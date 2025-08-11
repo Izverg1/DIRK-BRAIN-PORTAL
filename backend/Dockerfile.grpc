@@ -1,0 +1,40 @@
+# gRPC GodMode Server Dockerfile
+
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install gRPC dependencies
+RUN pip install --no-cache-dir \
+    grpcio==1.74.0 \
+    grpcio-tools==1.74.0 \
+    protobuf==6.31.1
+
+# Copy proto files and server
+COPY proto/ ./proto/
+COPY godmode_server.py .
+
+# Generate proto files
+RUN python -m grpc_tools.protoc \
+    -I./proto \
+    --python_out=. \
+    --grpc_python_out=. \
+    ./proto/godmode.proto
+
+# Create non-root user
+RUN useradd -m -u 1001 dirk && \
+    chown -R dirk:dirk /app
+
+USER dirk
+
+# Expose gRPC port
+EXPOSE 50051
+
+# Start gRPC server
+CMD ["python", "godmode_server.py"]

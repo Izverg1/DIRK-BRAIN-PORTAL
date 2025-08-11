@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent RPG Interface</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Orbitron', monospace;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: #e0e6ed;
+            min-height: 100vh;
+            overflow-x: auto;
+        }
+
+        .rpg-container {
+            display: flex;
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.15) 0%, transparent 50%);
+        }
+
+        /* Left Sidebar Menu */
+        .sidebar-menu {
+            width: 200px;
+            background: linear-gradient(180deg, #2c3e50 0%, #34495e 100%);
+            border-right: 3px solid #3498db;
+            box-shadow: inset -2px 0 10px rgba(0,0,0,0.3);
+            padding: 20px 0;
+        }
+
+        .menu-item {
+            display: block;
+            padding: 12px 20px;
+            color: #ecf0f1;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(52, 152, 219, 0.2);
+            transition: all 0.3s ease;
+            font-weight: 400;
+            font-size: 14px;
+            letter-spacing: 1px;
+        }
+
+        .menu-item:hover {
+            background: linear-gradient(90deg, #3498db 0%, rgba(52, 152, 219, 0.3) 100%);
+            color: #fff;
+            text-shadow: 0 0 10px rgba(52, 152, 219, 0.8);
+        }
+
+        .currency-display {
+            margin-top: 30px;
+            padding: 20px;
+            text-align: center;
+            border-top: 2px solid #3498db;
+        }
+
+        .currency-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 10px 0;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .currency-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-left: 10px;
+        }
+
+        .gold { background: linear-gradient(45deg, #f1c40f, #f39c12); }
+        .credits { background: linear-gradient(45deg, #e74c3c, #c0392b); }
+        .time { background: linear-gradient(45deg, #9b59b6, #8e44ad); }
+
+        /* Main Agent Display */
+        .agents-display {
+            flex: 1;
+            padding: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            align-content: start;
+        }
+
+        .agent-card {
+            background: linear-gradient(145deg, #2c3e50 0%, #34495e 100%);
+            border: 2px solid #3498db;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 
+                0 8px 32px rgba(0,0,0,0.3),
+                inset 0 1px 0 rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .agent-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #3498db, #2ecc71, #f1c40f, #e74c3c);
+            animation: shimmer 2s linear infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .agent-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 
+                0 15px 40px rgba(52, 152, 219, 0.3),
+                inset 0 1px 0 rgba(255,255,255,0.2);
+            border-color: #2ecc71;
+        }
+
+        .agent-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .agent-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #3498db, #2ecc71);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 900;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            margin-right: 15px;
+            border: 3px solid rgba(255,255,255,0.2);
+        }
+
+        .agent-info h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #ecf0f1;
+            margin-bottom: 5px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .agent-class {
+            font-size: 12px;
+            color: #3498db;
+            font-weight: 400;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .agent-level {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: linear-gradient(45deg, #f1c40f, #f39c12);
+            color: #2c3e50;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            box-shadow: 0 2px 8px rgba(241, 196, 15, 0.3);
+        }
+
+        /* Stats Bars */
+        .stat-bar {
+            margin: 12px 0;
+        }
+
+        .stat-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .stat-progress {
+            height: 8px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 4px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .stat-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.8s ease;
+            position: relative;
+        }
+
+        .stat-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: scan 2s linear infinite;
+        }
+
+        @keyframes scan {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .hp-fill { background: linear-gradient(90deg, #e74c3c, #c0392b); }
+        .mp-fill { background: linear-gradient(90deg, #3498db, #2980b9); }
+        .exp-fill { background: linear-gradient(90deg, #f1c40f, #f39c12); }
+        .cpu-fill { background: linear-gradient(90deg, #2ecc71, #27ae60); }
+
+        /* Resource Display */
+        .resources {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(52, 152, 219, 0.3);
+        }
+
+        .resource-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 11px;
+            font-weight: 700;
+            color: #bdc3c7;
+        }
+
+        .resource-value {
+            color: #ecf0f1;
+            display: flex;
+            align-items: center;
+        }
+
+        .resource-icon {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-left: 5px;
+        }
+
+        .sp-icon { background: linear-gradient(45deg, #f1c40f, #f39c12); }
+        .ap-icon { background: linear-gradient(45deg, #9b59b6, #8e44ad); }
+        .tasks-icon { background: linear-gradient(45deg, #2ecc71, #27ae60); }
+        .uptime-icon { background: linear-gradient(45deg, #3498db, #2980b9); }
+
+        /* Status Effects */
+        .status-effects {
+            display: flex;
+            gap: 5px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .status-effect {
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-active { background: linear-gradient(45deg, #2ecc71, #27ae60); color: white; }
+        .status-busy { background: linear-gradient(45deg, #f39c12, #e67e22); color: white; }
+        .status-idle { background: linear-gradient(45deg, #95a5a6, #7f8c8d); color: white; }
+        .status-error { background: linear-gradient(45deg, #e74c3c, #c0392b); color: white; }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .rpg-container {
+                flex-direction: column;
+            }
+            
+            .sidebar-menu {
+                width: 100%;
+                display: flex;
+                overflow-x: auto;
+                padding: 10px 0;
+            }
+            
+            .menu-item {
+                white-space: nowrap;
+                border-bottom: none;
+                border-right: 1px solid rgba(52, 152, 219, 0.2);
+            }
+            
+            .currency-display {
+                display: flex;
+                justify-content: space-around;
+                margin-top: 0;
+                padding: 10px;
+                border-top: none;
+                border-bottom: 2px solid #3498db;
+            }
+            
+            .agents-display {
+                grid-template-columns: 1fr;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="rpg-container">
+        <!-- Left Sidebar Menu -->
+        <nav class="sidebar-menu">
+            <a href="#" class="menu-item">Agent Status</a>
+            <a href="#" class="menu-item">Task Queue</a>
+            <a href="#" class="menu-item">Performance</a>
+            <a href="#" class="menu-item">Deployment</a>
+            <a href="#" class="menu-item">Analytics</a>
+            <a href="#" class="menu-item">Settings</a>
+            <a href="#" class="menu-item">Logs</a>
+            
+            <div class="currency-display">
+                <div class="currency-item">
+                    <span>Credits</span>
+                    <span>2,500 <div class="currency-icon gold"></div></span>
+                </div>
+                <div class="currency-item">
+                    <span>Tasks</span>
+                    <span>47 <div class="currency-icon credits"></div></span>
+                </div>
+                <div class="currency-item">
+                    <span>Uptime</span>
+                    <span>99.9% <div class="currency-icon time"></div></span>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Agent Display -->
+        <main class="agents-display">
+            <!-- Atlas Agent -->
+            <div class="agent-card">
+                <div class="agent-level">Lv. 15</div>
+                <div class="agent-header">
+                    <div class="agent-avatar">AT</div>
+                    <div class="agent-info">
+                        <h3>Atlas</h3>
+                        <div class="agent-class">Infrastructure Mage</div>
+                    </div>
+                </div>
+                
+                <div class="stat-bar">
+                    <div class="stat-label">
+                        <span>HP</span>
+                        <span>95/100</span>
+                    </div>
+                    <div class="stat-progress">
+                        <div class="stat-fill hp-fill" style="width: 95%"></div>
+                    </div>
+                </div>
+                
+                <div class="stat-bar">
+                    <div class="stat-label">
+                        <span>CPU</span>
+                        <span>67/100</span>
+                    </div>
+                    <div class="stat-progress">
+                        <div class="stat-fill cpu-fill" style="width: 67%"></div>
+                    </div>
+                </div>
+                
+                <div class="stat-bar">
+                    <div class="stat-label">
+                        <span>EXP</span>
+                        <span>8,450/10,000</span>
+                    </div>
+                    <div class="stat-progress">
+                        <div class="stat-fill exp-fill" style="width: 84.5%"></div>
+                    </div>
+                </div>
+                
+                <div class="resources">
+                    <div class="resource-item">
+                        <span>Tasks</span>
+                        <span class="resource-value">12 <div class="resource-icon tasks-icon"></div></span>
+                    </div>
+                    <div class="resource-item">
+                        <span>Uptime</span>
+                        <span class="resource-value">99.8% <div class="resource-icon uptime-icon"></div></span>
+                    </div>
+                    <div class="resource-item">
+                        <span>Memory</span>
+                        <span class="resource-value">2.1GB <div class="resource-icon sp-icon"></div></span>
+                    </div>
+                    <div class="resource-item">
+                        <span>Network</span>
+                        <span class="resource-value">45MB/s <div class="resource-icon ap-icon"></div></span>
+                    </div>
+                </div>
+                
+                <div class="status-effects">
+                    <span class="status-effect status-active">Active</span>
+                    <span class="status-effect status-busy">Deploying</span>
+                </div>
+            </div>
+
+            <!-- Nexus Agent -->
+            <div class="agent-card">
+                <div class="agent-level">Lv. 12</div>
+                <div class="agent-header">
+                    <div class="agent-avatar">NX</div>
+                    <div class="agent-info">
+                        <h3>Nexus</h3>
+                        <div class="agent-class">API Hunter</div>
+                    </div>
+                </div>
+                
+                <div class="stat-bar">
+                    <div class="stat-label">
+                        <span>HP</span>
+                        <span>88/100</span>
+                    </div>
+                    <div class="stat-progress">
+                        <div class="stat-fill hp-fill" style="width: 88%"></div>
+                    </div>
+                </div>
+                
+                <div class="stat-bar">
+                    <div class="stat-label">
+                        <span>CPU</span>
+                        <span>34/100</span>
+                    </div>
+                    <div class="stat-progress">
+                        <div class="stat-fill cpu-fill" style="width: 34%"></div>
+                    </div>
+                </div>
+                
+                <div class="stat-bar">
+                    <div class="stat-label">
+                        <span>EXP</span>
+                        <span>6,200/8,000</span>
+                    </div>
+                    <div class="stat-progress">
+                        <div class="stat-fill exp-fill" style="width: 77.5%"></div>
+                    </div>
+                </div>
+                
+                <div class="resources">
+                    <div class="resource-item">
+                        <span>Tasks</span>
+                        <span class="resource-value">8 <div class="resource-icon tasks-icon"></div></span>
+                    </div>
+                    <div class="resource-item">
+                        <span>Uptime</span>
+                        <span class="resource-value">99.2% <div class="resource-icon uptime-icon"></div></span>
+                    </div>
+                    <div class="resource-item">
+                        <span>Memory</span>
+                        <span class="resource-value">1.8GB <div class="resource-icon sp-icon"></div></span>
+                    </div>
+                    <div class="resource-item">
+                        <span>Network</span>
+                        <span class="resource-value">23MB/s <div class="resource-icon ap-icon"></div></span>
+                    </div>
+                </div>
+                
+                <div class="status-effects">
+                    <span class="status-effect status-active">Active</span>
+                    <span class="status-effect status-idle">Standby</span>
+                </div>
+            </div>
+
+            <!-- Sage Agent -->
+            <div class="agent-card">
+                <div class="agent-level">Lv. 18</div>
+                <div class="agent-header">
+                    <div class="agent-avatar">SG</div>
+                    <div class="agent-info">
+                        <h3>Sage</h3>
+                        <div class="agent-class">Data Monk</div>
+                    </div>
+                </div>
+                
+                <div class="stat-bar">
+                    <div class="stat-label">
+                        <span>HP</span>
+                        <span>100/100</span>
+                    </div>
+                    <div class="stat-progress">
+                        <div class="stat-fill hp-fill" style="width: 100%"></div>
+                    </div>
+                </div>
+                
+                <div class="stat-bar">
+                    <div class="stat-label">
+                        <span>CPU</span>
+                        <span>89/100</span>
+                    </div>
+                    <div class="stat-progress">
+                        <div class="stat-fill cpu-fill" style="width: 89%"></div>
+                    </div>
+                </div>
+                
+                <div class="stat-bar">
+                    <div class="stat-label">
+                        <span>EXP</span>
+                        <span>11,750/12,000</span>
+                    </div>
+                    <div class="stat-progress">
+                        <div class="stat-fill exp-fill" style="width: 97.9%"></div>
+                    </div>
+                </div>
+                
+                <div class="resources">
+                    <div class="resource-item">
+                        <span>Tasks</span>
+                        <span class="resource-value">15 <div class="resource-icon tasks-icon"></div></span>
+                    </div>
+                    <div class="resource-item">
+                        <span>Uptime</span>
+                        <span class="resource-value">100% <div class="resource-icon uptime-icon"></div></span>
+                    </div>
+                    <div class="resource-item">
+                        <span>Memory</span>
+                        <span class="resource-value">3.2GB <div class="resource-icon sp-icon"></div></span>
+                    </div>
+                    <div class="resource-item">
+                        <span>Network</span>
+                        <span class="resource-value">78MB/s <div class="resource-icon ap-icon"></div></span>
+                    </div>
+                </div>
+                
+                <div class="status-effects">
+                    <span class="status-effect status-active">Active</span>
+                    <span class="status-effect status-busy">Processing</span>
+                </div>
+            </div>
+
+            <!-- Orchestrator Agent -->
+            <div class="agent-card">
+                <div class="agent-level">Lv. 20</div>
+                <div class="agent-header">
+                    <div class="agent-avatar">OR</div>
+                    <div class="agent-info">
+                        <h3>Orchestrator</h3>
+                        <div class="agent-class">Command Paladin</div>
+                    </div>
+                </div>
+                
+                <div class="stat-bar">
+                    <div class="stat-label">
+                        <span>HP</span>
+                        <span>92/100</span>
+                    </div>
+                    <div class="stat-progress">
+                        <div class="stat-fill hp-fill" style="width: 92%"></div>
+                    </div>
+                </div>
+                
+                <div class="stat-bar">
+                    <div class="stat-label">
+                        <span>CPU</span>
+                        <span>56/100</span>
+                    </div>
+                    <div class="stat-progress">
+                        <div class="stat-fill cpu-fill" style="width: 56%"></div>
+                    </div>
+                </div>
+                
+                <div class="stat-bar">
+                    <div class="stat-label">
+                        <span>EXP</span>
+                        <span>15,200/15,500</span>
+                    </div>
+                    <div class="stat-progress">
+                        <div class="stat-fill exp-fill" style="width: 98.1%"></div>
+                    </div>
+                </div>
+                
+                <div class="resources">
+                    <div class="resource-item">
+                        <span>Tasks</span>
+                        <span class="resource-value">22 <div class="resource-icon tasks-icon"></div></span>
+                    </div>
+                    <div class="resource-item">
+                        <span>Uptime</span>
+                        <span class="resource-value">99.9% <div class="resource-icon uptime-icon"></div></span>
+                    </div>
+                    <div class="resource-item">
+                        <span>Memory</span>
+                        <span class="resource-value">4.1GB <div class="resource-icon sp-icon"></div></span>
+                    </div>
+                    <div class="resource-item">
+                        <span>Network</span>
+                        <span class="resource-value">92MB/s <div class="resource-icon ap-icon"></div></span>
+                    </div>
+                </div>
+                
+                <div class="status-effects">
+                    <span class="status-effect status-active">Active</span>
+                    <span class="status-effect status-busy">Coordinating</span>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Add some interactive elements
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate stat bars on load
+            const statFills = document.querySelectorAll('.stat-fill');
+            statFills.forEach(fill => {
+                const width = fill.style.width;
+                fill.style.width = '0%';
+                setTimeout(() => {
+                    fill.style.width = width;
+                }, 500);
+            });
+
+            // Add click interactions to agent cards
+            const agentCards = document.querySelectorAll('.agent-card');
+            agentCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    this.style.transform = 'scale(1.02)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 200);
+                });
+            });
+
+            // Simulate real-time updates
+            setInterval(() => {
+                const cpuBars = document.querySelectorAll('.cpu-fill');
+                cpuBars.forEach(bar => {
+                    const currentWidth = parseInt(bar.style.width);
+                    const newWidth = Math.max(10, Math.min(100, currentWidth + (Math.random() - 0.5) * 10));
+                    bar.style.width = newWidth + '%';
+                    
+                    // Update the text
+                    const label = bar.closest('.stat-bar').querySelector('.stat-label span:last-child');
+                    label.textContent = Math.round(newWidth) + '/100';
+                });
+            }, 3000);
+        });
+    </script>
+</body>
+</html>

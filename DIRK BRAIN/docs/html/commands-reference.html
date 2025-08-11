@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIRK Commands Reference - Complete Guide</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --bg-color: #ecf0f1;
+            --text-color: #2c3e50;
+            --code-bg: #f8f9fa;
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-validation: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .main-content {
+            padding: 2rem 0;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 2rem;
+            padding: 0.5rem 1rem;
+            background: var(--secondary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 600;
+        }
+
+        .back-link:hover {
+            background: #2980b9;
+        }
+
+        .commands-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .command-section {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .command-section h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-badge {
+            background: var(--success-color);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-badge.new {
+            background: #e74c3c;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .command {
+            background: var(--code-bg);
+            border-left: 4px solid var(--secondary-color);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 5px 5px 0;
+        }
+
+        .command h4 {
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .command-syntax {
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 0.5rem;
+            border-radius: 3px;
+            margin: 0.5rem 0;
+            font-size: 0.9rem;
+        }
+
+        .self-analysis {
+            border-left-color: var(--success-color);
+        }
+
+        .self-analysis h4 {
+            color: var(--success-color);
+        }
+
+        .dirk-g {
+            border-left-color: #9b59b6;
+        }
+
+        .dirk-g h4 {
+            color: #9b59b6;
+        }
+
+        .validation-command {
+            border-left-color: #11998e;
+            background: linear-gradient(135deg, #f0fdfa, #ccfbf1);
+        }
+
+        .validation-command h4 {
+            color: #11998e;
+        }
+
+        .quality-hook {
+            border-left-color: var(--warning-color);
+        }
+
+        .quality-hook h4 {
+            color: var(--warning-color);
+        }
+
+        .workflow-example {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 3rem 0;
+        }
+
+        .workflow-example h2 {
+            margin-bottom: 1rem;
+        }
+
+        .workflow-code {
+            background: rgba(0,0,0,0.3);
+            padding: 1.5rem;
+            border-radius: 10px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            overflow-x: auto;
+        }
+
+        .summary-stats {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .stat-item {
+            padding: 1rem;
+            border-radius: 10px;
+            background: #f8f9fa;
+            border-left: 4px solid var(--secondary-color);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--secondary-color);
+        }
+
+        .validation-showcase {
+            background: var(--gradient-validation);
+            color: white;
+            padding: 3rem 0;
+            margin: 3rem 0;
+            border-radius: 15px;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+            border-left: 4px solid;
+        }
+
+        .alert.info {
+            background: #d4edda;
+            border-left-color: var(--success-color);
+            color: #155724;
+        }
+
+        @media (max-width: 768px) {
+            .commands-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1>📋 DIRK Commands Reference</h1>
+            <p>Complete reference for all DIRK.g and DIRK.c commands - 22 total commands ready for enterprise development</p>
+            <p style="margin-top: 0.5rem; font-size: 1.1rem;"><strong>🆕 NEW: Automated Task Validation Commands Added!</strong></p>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <a href="index.html" class="back-link">← Back to Main Documentation</a>
+            
+            <!-- Summary Statistics -->
+            <div class="summary-stats">
+                <h2>🎯 DIRK System Command Overview</h2>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number">9</div>
+                        <div>DIRK.g Commands</div>
+                        <small>Business Analysis & Architecture <strong>+ 3 NEW Validation</strong></small>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">13</div>
+                        <div>DIRK.c Commands</div>
+                        <small>Implementation & Development</small>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">5</div>
+                        <div>Quality Hooks</div>
+                        <small>Automated Quality Assurance</small>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">100%</div>
+                        <div>Implementation</div>
+                        <small>All Commands Active</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NEW: Automated Validation Showcase -->
+            <section class="validation-showcase">
+                <div class="container">
+                    <h2>🤖 NEW: Automated Task Validation Commands</h2>
+                    <p>Zero manual work required! DIRK.g now automatically validates DIRK.c task completion.</p>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 2rem;">
+                        <div style="background: rgba(255,255,255,0.1); padding: 1.5rem; border-radius: 10px;">
+                            <h4>🎯 Single Command Validation</h4>
+                            <div class="command-syntax" style="background: rgba(0,0,0,0.3);">dirk_g_validate_completion "authentication"</div>
+                            <p>Automatically validates task completion with comprehensive scoring.</p>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.1); padding: 1.5rem; border-radius: 10px;">
+                            <h4>⚡ Quick Status Check</h4>
+                            <div class="command-syntax" style="background: rgba(0,0,0,0.3);">dirk_g_done "authentication"</div>
+                            <p>Instant yes/no task completion verification.</p>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.1); padding: 1.5rem; border-radius: 10px;">
+                            <h4>📊 Task Dashboard</h4>
+                            <div class="command-syntax" style="background: rgba(0,0,0,0.3);">dirk_g_status</div>
+                            <p>Overview of all task statuses and validation reports.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <div class="commands-grid">
+                
+                <!-- DIRK.g Commands -->
+                <div class="command-section">
+                    <h3>🧠 DIRK.g (Gemini) Commands <span class="status-badge">9 Commands</span> <span class="status-badge new">3 NEW</span></h3>
+                    
+                    <div class="command dirk-g">
+                        <h4>dirk_g_workflow <span class="status-badge">✅ Active</span></h4>
+                        <div class="command-syntax">dirk_g_workflow "complete requirement"</div>
+                        <p><strong>Complete Workflow:</strong> End-to-end Business Analysis → Solution Architecture with comprehensive specifications ready for DIRK.c implementation.</p>
+                        <p><strong>Output:</strong> Complete handoff package with all specifications and implementation guidance.</p>
+                    </div>
+
+                    <div class="command dirk-g">
+                        <h4>dirk_g_ba <span class="status-badge">✅ Active</span></h4>
+                        <div class="command-syntax">dirk_g_ba "requirement description"</div>
+                        <p><strong>Business Analysis:</strong> Comprehensive stakeholder analysis, functional requirements, acceptance criteria, risk assessment, and business impact evaluation.</p>
+                        <p><strong>Output:</strong> Business requirements document with stakeholder map and success metrics.</p>
+                    </div>
+
+                    <div class="command dirk-g">
+                        <h4>dirk_g_sa <span class="status-badge">✅ Active</span></h4>
+                        <div class="command-syntax">dirk_g_sa "architectural requirement"</div>
+                        <p><strong>Solution Architecture:</strong> Technology recommendations, design patterns, scalability considerations, and implementation strategies with enterprise standards.</p>
+                        <p><strong>Output:</strong> Technical architecture document with design decisions and implementation roadmap.</p>
+                    </div>
+
+                    <!-- NEW VALIDATION COMMANDS -->
+                    <div class="command validation-command">
+                        <h4>🆕 dirk_g_validate_completion <span class="status-badge new">NEW!</span></h4>
+                        <div class="command-syntax">dirk_g_validate_completion "task_name"</div>
+                        <p><strong>Automated Task Validation:</strong> Comprehensive automated validation of DIRK.c task completion with scoring (0-100%), detailed reporting, and compliance analysis.</p>
+                        <p><strong>Features:</strong> Project structure check, implementation file search, quality validation, task-specific requirements verification.</p>
+                        <p><strong>Output:</strong> Completion score, detailed report, and actionable recommendations.</p>
+                    </div>
+
+                    <div class="command validation-command">
+                        <h4>🆕 dirk_g_done <span class="status-badge new">NEW!</span></h4>
+                        <div class="command-syntax">dirk_g_done "task_name"</div>
+                        <p><strong>Quick Task Check:</strong> Instant yes/no verification of task completion without detailed analysis.</p>
+                        <p><strong>Output:</strong> Simple ✅ YES or ❌ NO response with basic file detection.</p>
+                    </div>
+
+                    <div class="command validation-command">
+                        <h4>🆕 dirk_g_status <span class="status-badge new">NEW!</span></h4>
+                        <div class="command-syntax">dirk_g_status</div>
+                        <p><strong>Task Status Dashboard:</strong> Overview of all task statuses, recent validation reports, and quick command reference.</p>
+                        <p><strong>Output:</strong> Dashboard with recent reports and available validation commands.</p>
+                    </div>
+
+                    <div class="command dirk-g">
+                        <h4>dirk_g_validate <span class="status-badge">✅ Active</span></h4>
+                        <div class="command-syntax">dirk_g_validate "implementation.ts" "spec.md"</div>
+                        <p><strong>Cross-AI Validation:</strong> Validates DIRK.c implementation against DIRK.g specifications for compliance, quality, and specification adherence.</p>
+                        <p><strong>Output:</strong> Compliance report with scoring and improvement recommendations.</p>
+                    </div>
+
+                    <div class="command dirk-g">
+                        <h4>dirk_g_quality_review <span class="status-badge">✅ Active</span></h4>
+                        <div class="command-syntax">dirk_g_quality_review "implementation_dir/"</div>
+                        <p><strong>Quality Review:</strong> Comprehensive quality assessment with improvement recommendations and enterprise compliance verification.</p>
+                        <p><strong>Output:</strong> Quality assessment report with actionable improvement plan.</p>
+                    </div>
+
+                    <div class="command dirk-g">
+                        <h4>dirk_g_test <span class="status-badge">✅ Active</span></h4>
+                        <div class="command-syntax">dirk_g_test</div>
+                        <p><strong>System Test:</strong> Test DIRK.g integration and display available commands with usage examples and system status including new validation commands.</p>
+                        <p><strong>Output:</strong> System status report and command availability confirmation.</p>
+                    </div>
+                </div>
+
+                <!-- DIRK.c Core Commands -->
+                <div class="command-section">
+                    <h3>⚡ DIRK.c Core Development <span class="status-badge">5 Commands</span></h3>
+                    
+                    <div class="command">
+                        <h4>/build <span class="status-badge">✅ Active</span></h4>
+                        <div class="command-syntax">/build</div>
+                        <p><strong>Enterprise Build:</strong> Complete project build with environment validation, dependency installation, compilation, testing, and deployment preparation.</p>
+                        <p><strong>Includes:</strong> Quality hooks, security scanning, performance validation, and comprehensive documentation.</p>
+                    </div>
+
+                    <div class="command">
+                        <h4>/test <span class="status-badge">✅ Active</span></h4>
+                        <div class="command-syntax">/test [unit|integration|e2e|all]</div>
+                        <p><strong>Comprehensive Testing:</strong> Run test suites with coverage analysis, performance benchmarking, and quality metrics.</p>
+                        <p><strong>Options:</strong> Unit tests, integration tests, end-to-end tests, or complete test suite execution.</p>
+                    </div>
+
+                    <div class="command">
+                        <h4>/feature <span class="status-badge">✅ Active</span></h4>
+                        <div class="command-syntax">/feature "feature description"</div>
+                        <p><strong>Feature Development:</strong> Implement new features from scratch with complete analysis, design, implementation, testing, and documentation.</p>
+                        <p><strong>Process:</strong> Requirements analysis → Design → Implementation → Testing → Documentation.</p>
+                    </div>
+
+                    <div class="command">
+                        <h4>/debug <span class="status-badge">✅ Active</span></h4>
+                        <div class="command-syntax">/debug [component|error|performance]</div>
+                        <p><strong>Systematic Debugging:</strong> Evidence-based debugging using DIRK principles with root cause analysis and solution implementation.</p>
+                        <p><strong>Approach:</strong> Systematic analysis, hypothesis testing, and verified solutions.</p>
+                    </div>
+
+                    <div class="command">
+                        <h4>/optimize <span class="status-badge">✅ Active</span></h4>
+                        <div class="command-syntax">/optimize [cpu|memory|network|database]</div>
+                        <p><strong>Performance Optimization:</strong> Evidence-based performance improvements with benchmarking and validation.</p>
+                        <p><strong>Targets:</strong> CPU optimization, memory efficiency, network performance, database query optimization.</p>
+                    </div>
+                </div>
+
+                <!-- DIRK Integration Commands -->
+                <div class="command-section">
+                    <h3>🔄 DIRK Integration Commands <span class="status-badge">2 Commands</span></h3>
+                    
+                    <div class="command">
+                        <h4>/implement-from-dirk-g <span class="status-badge">✅ Active</span></h4>
+                        <div class="command-syntax">/implement-from-dirk-g</div>
+                        <p><strong>DIRK.g → DIRK.c Handoff:</strong> Implement features from DIRK.g specifications with automatic quality enforcement and validation.</p>
+                        <p><strong>Process:</strong> Read specifications → Validate requirements → Implement → Test → Document.</p>
+                    </div>
+
+                    <div class="command">
+                        <h4>/enterprise-implement <span class="status-badge">✅ Active</span></h4>
+                        <div class="command-syntax">/enterprise-implement "specification"</div>
+                        <p><strong>Enterprise-Grade Implementation:</strong> Guaranteed production-ready quality with zero minimal versions or placeholder implementations.</p>
+                        <p><strong>Standards:</strong> Enterprise architecture, security compliance, performance requirements, comprehensive testing.</p>
+                    </div>
+                </div>
+
+                <!-- Self-Analysis Commands -->
+                <div class="command-section">
+                    <h3>🔍 Self-Analysis & Validation <span class="status-badge">3 Commands</span></h3>
+                    
+                    <div class="command self-analysis">
+                        <h4>/self-analyze <span class="status-badge">✅ Active</span></h4>
+                        <div class="command-syntax">/self-analyze [file] [--auto-correct]</div>
+                        <p><strong>Implementation Analysis:</strong> Analyze implementations against DIRK.g specifications with compliance scoring and detailed recommendations.</p>
+                        <p><strong>Analysis:</strong> Code quality, security, performance, architecture compliance, testing coverage, documentation quality.</p>
+                    </div>
+
+                    <div class="command self-analysis">
+                        <h4>/proof-validate <span class="status-badge">✅ Active</span></h4>
+                        <div class="command-syntax">/proof-validate [implementation] [--certification]</div>
+                        <p><strong>Formal Validation:</strong> Mathematical and logical proof validation with algorithm correctness verification and enterprise compliance.</p>
+                        <p><strong>Validation:</strong> Logical consistency, algorithmic correctness, performance guarantees, security properties.</p>
+                    </div>
+
+                    <div class="command self-analysis">
+                        <h4>/auto-correct <span class="status-badge">✅ Active</span></h4>
+                        <div class="command-syntax">/auto-correct --based-on-analysis</div>
+                        <p><strong>Automatic Correction:</strong> Apply corrections based on self-analysis recommendations with quality improvements and compliance fixes.</p>
+                        <p><strong>Corrections:</strong> Code quality issues, security vulnerabilities, performance optimizations, standard compliance.</p>
+                    </div>
+                </div>
+
+                <!-- Quality & Monitoring Commands -->
+                <div class="command-section">
+                    <h3>🛡️ Quality & Monitoring <span class="status-badge">3 Commands</span></h3>
+                    
+                    <div class="command">
+                        <h4>/continuous-validation <span class="status-badge">✅ Active</span></h4>
+                        <div class="command-syntax">/continuous-validation [--sensitivity=high]</div>
+                        <p><strong>Real-Time Monitoring:</strong> Enable continuous quality tracking with automatic validation and feedback systems.</p>
+                        <p><strong>Features:</strong> Real-time quality metrics, automatic alerts, trend analysis, performance monitoring.</p>
+                    </div>
+
+                    <div class="command">
+                        <h4>/validate-enterprise-standards <span class="status-badge">✅ Active</span></h4>
+                        <div class="command-syntax">/validate-enterprise-standards</div>
+                        <p><strong>Standards Compliance:</strong> Comprehensive validation against enterprise standards with security, performance, and quality verification.</p>
+                        <p><strong>Standards:</strong> Security compliance, performance benchmarks, code quality, architecture standards.</p>
+                    </div>
+
+                    <div class="command">
+                        <h4>/validation-dashboard <span class="status-badge">✅ Active</span></h4>
+                        <div class="command-syntax">/validation-dashboard</div>
+                        <p><strong>Quality Dashboard:</strong> Display real-time validation status, compliance scores, quality trends, and system health monitoring.</p>
+                        <p><strong>Metrics:</strong> Compliance scores, quality trends, performance metrics, security status.</p>
+                    </div>
+                </div>
+
+                <!-- Quality Hooks -->
+                <div class="command-section">
+                    <h3>🔗 Automated Quality Hooks <span class="status-badge">5 Hooks</span></h3>
+                    
+                    <div class="command quality-hook">
+                        <h4>security_scan.sh <span class="status-badge">✅ Active</span></h4>
+                        <div class="command-syntax">./.claude/hooks/security_scan.sh</div>
+                        <p><strong>Security Automation:</strong> Automated security scanning for vulnerabilities, credential detection, injection prevention, and secure coding practices.</p>
+                        <p><strong>Scans:</strong> Credential detection, vulnerability scanning, secure coding validation, dependency security.</p>
+                    </div>
+
+                    <div class="command quality-hook">
+                        <h4>code_quality.sh <span class="status-badge">✅ Active</span></h4>
+                        <div class="command-syntax">./.claude/hooks/code_quality.sh</div>
+                        <p><strong>Code Quality:</strong> Automated code formatting, linting, complexity analysis, and style enforcement for multiple languages.</p>
+                        <p><strong>Languages:</strong> TypeScript, C++, JavaScript with ESLint, Prettier, clang-format integration.</p>
+                    </div>
+
+                    <div class="command quality-hook">
+                        <h4>quality_enforcement.sh <span class="status-badge">✅ Active</span></h4>
+                        <div class="command-syntax">./.claude/hooks/quality_enforcement.sh</div>
+                        <p><strong>Standards Enforcement:</strong> Prevents minimal implementations, demo code, and placeholder content with enterprise-grade quality enforcement.</p>
+                        <p><strong>Enforcement:</strong> No placeholders, complete implementations, enterprise standards, production readiness.</p>
+                    </div>
+
+                    <div class="command quality-hook">
+                        <h4>self_analysis.sh <span class="status-badge">✅ Active</span></h4>
+                        <div class="command-syntax">./.claude/hooks/self_analysis.sh</div>
+                        <p><strong>Self-Validation Hook:</strong> Automatic analysis of implementations against DIRK principles with compliance scoring and recommendations.</p>
+                        <p><strong>Analysis:</strong> DIRK principle compliance, quality metrics, improvement recommendations, automated reporting.</p>
+                    </div>
+
+                    <div class="command quality-hook">
+                        <h4>validate_build.sh <span class="status-badge">✅ Active</span></h4>
+                        <div class="command-syntax">./.claude/hooks/validate_build.sh</div>
+                        <p><strong>Build Validation:</strong> Environment validation, dependency checking, build integrity, and deployment readiness verification.</p>
+                        <p><strong>Validation:</strong> Environment setup, dependencies, build process, deployment readiness, configuration validation.</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Complete Workflow Example -->
+            <div class="workflow-example">
+                <h2>🔄 Complete Enterprise Workflow Example with NEW Automated Validation</h2>
+                <p>Demonstrate the full power of DIRK with automated task validation:</p>
+                <div class="workflow-code">
+# 1. Business Analysis with DIRK.g
+dirk_g_workflow "user authentication with OAuth2, JWT, and RBAC"
+
+# 2. Enterprise Implementation with DIRK.c
+dirk-c
+/enterprise-implement "user authentication system"
+
+# 3. Self-Analysis and Validation
+/self-analyze auth-service.ts --auto-correct
+/proof-validate auth-service.ts --certification
+
+# 4. 🆕 NEW: Automated Task Validation with DIRK.g
+dirk_g_validate_completion "authentication"
+# Output: 🎉 OVERALL SCORE: 94% - TASK COMPLETED SUCCESSFULLY
+
+# 5. 🆕 NEW: Quick Status Checks
+dirk_g_done "authentication"
+# Output: ✅ YES - Authentication files found
+
+dirk_g_status
+# Output: Dashboard with all task statuses
+
+# 6. Quality Assurance
+/validate-enterprise-standards
+/test all
+
+# 7. Continuous Monitoring
+/continuous-validation --sensitivity=high
+/validation-dashboard
+
+# 8. Production Deployment
+/build
+# All quality hooks run automatically during build process
+                </div>
+            </div>
+
+            <!-- Task Validation Usage Guide -->
+            <div style="background: white; border-radius: 10px; padding: 2rem; margin: 2rem 0; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                <h3>🎯 Automated Task Validation Usage Guide</h3>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem; margin-top: 1.5rem;">
+                    <div>
+                        <h4>📋 Supported Task Types</h4>
+                        <div class="command-syntax" style="background: #f8f9fa; color: #2c3e50; margin: 0.5rem 0;">
+# Authentication/Auth tasks
+dirk_g_validate_completion "authentication"
+dirk_g_validate_completion "auth"
+
+# Rate limiting tasks  
+dirk_g_validate_completion "rate-limiting"
+dirk_g_validate_completion "rate-limiter"
+
+# API/Endpoint tasks
+dirk_g_validate_completion "api"
+dirk_g_validate_completion "endpoints"
+
+# Any custom task name
+dirk_g_validate_completion "file-upload"
+dirk_g_validate_completion "user-management"
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h4>📊 Validation Scoring</h4>
+                        <p><strong>90-100%:</strong> ✅ Task Completed Successfully</p>
+                        <p><strong>70-89%:</strong> ⚠️ Task Partially Completed</p>
+                        <p><strong>0-69%:</strong> ❌ Task Incomplete</p>
+                        
+                        <h4 style="margin-top: 1rem;">📄 Report Generation</h4>
+                        <p>Each validation creates a detailed report:</p>
+                        <div class="command-syntax" style="background: #f8f9fa; color: #2c3e50; margin: 0.5rem 0;">
+Location: .dirk/validation/task_validation_report_TIMESTAMP.txt
+Contains: Scores, file lists, recommendations
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert info">
+                    <strong>💡 Pro Tip:</strong> Use <code>dirk_g_done "task"</code> for quick checks and <code>dirk_g_validate_completion "task"</code> for comprehensive validation with detailed reporting.
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer style="background: var(--primary-color); color: white; text-align: center; padding: 2rem 0;">
+        <div class="container">
+            <p><a href="index.html" style="color: white; font-weight: 600;">← Back to Main Documentation</a></p>
+            <p>DIRK Commands Reference - 22 Total Commands Active and Ready for Enterprise Development</p>
+            <p><strong>Status:</strong> ✅ All Systems Operational | ✅ Quality Hooks Active | 🆕 Automated Task Validation | ✅ Ready for Production</p>
+        </div>
+    </footer>
+
+    <script>
+        // Add copy functionality to command syntax blocks
+        document.querySelectorAll('.command-syntax').forEach(block => {
+            block.style.position = 'relative';
+            block.style.cursor = 'pointer';
+            
+            block.addEventListener('click', () => {
+                navigator.clipboard.writeText(block.textContent).then(() => {
+                    // Create temporary notification
+                    const notification = document.createElement('div');
+                    notification.textContent = 'Copied!';
+                    notification.style.cssText = `
+                        position: absolute;
+                        top: -30px;
+                        right: 5px;
+                        background: var(--success-color);
+                        color: white;
+                        padding: 0.25rem 0.5rem;
+                        border-radius: 3px;
+                        font-size: 0.8rem;
+                        z-index: 1000;
+                    `;
+                    
+                    block.style.position = 'relative';
+                    block.appendChild(notification);
+                    
+                    setTimeout(() => {
+                        notification.remove();
+                    }, 2000);
+                });
+            });
+        });
+
+        // Add hover effect to command cards
+        document.querySelectorAll('.command').forEach(command => {
+            command.addEventListener('mouseenter', () => {
+                command.style.transform = 'translateX(5px)';
+                command.style.transition = 'transform 0.3s ease';
+            });
+            
+            command.addEventListener('mouseleave', () => {
+                command.style.transform = 'translateX(0)';
+            });
+        });
+
+        // Add animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.command-section, .workflow-example').forEach(element => {
+            element.style.opacity = '0';
+            element.style.transform = 'translateY(20px)';
+            element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(element);
+        });
+
+        // Highlight new validation commands
+        document.querySelectorAll('.validation-command').forEach(command => {
+            command.style.transform = 'scale(1.02)';
+            command.style.boxShadow = '0 8px 15px rgba(17, 153, 142, 0.2)';
+        });
+    </script>
+</body>
+</html>

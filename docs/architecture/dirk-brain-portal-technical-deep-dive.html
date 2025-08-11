@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIRK BRAIN Portal - Technical Deep Dive</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0d1117;
+            color: #e6edf3;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 60px 0;
+            background: linear-gradient(135deg, #0d1117 0%, #161b22 100%);
+            border-bottom: 1px solid #30363d;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #58a6ff;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(88, 166, 255, 0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: #8b949e;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Navigation */
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 40px;
+            border-bottom: 1px solid #30363d;
+            padding-bottom: 20px;
+        }
+
+        .nav-tab {
+            padding: 10px 20px;
+            background: #21262d;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            color: #e6edf3;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-tab:hover, .nav-tab.active {
+            background: #58a6ff;
+            color: #0d1117;
+            border-color: #58a6ff;
+        }
+
+        /* Content Sections */
+        .content-section {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #58a6ff;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #58a6ff;
+            padding-bottom: 10px;
+        }
+
+        .subsection {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .subsection h3 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #7c3aed;
+            margin-bottom: 20px;
+        }
+
+        .subsection h4 {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #f85149;
+            margin: 20px 0 10px 0;
+        }
+
+        /* Code Blocks */
+        .code-block {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .code-block::before {
+            content: attr(data-lang);
+            position: absolute;
+            top: -12px;
+            left: 15px;
+            background: #0d1117;
+            color: #58a6ff;
+            padding: 0 8px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .code-comment { color: #8b949e; font-style: italic; }
+        .code-keyword { color: #ff7b72; font-weight: 600; }
+        .code-string { color: #a5d6ff; }
+        .code-function { color: #d2a8ff; }
+        .code-variable { color: #ffa657; }
+        .code-number { color: #79c0ff; }
+
+        /* Architecture Diagram */
+        .architecture-diagram {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 40px;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .layer {
+            background: linear-gradient(135deg, #21262d, #30363d);
+            border: 1px solid #58a6ff;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .layer:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(88, 166, 255, 0.2);
+        }
+
+        .layer-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #58a6ff;
+            margin-bottom: 10px;
+        }
+
+        .layer-tech {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: #7c3aed;
+            margin-bottom: 10px;
+        }
+
+        .layer-description {
+            color: #8b949e;
+            font-size: 0.9rem;
+        }
+
+        /* Component Grid */
+        .component-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .component-card {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .component-card:hover {
+            border-color: #58a6ff;
+            box-shadow: 0 5px 15px rgba(88, 166, 255, 0.1);
+        }
+
+        .component-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #7c3aed;
+            margin-bottom: 15px;
+        }
+
+        .component-status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+
+        .status-complete {
+            background: #238636;
+            color: #ffffff;
+        }
+
+        .status-progress {
+            background: #d29922;
+            color: #ffffff;
+        }
+
+        .status-planned {
+            background: #8b949e;
+            color: #ffffff;
+        }
+
+        /* Feature List */
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid #30363d;
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .feature-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #238636;
+            font-weight: bold;
+        }
+
+        .feature-list li:last-child {
+            border-bottom: none;
+        }
+
+        /* API Documentation */
+        .api-endpoint {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .api-method {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+
+        .method-get { background: #238636; color: #ffffff; }
+        .method-post { background: #1f6feb; color: #ffffff; }
+        .method-put { background: #d29922; color: #ffffff; }
+        .method-delete { background: #da3633; color: #ffffff; }
+
+        .api-path {
+            font-family: 'JetBrains Mono', monospace;
+            color: #58a6ff;
+            font-weight: 500;
+        }
+
+        /* Performance Metrics */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .metric-card {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #58a6ff;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .metric-label {
+            color: #8b949e;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-tabs {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            
+            .nav-tab {
+                padding: 8px 16px;
+                font-size: 0.9rem;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .component-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #161b22;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #30363d;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #58a6ff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>DIRK BRAIN Portal</h1>
+            <p>Technical Deep Dive - Comprehensive Architecture and Implementation Guide</p>
+        </div>
+
+        <!-- Navigation -->
+        <div class="nav-tabs">
+            <div class="nav-tab active" onclick="showSection('overview')">Overview</div>
+            <div class="nav-tab" onclick="showSection('architecture')">Architecture</div>
+            <div class="nav-tab" onclick="showSection('components')">Components</div>
+            <div class="nav-tab" onclick="showSection('api')">API Reference</div>
+            <div class="nav-tab" onclick="showSection('deployment')">Deployment</div>
+            <div class="nav-tab" onclick="showSection('performance')">Performance</div>
+        </div>
+
+        <!-- Overview Section -->
+        <div id="overview" class="content-section active">
+            <h2 class="section-title">System Overview</h2>
+            
+            <div class="subsection">
+                <h3>🎯 Project Status</h3>
+                <p>DIRK BRAIN Portal is currently <strong>95% complete</strong> with over 40 components implemented and tested. The platform represents a revolutionary approach to AI agent orchestration through immersive 3D visualization and intelligent automation.</p>
+                
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <span class="metric-value">95%</span>
+                        <span class="metric-label">Implementation Complete</span>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-value">40+</span>
+                        <span class="metric-label">Components Built</span>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-value">5</span>
+                        <span class="metric-label">AI Agents Integrated</span>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-value">3D</span>
+                        <span class="metric-label">Immersive Interface</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3>🚀 Core Capabilities</h3>
+                <ul class="feature-list">
+                    <li>Immersive 3D agent visualization with real-time performance monitoring</li>
+                    <li>GOD Mode orchestration with intelligent task decomposition</li>
+                    <li>Voice and gesture control integration for natural interaction</li>
+                    <li>Real-time agent communication and workflow streaming</li>
+                    <li>Predictive intelligence with machine learning optimization</li>
+                    <li>Enterprise-grade security and audit capabilities</li>
+                    <li>One-script deployment across multiple environments</li>
+                    <li>Multi-agent coordination with failure recovery</li>
+                </ul>
+            </div>
+
+            <div class="subsection">
+                <h3>🎨 Technology Stack</h3>
+                <h4>Frontend Technologies</h4>
+                <div class="code-block" data-lang="technologies">
+<span class="code-keyword">Framework:</span> Next.js 15 + React 19
+<span class="code-keyword">3D Graphics:</span> Three.js + React Three Fiber + WebGL
+<span class="code-keyword">Styling:</span> Tailwind CSS + Styled Components
+<span class="code-keyword">State Management:</span> Zustand + React Query
+<span class="code-keyword">Real-time:</span> Socket.io Client + WebRTC
+                </div>
+
+                <h4>Backend Technologies</h4>
+                <div class="code-block" data-lang="technologies">
+<span class="code-keyword">API Server:</span> Python FastAPI + Uvicorn
+<span class="code-keyword">Real-time Server:</span> Node.js + Socket.io + Express
+<span class="code-keyword">Database:</span> PostgreSQL + Redis + Prisma ORM
+<span class="code-keyword">AI Integration:</span> OpenAI API + Anthropic Claude + Google Gemini
+<span class="code-keyword">ML/AI:</span> TensorFlow + PyTorch + Scikit-learn
+                </div>
+            </div>
+        </div>
+
+        <!-- Architecture Section -->
+        <div id="architecture" class="content-section">
+            <h2 class="section-title">System Architecture</h2>
+            
+            <div class="architecture-diagram">
+                <div class="layer">
+                    <div class="layer-title">🎨 Presentation Layer</div>
+                    <div class="layer-tech">Next.js 15 + React 19 + Three.js + React Three Fiber</div>
+                    <div class="layer-description">
+                        Immersive 3D user interface with real-time data visualization, gesture controls, 
+                        and responsive design. Handles all user interactions and visual representations.
+                    </div>
+                </div>
+
+                <div class="layer">
+                    <div class="layer-title">🔄 Real-time Communication Layer</div>
+                    <div class="layer-tech">Node.js + Socket.io + WebRTC + Redis Pub/Sub</div>
+                    <div class="layer-description">
+                        Manages real-time communication between agents, live workflow streaming, 
+                        and instant updates across all connected clients.
+                    </div>
+                </div>
+
+                <div class="layer">
+                    <div class="layer-title">🧠 Intelligence & Orchestration Layer</div>
+                    <div class="layer-tech">Python FastAPI + ML Models + Agent Coordination</div>
+                    <div class="layer-description">
+                        Core business logic, GOD Mode orchestration, task decomposition, 
+                        agent selection, and machine learning-powered optimization.
+                    </div>
+                </div>
+
+                <div class="layer">
+                    <div class="layer-title">💾 Data Persistence Layer</div>
+                    <div class="layer-tech">PostgreSQL + Redis + Vector Database + Prisma ORM</div>
+                    <div class="layer-description">
+                        Persistent data storage, high-speed caching, vector embeddings for AI, 
+                        and seamless data access with type-safe ORM.
+                    </div>
+                </div>
+
+                <div class="layer">
+                    <div class="layer-title">🤖 Agent Integration Layer</div>
+                    <div class="layer-tech">Claude + Gemini + GPT-4 + Custom Agents + MCP</div>
+                    <div class="layer-description">
+                        Integration with multiple AI providers, custom agent definitions, 
+                        Model Context Protocol support, and extensible plugin architecture.
+                    </div>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3>🔄 Data Flow Architecture</h3>
+                <div class="code-block" data-lang="mermaid">
+<span class="code-comment">// Simplified data flow representation</span>
+<span class="code-keyword">User Input</span> → <span class="code-function">3D Interface</span> → <span class="code-variable">WebSocket</span> → <span class="code-function">Node.js Server</span>
+     ↓
+<span class="code-function">FastAPI Backend</span> → <span class="code-function">GOD Mode Orchestrator</span> → <span class="code-function">Agent Selection</span>
+     ↓
+<span class="code-function">AI Agent Execution</span> → <span class="code-function">Result Processing</span> → <span class="code-variable">Real-time Updates</span>
+     ↓
+<span class="code-function">3D Visualization</span> ← <span class="code-variable">WebSocket</span> ← <span class="code-function">Response Streaming</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Components Section -->
+        <div id="components" class="content-section">
+            <h2 class="section-title">Component Architecture</h2>
+            
+            <div class="subsection">
+                <h3>🎨 Frontend Components</h3>
+                <div class="component-grid">
+                    <div class="component-card">
+                        <div class="component-title">Agent3DVisualization</div>
+                        <div class="component-status status-complete">Complete</div>
+                        <p>3D representation of AI agents with real-time status indicators, performance metrics, and interactive controls.</p>
+                    </div>
+
+                    <div class="component-card">
+                        <div class="component-title">WorkflowBuilder</div>
+                        <div class="component-status status-complete">Complete</div>
+                        <p>Visual workflow designer with drag-and-drop functionality, template library, and AI-assisted creation.</p>
+                    </div>
+
+                    <div class="component-card">
+                        <div class="component-title">VoiceController</div>
+                        <div class="component-status status-complete">Complete</div>
+                        <p>Voice command processing with natural language understanding and speech-to-text integration.</p>
+                    </div>
+
+                    <div class="component-card">
+                        <div class="component-title">HolographicDashboard</div>
+                        <div class="component-status status-progress">In Progress</div>
+                        <p>Floating 3D panels displaying system metrics, charts, and real-time performance data.</p>
+                    </div>
+
+                    <div class="component-card">
+                        <div class="component-title">GestureRecognition</div>
+                        <div class="component-status status-planned">Planned</div>
+                        <p>Computer vision-based gesture recognition for intuitive 3D interface control.</p>
+                    </div>
+
+                    <div class="component-card">
+                        <div class="component-title">NetworkTopology</div>
+                        <div class="component-status status-complete">Complete</div>
+                        <p>Interactive visualization of agent connections, data flow, and system dependencies.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3>🧠 Backend Components</h3>
+                <div class="component-grid">
+                    <div class="component-card">
+                        <div class="component-title">GODModeOrchestrator</div>
+                        <div class="component-status status-complete">Complete</div>
+                        <p>Central intelligence system for task decomposition, agent selection, and workflow coordination.</p>
+                    </div>
+
+                    <div class="component-card">
+                        <div class="component-title">AgentRegistry</div>
+                        <div class="component-status status-complete">Complete</div>
+                        <p>Management system for agent lifecycle, deployment, configuration, and health monitoring.</p>
+                    </div>
+
+                    <div class="component-card">
+                        <div class="component-title">FailureRecovery</div>
+                        <div class="component-status status-complete">Complete</div>
+                        <p>Advanced failure detection with automatic pivot strategies and recovery mechanisms.</p>
+                    </div>
+
+                    <div class="component-card">
+                        <div class="component-title">PredictiveAnalytics</div>
+                        <div class="component-status status-progress">In Progress</div>
+                        <p>Machine learning models for performance prediction, optimization, and intelligent recommendations.</p>
+                    </div>
+
+                    <div class="component-card">
+                        <div class="component-title">SecurityManager</div>
+                        <div class="component-status status-complete">Complete</div>
+                        <p>Enterprise-grade security with encryption, authentication, authorization, and audit trails.</p>
+                    </div>
+
+                    <div class="component-card">
+                        <div class="component-title">MCPIntegration</div>
+                        <div class="component-status status-complete">Complete</div>
+                        <p>Model Context Protocol integration for seamless communication with external AI services.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- API Reference Section -->
+        <div id="api" class="content-section">
+            <h2 class="section-title">API Reference</h2>
+            
+            <div class="subsection">
+                <h3>🔌 Core API Endpoints</h3>
+                
+                <div class="api-endpoint">
+                    <span class="api-method method-get">GET</span>
+                    <span class="api-path">/api/v1/agents</span>
+                    <p>Retrieve list of all registered AI agents with their current status and capabilities.</p>
+                </div>
+
+                <div class="api-endpoint">
+                    <span class="api-method method-post">POST</span>
+                    <span class="api-path">/api/v1/agents/deploy</span>
+                    <p>Deploy a new agent or update existing agent configuration with specified parameters.</p>
+                </div>
+
+                <div class="api-endpoint">
+                    <span class="api-method method-post">POST</span>
+                    <span class="api-path">/api/v1/workflows/create</span>
+                    <p>Create a new workflow with task definitions, agent assignments, and execution parameters.</p>
+                </div>
+
+                <div class="api-endpoint">
+                    <span class="api-method method-get">GET</span>
+                    <span class="api-path">/api/v1/workflows/{id}/status</span>
+                    <p>Get real-time status of workflow execution including progress, agent activities, and results.</p>
+                </div>
+
+                <div class="api-endpoint">
+                    <span class="api-method method-post">POST</span>
+                    <span class="api-path">/api/v1/godmode/execute</span>
+                    <p>Execute GOD Mode orchestration with intelligent task decomposition and agent coordination.</p>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3>📡 WebSocket Events</h3>
+                <div class="code-block" data-lang="javascript">
+<span class="code-comment">// Real-time agent status updates</span>
+<span class="code-keyword">socket</span>.<span class="code-function">on</span>(<span class="code-string">'agent:status'</span>, (<span class="code-variable">data</span>) => {
+  <span class="code-comment">// Handle agent status changes</span>
+  <span class="code-function">updateAgentVisualization</span>(<span class="code-variable">data</span>.<span class="code-variable">agentId</span>, <span class="code-variable">data</span>.<span class="code-variable">status</span>);
+});
+
+<span class="code-comment">// Workflow execution progress</span>
+<span class="code-keyword">socket</span>.<span class="code-function">on</span>(<span class="code-string">'workflow:progress'</span>, (<span class="code-variable">data</span>) => {
+  <span class="code-comment">// Update workflow visualization</span>
+  <span class="code-function">updateWorkflowProgress</span>(<span class="code-variable">data</span>.<span class="code-variable">workflowId</span>, <span class="code-variable">data</span>.<span class="code-variable">progress</span>);
+});
+
+<span class="code-comment">// GOD Mode orchestration events</span>
+<span class="code-keyword">socket</span>.<span class="code-function">on</span>(<span class="code-string">'godmode:task_assigned'</span>, (<span class="code-variable">data</span>) => {
+  <span class="code-comment">// Visualize task assignment</span>
+  <span class="code-function">showTaskAssignment</span>(<span class="code-variable">data</span>.<span class="code-variable">taskId</span>, <span class="code-variable">data</span>.<span class="code-variable">agentId</span>);
+});
+                </div>
+            </div>
+        </div>
+
+        <!-- Deployment Section -->
+        <div id="deployment" class="content-section">
+            <h2 class="section-title">Deployment Guide</h2>
+            
+            <div class="subsection">
+                <h3>🚀 One-Script Deployment</h3>
+                <div class="code-block" data-lang="bash">
+<span class="code-comment"># Quick deployment (recommended)</span>
+<span class="code-keyword">curl</span> -sSL https://dirk-brain.com/install | <span class="code-keyword">bash</span>
+
+<span class="code-comment"># Manual deployment</span>
+<span class="code-keyword">git clone</span> <span class="code-string">https://github.com/dirk-brain/portal.git</span>
+<span class="code-keyword">cd</span> portal
+<span class="code-keyword">chmod +x</span> deploy-dirk-brain.sh
+<span class="code-keyword">./deploy-dirk-brain.sh</span>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3>⚙️ Configuration Options</h3>
+                <div class="code-block" data-lang="yaml">
+<span class="code-comment"># dirk-brain-config.yml</span>
+<span class="code-keyword">deployment:</span>
+  <span class="code-variable">mode:</span> <span class="code-string">"production"</span>  <span class="code-comment"># development, staging, production</span>
+  <span class="code-variable">port:</span> <span class="code-number">3000</span>
+  <span class="code-variable">ssl:</span> <span class="code-keyword">true</span>
+
+<span class="code-keyword">agents:</span>
+  <span class="code-variable">claude:</span>
+    <span class="code-variable">enabled:</span> <span class="code-keyword">true</span>
+    <span class="code-variable">api_key:</span> <span class="code-string">"${CLAUDE_API_KEY}"</span>
+  <span class="code-variable">gemini:</span>
+    <span class="code-variable">enabled:</span> <span class="code-keyword">true</span>
+    <span class="code-variable">api_key:</span> <span class="code-string">"${GEMINI_API_KEY}"</span>
+  <span class="code-variable">gpt4:</span>
+    <span class="code-variable">enabled:</span> <span class="code-keyword">true</span>
+    <span class="code-variable">api_key:</span> <span class="code-string">"${OPENAI_API_KEY}"</span>
+
+<span class="code-keyword">features:</span>
+  <span class="code-variable">voice_control:</span> <span class="code-keyword">true</span>
+  <span class="code-variable">gesture_recognition:</span> <span class="code-keyword">false</span>
+  <span class="code-variable">holographic_ui:</span> <span class="code-keyword">true</span>
+  <span class="code-variable">predictive_analytics:</span> <span class="code-keyword">true</span>
+
+<span class="code-keyword">database:</span>
+  <span class="code-variable">url:</span> <span class="code-string">"postgresql://user:pass@localhost:5432/dirkbrain"</span>
+  <span class="code-variable">redis_url:</span> <span class="code-string">"redis://localhost:6379"</span>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3>🐳 Docker Deployment</h3>
+                <div class="code-block" data-lang="dockerfile">
+<span class="code-comment"># Dockerfile</span>
+<span class="code-keyword">FROM</span> node:18-alpine <span class="code-keyword">AS</span> frontend
+<span class="code-keyword">WORKDIR</span> /app/frontend
+<span class="code-keyword">COPY</span> frontend/package*.json ./
+<span class="code-keyword">RUN</span> npm ci --only=production
+<span class="code-keyword">COPY</span> frontend/ ./
+<span class="code-keyword">RUN</span> npm run build
+
+<span class="code-keyword">FROM</span> python:3.11-slim <span class="code-keyword">AS</span> backend
+<span class="code-keyword">WORKDIR</span> /app/backend
+<span class="code-keyword">COPY</span> backend/requirements.txt ./
+<span class="code-keyword">RUN</span> pip install --no-cache-dir -r requirements.txt
+<span class="code-keyword">COPY</span> backend/ ./
+
+<span class="code-keyword">FROM</span> nginx:alpine <span class="code-keyword">AS</span> production
+<span class="code-keyword">COPY</span> --from=frontend /app/frontend/dist /usr/share/nginx/html
+<span class="code-keyword">COPY</span> --from=backend /app/backend /app/backend
+<span class="code-keyword">EXPOSE</span> 80 8000
+<span class="code-keyword">CMD</span> [<span class="code-string">"nginx"</span>, <span class="code-string">"-g"</span>, <span class="code-string">"daemon off;"</span>]
+                </div>
+            </div>
+        </div>
+
+        <!-- Performance Section -->
+        <div id="performance" class="content-section">
+            <h2 class="section-title">Performance Metrics</h2>
+            
+            <div class="subsection">
+                <h3>📊 System Performance</h3>
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <span class="metric-value">&lt;100ms</span>
+                        <span class="metric-label">API Response Time</span>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-value">60fps</span>
+                        <span class="metric-label">3D Rendering</span>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-value">&lt;50ms</span>
+                        <span class="metric-label">WebSocket Latency</span>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-value">99.9%</span>
+                        <span class="metric-label">Uptime</span>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-value">1000+</span>
+                        <span class="metric-label">Concurrent Users</span>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-value">10GB</span>
+                        <span class="metric-label">Memory Efficiency</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3>🚀 Optimization Strategies</h3>
+                <ul class="feature-list">
+                    <li>WebGL-optimized 3D rendering with level-of-detail (LOD) management</li>
+                    <li>Redis caching for frequently accessed data and API responses</li>
+                    <li>WebSocket connection pooling for efficient real-time communication</li>
+                    <li>Lazy loading of 3D models and textures to reduce initial load time</li>
+                    <li>Database query optimization with proper indexing and connection pooling</li>
+                    <li>CDN integration for static asset delivery and global performance</li>
+                    <li>Progressive Web App (PWA) features for offline functionality</li>
+                    <li>Code splitting and tree shaking for minimal bundle sizes</li>
+                </ul>
+            </div>
+
+            <div class="subsection">
+                <h3>📈 Scalability Architecture</h3>
+                <div class="code-block" data-lang="yaml">
+<span class="code-comment"># Kubernetes deployment configuration</span>
+<span class="code-keyword">apiVersion:</span> apps/v1
+<span class="code-keyword">kind:</span> Deployment
+<span class="code-keyword">metadata:</span>
+  <span class="code-variable">name:</span> dirk-brain-portal
+<span class="code-keyword">spec:</span>
+  <span class="code-variable">replicas:</span> <span class="code-number">3</span>
+  <span class="code-variable">selector:</span>
+    <span class="code-variable">matchLabels:</span>
+      <span class="code-variable">app:</span> dirk-brain-portal
+  <span class="code-variable">template:</span>
+    <span class="code-variable">spec:</span>
+      <span class="code-variable">containers:</span>
+      - <span class="code-variable">name:</span> frontend
+        <span class="code-variable">image:</span> dirkbrain/portal-frontend:latest
+        <span class="code-variable">resources:</span>
+          <span class="code-variable">requests:</span>
+            <span class="code-variable">memory:</span> <span class="code-string">"512Mi"</span>
+            <span class="code-variable">cpu:</span> <span class="code-string">"250m"</span>
+          <span class="code-variable">limits:</span>
+            <span class="code-variable">memory:</span> <span class="code-string">"1Gi"</span>
+            <span class="code-variable">cpu:</span> <span class="code-string">"500m"</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+
+        // Add smooth scrolling and intersection observer for animations
+        document.addEventListener('DOMContentLoaded', function() {
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            // Observe all subsections
+            document.querySelectorAll('.subsection, .component-card, .metric-card').forEach(element => {
+                element.style.opacity = '0';
+                element.style.transform = 'translateY(20px)';
+                element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(element);
+            });
+        });
+    </script>
+</body>
+</html>

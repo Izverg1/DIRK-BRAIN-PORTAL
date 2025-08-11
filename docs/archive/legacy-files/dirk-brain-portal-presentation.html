@@ -1,0 +1,1891 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIRK BRAIN Portal - AI Agent Orchestration Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Orbitron', 'Courier New', monospace;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 25%, #16213e 50%, #0f0f23 75%, #000000 100%);
+            color: #00ffff;
+            overflow: hidden;
+            height: 100vh;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(circle at 20% 80%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 0, 255, 0.1) 0%, transparent 50%),
+                linear-gradient(45deg, transparent 49%, rgba(0, 255, 255, 0.03) 50%, transparent 51%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .presentation-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+        }
+
+        .slide {
+            display: none;
+            width: 95%;
+            max-width: 1400px;
+            height: 90vh;
+            padding: 30px;
+            text-align: center;
+            animation: slideIn 0.5s ease-in-out;
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.05) 0%, rgba(0, 0, 0, 0.8) 100%);
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow:
+                0 0 50px rgba(0, 255, 255, 0.2),
+                inset 0 0 50px rgba(0, 255, 255, 0.05);
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #00ffff 0%, #ff00ff 50%, #ffff00 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(0, 255, 255, 0.8);
+            line-height: 1.1;
+            font-family: 'Orbitron', monospace;
+            letter-spacing: 2px;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #00ffff;
+            text-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
+            font-family: 'Orbitron', monospace;
+            letter-spacing: 1px;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: #ff00ff;
+            text-shadow: 0 0 15px rgba(255, 0, 255, 0.6);
+            font-family: 'Orbitron', monospace;
+        }
+
+        p {
+            font-size: 1.1rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+            color: #b0e0e6;
+            font-family: 'Courier New', monospace;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #ffff00;
+            margin-bottom: 1.5rem;
+            font-weight: 300;
+            text-shadow: 0 0 10px rgba(255, 255, 0, 0.6);
+            font-family: 'Courier New', monospace;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0.9) 100%);
+            border: 1px solid rgba(0, 255, 255, 0.4);
+            border-radius: 15px;
+            padding: 1.2rem;
+            text-align: left;
+            transition: all 0.3s ease;
+            box-shadow:
+                0 5px 15px rgba(0, 255, 255, 0.2),
+                inset 0 1px 0 rgba(0, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .feature-card:hover::before {
+            left: 100%;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-3px);
+            box-shadow:
+                0 15px 30px rgba(0, 255, 255, 0.3),
+                inset 0 1px 0 rgba(0, 255, 255, 0.2);
+            border-color: rgba(0, 255, 255, 0.8);
+        }
+
+        .feature-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #00ffff;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.6);
+            font-family: 'Orbitron', monospace;
+            letter-spacing: 0.5px;
+        }
+
+        .feature-description {
+            font-size: 0.85rem;
+            color: #b0e0e6;
+            line-height: 1.4;
+            font-family: 'Courier New', monospace;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0.9) 100%);
+            border: 1px solid rgba(0, 255, 255, 0.4);
+            border-radius: 12px;
+            padding: 1.2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00ffff, transparent);
+            animation: scan 2s linear infinite;
+        }
+
+        @keyframes scan {
+            0% {
+                transform: translateX(-100%);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        .stat-number {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #00ffff;
+            display: block;
+            text-shadow: 0 0 15px rgba(0, 255, 255, 0.8);
+            font-family: 'Orbitron', monospace;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #b0e0e6;
+            margin-top: 0.3rem;
+            font-family: 'Courier New', monospace;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.5rem;
+            margin: 1rem 0;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .tech-badge {
+            background: rgba(0, 255, 255, 0.15);
+            border: 1px solid rgba(0, 255, 255, 0.5);
+            border-radius: 20px;
+            padding: 0.3rem 0.8rem;
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: #00ffff;
+            box-shadow: 0 0 8px rgba(0, 255, 255, 0.3);
+            font-family: 'Courier New', monospace;
+            transition: all 0.3s ease;
+        }
+
+        .tech-badge:hover {
+            background: rgba(0, 255, 255, 0.25);
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 1rem;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(0, 0, 0, 0.8));
+            color: #00ffff;
+            border: 1px solid rgba(0, 255, 255, 0.5);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+            font-family: 'Orbitron', monospace;
+            font-size: 0.8rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 255, 255, 0.5);
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.3), rgba(0, 0, 0, 0.9));
+            border-color: rgba(0, 255, 255, 0.8);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .slide-counter {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 8px 16px;
+            border-radius: 15px;
+            border: 1px solid rgba(0, 255, 255, 0.5);
+            color: #00ffff;
+            font-weight: 600;
+            font-family: 'Orbitron', monospace;
+            font-size: 0.8rem;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+            z-index: 1000;
+        }
+
+        .architecture-diagram {
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0.9) 100%);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border: 1px solid rgba(0, 255, 255, 0.4);
+            box-shadow: 0 8px 25px rgba(0, 255, 255, 0.2);
+            max-height: 50vh;
+            overflow-y: auto;
+        }
+
+        .layer-box {
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0.8) 100%);
+            border: 1px solid rgba(0, 255, 255, 0.4);
+            border-radius: 8px;
+            padding: 0.8rem;
+            margin: 0.5rem 0;
+            text-align: left;
+            box-shadow: 0 3px 10px rgba(0, 255, 255, 0.1);
+            position: relative;
+        }
+
+        .layer-box::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(180deg, #00ffff, #ff00ff);
+            border-radius: 0 3px 3px 0;
+        }
+
+        .layer-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #00ffff;
+            margin-bottom: 0.3rem;
+            text-shadow: 0 0 8px rgba(0, 255, 255, 0.6);
+            font-family: 'Orbitron', monospace;
+        }
+
+        .bullet-list {
+            text-align: left;
+            margin: 1rem 0;
+            max-height: 50vh;
+            overflow-y: auto;
+            padding-right: 1rem;
+        }
+
+        .bullet-list li {
+            font-size: 0.9rem;
+            margin: 0.5rem 0;
+            color: #b0e0e6;
+            list-style: none;
+            position: relative;
+            padding-left: 1.5rem;
+            font-family: 'Courier New', monospace;
+            line-height: 1.4;
+        }
+
+        .bullet-list li::before {
+            content: "►";
+            color: #00ffff;
+            position: absolute;
+            left: 0;
+            top: 0;
+            text-shadow: 0 0 5px rgba(0, 255, 255, 0.8);
+        }
+
+        .cta-section {
+            margin-top: 1.5rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(0, 0, 0, 0.8));
+            color: #00ffff;
+            padding: 0.6rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            margin: 0.5rem;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+            border: 1px solid rgba(0, 255, 255, 0.5);
+            font-family: 'Orbitron', monospace;
+            backdrop-filter: blur(10px);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 255, 255, 0.5);
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.3), rgba(0, 0, 0, 0.9));
+            border-color: rgba(0, 255, 255, 0.8);
+        }
+
+        .demo-video {
+            width: 100%;
+            max-width: 600px;
+            height: 300px;
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0.9) 100%);
+            border: 2px solid rgba(0, 255, 255, 0.4);
+            border-radius: 15px;
+            margin: 1rem auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #00ffff;
+            font-size: 1.2rem;
+            font-family: 'Orbitron', monospace;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .demo-video::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.1), transparent);
+            animation: scan 3s linear infinite;
+        }
+
+        /* Interactive Card Styles for All Slides */
+        .interactive-card {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .interactive-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 255, 255, 0.4);
+        }
+
+        .interactive-card.active {
+            border-color: rgba(255, 0, 255, 0.8);
+            box-shadow: 0 0 25px rgba(255, 0, 255, 0.4);
+            transform: scale(1.02);
+        }
+
+        .interactive-card::after {
+            content: '👆 Click to explore';
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.6rem;
+            color: rgba(0, 255, 255, 0.6);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            font-family: 'Courier New', monospace;
+        }
+
+        .interactive-card:hover::after {
+            opacity: 1;
+        }
+
+        .visualization-area {
+            margin-top: 2rem;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 255, 255, 0.05) 100%);
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            border-radius: 15px;
+            padding: 1.5rem;
+            min-height: 280px;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .visualization-area::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 0, 255, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .viz-container {
+            position: relative;
+            z-index: 2;
+        }
+
+        .viz-title {
+            font-size: 1.2rem;
+            color: #00ffff;
+            text-align: center;
+            margin-bottom: 0.5rem;
+            font-family: 'Orbitron', monospace;
+            text-shadow: 0 0 15px rgba(0, 255, 255, 0.8);
+        }
+
+        .viz-subtitle {
+            font-size: 0.8rem;
+            color: #ffff00;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-family: 'Courier New', monospace;
+            opacity: 0.8;
+        }
+
+        .viz-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 200px;
+            position: relative;
+        }
+
+        .viz-description {
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 1rem;
+            font-size: 0.8rem;
+            color: #b0e0e6;
+            font-family: 'Courier New', monospace;
+            line-height: 1.4;
+            max-width: 80%;
+            text-align: center;
+        }
+
+        /* Complex Workflows Animation */
+        .workflow-chaos {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            width: 100%;
+        }
+
+        .workflow-node {
+            width: 60px;
+            height: 60px;
+            border: 2px solid #ff0066;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            color: #ff0066;
+            position: relative;
+            animation: chaosFloat 2s ease-in-out infinite;
+        }
+
+        .workflow-node::after {
+            content: '';
+            position: absolute;
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(90deg, #ff0066, transparent);
+            top: 50%;
+            left: 100%;
+            animation: chaosLine 1.5s ease-in-out infinite;
+        }
+
+        @keyframes chaosFloat {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-10px) rotate(180deg);
+            }
+        }
+
+        @keyframes chaosLine {
+
+            0%,
+            100% {
+                opacity: 0.3;
+                transform: scaleX(0.5);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scaleX(1.2);
+            }
+        }
+
+        /* Limited Visibility Animation */
+        .visibility-problem {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .flat-interface {
+            width: 200px;
+            height: 120px;
+            border: 2px solid #666;
+            background: linear-gradient(135deg, #333, #111);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+            position: relative;
+        }
+
+        .flat-interface::before {
+            content: 'Traditional 2D View';
+            position: absolute;
+            top: -25px;
+            left: 0;
+            font-size: 0.7rem;
+            color: #666;
+        }
+
+        .flat-bar {
+            height: 8px;
+            background: #666;
+            margin: 4px 0;
+            border-radius: 4px;
+            animation: flatPulse 2s ease-in-out infinite;
+        }
+
+        .hidden-complexity {
+            width: 200px;
+            height: 120px;
+            border: 2px dashed #ff0066;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ff0066;
+            font-size: 0.8rem;
+            text-align: center;
+            position: relative;
+            animation: hiddenGlow 2s ease-in-out infinite;
+        }
+
+        .hidden-complexity::before {
+            content: 'Hidden 3D Reality';
+            position: absolute;
+            top: -25px;
+            left: 0;
+            font-size: 0.7rem;
+            color: #ff0066;
+        }
+
+        @keyframes flatPulse {
+
+            0%,
+            100% {
+                opacity: 0.3;
+            }
+
+            50% {
+                opacity: 0.8;
+            }
+        }
+
+        @keyframes hiddenGlow {
+
+            0%,
+            100% {
+                box-shadow: 0 0 5px rgba(255, 0, 102, 0.3);
+            }
+
+            50% {
+                box-shadow: 0 0 20px rgba(255, 0, 102, 0.8);
+            }
+        }
+
+        /* Manual Coordination Animation */
+        .coordination-problem {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            position: relative;
+        }
+
+        .developer-icon {
+            width: 80px;
+            height: 80px;
+            border: 3px solid #ffff00;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: #ffff00;
+            position: relative;
+            animation: developerStress 1.5s ease-in-out infinite;
+        }
+
+        .coordination-line {
+            position: absolute;
+            width: 2px;
+            height: 60px;
+            background: linear-gradient(180deg, #ffff00, transparent);
+            animation: coordinationPulse 1s ease-in-out infinite;
+        }
+
+        .agent-cluster {
+            display: flex;
+            gap: 10px;
+            margin: 0 30px;
+        }
+
+        .mini-agent {
+            width: 30px;
+            height: 30px;
+            border: 2px solid #ff0066;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            color: #ff0066;
+            animation: agentChaos 2s ease-in-out infinite;
+        }
+
+        @keyframes developerStress {
+
+            0%,
+            100% {
+                transform: scale(1);
+                border-color: #ffff00;
+            }
+
+            50% {
+                transform: scale(1.1);
+                border-color: #ff0066;
+            }
+        }
+
+        @keyframes coordinationPulse {
+
+            0%,
+            100% {
+                opacity: 0.3;
+                transform: scaleY(0.5);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scaleY(1.2);
+            }
+        }
+
+        @keyframes agentChaos {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            25% {
+                transform: translateY(-15px) rotate(90deg);
+            }
+
+            75% {
+                transform: translateY(15px) rotate(-90deg);
+            }
+        }
+
+        /* Fragmented Tools Animation */
+        .fragmentation-problem {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            width: 100%;
+        }
+
+        .tool-fragment {
+            width: 100px;
+            height: 80px;
+            border: 2px solid #00ffff;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            color: #00ffff;
+            position: relative;
+            animation: fragmentFloat 3s ease-in-out infinite;
+        }
+
+        .tool-fragment::after {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #ff0066, transparent);
+            top: 50%;
+            left: 100%;
+            animation: brokenConnection 2s ease-in-out infinite;
+        }
+
+        .disconnect-symbol {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ff0066;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            color: #ff0066;
+            animation: disconnectPulse 1s ease-in-out infinite;
+        }
+
+        @keyframes fragmentFloat {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            33% {
+                transform: translateY(-10px) rotate(5deg);
+            }
+
+            66% {
+                transform: translateY(10px) rotate(-5deg);
+            }
+        }
+
+        @keyframes brokenConnection {
+
+            0%,
+            100% {
+                opacity: 0.2;
+                transform: scaleX(0.3);
+            }
+
+            50% {
+                opacity: 0.8;
+                transform: scaleX(0.7);
+            }
+        }
+
+        @keyframes disconnectPulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.2);
+            }
+        }
+
+        /* Enhanced Challenge Animations */
+        .workflow-chaos {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 150px;
+            position: relative;
+        }
+
+        .workflow-center {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            border: 3px solid #ffff00;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            color: #ffff00;
+            background: rgba(255, 255, 0, 0.1);
+            animation: centerOverload 2s ease-in-out infinite;
+        }
+
+        .workflow-satellite {
+            position: absolute;
+            width: 35px;
+            height: 35px;
+            border: 2px solid #ff0066;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            color: #ff0066;
+            background: rgba(255, 0, 102, 0.1);
+        }
+
+        @keyframes centerOverload {
+
+            0%,
+            100% {
+                transform: scale(1);
+                border-color: #ffff00;
+                box-shadow: 0 0 10px rgba(255, 255, 0, 0.3);
+            }
+
+            50% {
+                transform: scale(1.2);
+                border-color: #ff0066;
+                box-shadow: 0 0 25px rgba(255, 0, 102, 0.6);
+            }
+        }
+
+        /* Enhanced Solution Animations */
+        .solution-3d {
+            width: 100%;
+            height: 150px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .solution-sphere {
+            width: 80px;
+            height: 80px;
+            border: 3px solid #00ffff;
+            border-radius: 50%;
+            position: relative;
+            animation: solution3DRotate 4s linear infinite;
+            background: radial-gradient(circle, rgba(0, 255, 255, 0.2), transparent);
+        }
+
+        .solution-orbit {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ff00ff;
+            border-radius: 50%;
+            background: rgba(255, 0, 255, 0.3);
+        }
+
+        @keyframes solution3DRotate {
+            0% {
+                transform: rotateY(0deg) rotateX(0deg);
+            }
+
+            25% {
+                transform: rotateY(90deg) rotateX(15deg);
+            }
+
+            50% {
+                transform: rotateY(180deg) rotateX(0deg);
+            }
+
+            75% {
+                transform: rotateY(270deg) rotateX(-15deg);
+            }
+
+            100% {
+                transform: rotateY(360deg) rotateX(0deg);
+            }
+        }
+
+        /* Architecture Animation */
+        .architecture-flow {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            width: 100%;
+        }
+
+        .arch-layer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.6rem;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 8px;
+            background: linear-gradient(90deg, rgba(0, 255, 255, 0.1), transparent);
+            position: relative;
+            overflow: hidden;
+            font-size: 0.8rem;
+        }
+
+        .arch-layer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.2), transparent);
+            animation: archFlow 3s linear infinite;
+        }
+
+        @keyframes archFlow {
+            0% {
+                left: -100%;
+            }
+
+            100% {
+                left: 100%;
+            }
+        }
+
+        /* Technology Constellation */
+        .tech-constellation {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 150px;
+            position: relative;
+        }
+
+        .tech-star {
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            border: 2px solid #00ffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.5rem;
+            color: #00ffff;
+            background: rgba(0, 255, 255, 0.1);
+            animation: techTwinkle 2s ease-in-out infinite;
+        }
+
+        @keyframes techTwinkle {
+
+            0%,
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
+            }
+
+            50% {
+                transform: scale(1.2);
+                box-shadow: 0 0 15px rgba(0, 255, 255, 0.8);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="presentation-container">
+        <div class="slide-counter">
+            <span id="current-slide">1</span> / <span id="total-slides">9</span>
+        </div>
+
+        <!-- Slide 1: Title -->
+        <div class="slide active">
+            <h1>DIRK BRAIN Portal</h1>
+            <p class="subtitle">The Ultimate AI Agent Orchestration Platform</p>
+            <p>Transform your development workflow with immersive 3D visualization, intelligent agent coordination, and
+                cutting-edge automation.</p>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number">95%</span>
+                    <div class="stat-label">Implementation Complete</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">40+</span>
+                    <div class="stat-label">Components Built</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">3D</span>
+                    <div class="stat-label">Immersive Experience</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: The Problem -->
+        <div class="slide">
+            <h2>The Challenge</h2>
+            <p class="subtitle">Modern development faces complex orchestration challenges</p>
+            <div class="feature-grid">
+                <div class="feature-card interactive-card"
+                    onclick="showVisualization('challenge', 'complex-workflows')">
+                    <div class="feature-title">🔄 Complex Workflows</div>
+                    <div class="feature-description">Managing multiple AI agents, tasks, and dependencies becomes
+                        overwhelming without proper visualization and coordination.</div>
+                </div>
+                <div class="feature-card interactive-card"
+                    onclick="showVisualization('challenge', 'limited-visibility')">
+                    <div class="feature-title">📊 Limited Visibility</div>
+                    <div class="feature-description">Traditional tools provide flat, 2D interfaces that fail to
+                        represent the dynamic, interconnected nature of AI systems.</div>
+                </div>
+                <div class="feature-card interactive-card"
+                    onclick="showVisualization('challenge', 'manual-coordination')">
+                    <div class="feature-title">⚡ Manual Coordination</div>
+                    <div class="feature-description">Developers spend too much time manually coordinating agents instead
+                        of focusing on creative problem-solving.</div>
+                </div>
+                <div class="feature-card interactive-card" onclick="showVisualization('challenge', 'fragmented-tools')">
+                    <div class="feature-title">🎯 Fragmented Tools</div>
+                    <div class="feature-description">Multiple disconnected tools create friction and reduce productivity
+                        in AI-driven development workflows.</div>
+                </div>
+            </div>
+
+            <!-- Interactive Visualization Area -->
+            <div class="visualization-area" id="viz-area-2">
+                <div class="viz-container">
+                    <div class="viz-title" id="viz-title-2">👆 Click any challenge above to see detailed problem
+                        visualization</div>
+                    <div class="viz-subtitle" id="viz-subtitle-2">Interactive animations will show you exactly what goes
+                        wrong</div>
+                    <div class="viz-content" id="viz-content-2">
+                        <div
+                            style="text-align: center; color: rgba(0, 255, 255, 0.5); font-size: 3rem; margin: 2rem 0;">
+                            ⚡</div>
+                    </div>
+                    <div class="viz-description" id="viz-description-2">
+                        Select a challenge card to see an animated demonstration of the problem. Each visualization
+                        shows the real-world impact on development workflows.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: The Solution -->
+        <div class="slide">
+            <h2>DIRK BRAIN Portal Solution</h2>
+            <p class="subtitle">A revolutionary 3D AI agent orchestration platform</p>
+            <div class="feature-grid">
+                <div class="feature-card interactive-card" onclick="showVisualization('solution', '3d-interface')">
+                    <div class="feature-title">🌐 Immersive 3D Interface</div>
+                    <div class="feature-description">Visualize your AI agents in a stunning 3D environment with
+                        real-time performance metrics and interactive controls.</div>
+                </div>
+                <div class="feature-card interactive-card" onclick="showVisualization('solution', 'god-mode')">
+                    <div class="feature-title">🤖 GOD Mode Orchestration</div>
+                    <div class="feature-description">Intelligent task decomposition and automatic agent selection with
+                        machine learning-based optimization.</div>
+                </div>
+                <div class="feature-card interactive-card" onclick="showVisualization('solution', 'voice-control')">
+                    <div class="feature-title">🔊 Voice & Gesture Control</div>
+                    <div class="feature-description">Natural language commands and intuitive gesture controls for
+                        seamless interaction with your AI ecosystem.</div>
+                </div>
+                <div class="feature-card interactive-card"
+                    onclick="showVisualization('solution', 'realtime-coordination')">
+                    <div class="feature-title">📡 Real-time Coordination</div>
+                    <div class="feature-description">Live agent communication, workflow streaming, and performance
+                        monitoring with beautiful data visualizations.</div>
+                </div>
+            </div>
+
+            <!-- Interactive Visualization Area -->
+            <div class="visualization-area" id="viz-area-3">
+                <div class="viz-container">
+                    <div class="viz-title" id="viz-title-3">👆 Click any solution above to see how DIRK BRAIN Portal
+                        works</div>
+                    <div class="viz-subtitle" id="viz-subtitle-3">Interactive demonstrations of revolutionary features
+                    </div>
+                    <div class="viz-content" id="viz-content-3">
+                        <div
+                            style="text-align: center; color: rgba(0, 255, 255, 0.5); font-size: 3rem; margin: 2rem 0;">
+                            🚀</div>
+                    </div>
+                    <div class="viz-description" id="viz-description-3">
+                        Select a solution card to see an animated demonstration of how DIRK BRAIN Portal solves
+                        development challenges with cutting-edge technology.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Architecture -->
+        <div class="slide">
+            <h2>System Architecture</h2>
+            <p class="subtitle">Hybrid backend with immersive frontend experience</p>
+            <div class="feature-grid">
+                <div class="feature-card interactive-card"
+                    onclick="showVisualization('architecture', 'frontend-layer')">
+                    <div class="feature-title">🎨 Frontend Layer</div>
+                    <div class="feature-description">Next.js 15 + React 19 + Three.js + React Three Fiber for immersive
+                        3D experiences</div>
+                </div>
+                <div class="feature-card interactive-card"
+                    onclick="showVisualization('architecture', 'realtime-layer')">
+                    <div class="feature-title">🔄 Real-time Layer</div>
+                    <div class="feature-description">Node.js + Socket.io for instant agent communication and live
+                        workflow streaming</div>
+                </div>
+                <div class="feature-card interactive-card"
+                    onclick="showVisualization('architecture', 'intelligence-layer')">
+                    <div class="feature-title">🧠 Intelligence Layer</div>
+                    <div class="feature-description">Python FastAPI + ML models for GOD mode orchestration and
+                        predictive analytics</div>
+                </div>
+                <div class="feature-card interactive-card" onclick="showVisualization('architecture', 'data-layer')">
+                    <div class="feature-title">💾 Data Layer</div>
+                    <div class="feature-description">PostgreSQL + Redis + Prisma ORM for persistent storage and caching
+                    </div>
+                </div>
+                <div class="feature-card interactive-card"
+                    onclick="showVisualization('architecture', 'integration-layer')">
+                    <div class="feature-title">🔌 Integration Layer</div>
+                    <div class="feature-description">MCP servers + Service integrations + DIRK protocol compatibility
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interactive Visualization Area -->
+            <div class="visualization-area" id="viz-area-4">
+                <div class="viz-container">
+                    <div class="viz-title" id="viz-title-4">👆 Click any layer to see architectural flow visualization
+                    </div>
+                    <div class="viz-subtitle" id="viz-subtitle-4">Watch data flow through the hybrid system architecture
+                    </div>
+                    <div class="viz-content" id="viz-content-4">
+                        <div
+                            style="text-align: center; color: rgba(0, 255, 255, 0.5); font-size: 3rem; margin: 2rem 0;">
+                            🏗️</div>
+                    </div>
+                    <div class="viz-description" id="viz-description-4">
+                        Select an architectural layer to see how data flows through the system. Each layer has specific
+                        responsibilities and communicates with others through well-defined interfaces.
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layer-box">
+            <div class="layer-title">💾 Data Layer</div>
+            <p>PostgreSQL + Redis + Prisma ORM for persistent storage and caching</p>
+        </div>
+        <div class="layer-box">
+            <div class="layer-title">🔌 Integration Layer</div>
+            <p>MCP servers + Service integrations + DIRK protocol compatibility</p>
+        </div>
+    </div>
+    </div>
+
+    <!-- Slide 5: Key Features -->
+    <div class="slide">
+        <h2>Revolutionary Features</h2>
+        <p class="subtitle">Experience the future of AI development</p>
+        <div class="feature-grid">
+            <div class="feature-card interactive-card" onclick="showVisualization('features', '3d-universe')">
+                <div class="feature-title">🌌 3D Agent Universe</div>
+                <div class="feature-description">Visualize agents as dynamic entities with real-time performance
+                    indicators</div>
+            </div>
+            <div class="feature-card interactive-card"
+                onclick="showVisualization('features', 'holographic-dashboards')">
+                <div class="feature-title">📊 Holographic Dashboards</div>
+                <div class="feature-description">Floating 3D panels with metrics, charts, and system status</div>
+            </div>
+            <div class="feature-card interactive-card" onclick="showVisualization('features', 'data-tunnels')">
+                <div class="feature-title">🌊 Data Tunnels</div>
+                <div class="feature-description">Time-series visualization through immersive particle streams</div>
+            </div>
+            <div class="feature-card interactive-card" onclick="showVisualization('features', 'voice-commands')">
+                <div class="feature-title">🗣️ Voice Commands</div>
+                <div class="feature-description">Natural language workflow creation and agent control</div>
+            </div>
+            <div class="feature-card interactive-card" onclick="showVisualization('features', 'network-topology')">
+                <div class="feature-title">🕸️ Network Topology</div>
+                <div class="feature-description">Interactive visualization of agent connections and data flow</div>
+            </div>
+            <div class="feature-card interactive-card" onclick="showVisualization('features', 'god-mode')">
+                <div class="feature-title">⚡ GOD Mode</div>
+                <div class="feature-description">Intelligent task decomposition with automatic agent selection</div>
+            </div>
+        </div>
+
+        <!-- Interactive Visualization Area -->
+        <div class="visualization-area" id="viz-area-5">
+            <div class="viz-container">
+                <div class="viz-title" id="viz-title-5">👆 Click any feature to see it in action</div>
+                <div class="viz-subtitle" id="viz-subtitle-5">Interactive demonstrations of revolutionary capabilities
+                </div>
+                <div class="viz-content" id="viz-content-5">
+                    <div style="text-align: center; color: rgba(0, 255, 255, 0.5); font-size: 3rem; margin: 2rem 0;">✨
+                    </div>
+                </div>
+                <div class="viz-description" id="viz-description-5">
+                    Select a feature card to see an animated demonstration of how each revolutionary capability
+                    transforms the development experience.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 6: Technology Stack -->
+    <div class="slide">
+        <h2>Cutting-Edge Technology</h2>
+        <p class="subtitle">Built with the latest and greatest technologies</p>
+        <div class="feature-grid">
+            <div class="feature-card interactive-card" onclick="showVisualization('technology', 'frontend-stack')">
+                <div class="feature-title">🎨 Frontend Excellence</div>
+                <div class="feature-description">Next.js 15, React 19, Three.js, React Three Fiber for cutting-edge 3D
+                    graphics</div>
+            </div>
+            <div class="feature-card interactive-card" onclick="showVisualization('technology', 'backend-stack')">
+                <div class="feature-title">🧠 Backend Intelligence</div>
+                <div class="feature-description">Python FastAPI, Node.js hybrid architecture for optimal performance
+                </div>
+            </div>
+            <div class="feature-card interactive-card" onclick="showVisualization('technology', 'realtime-stack')">
+                <div class="feature-title">⚡ Real-time Communication</div>
+                <div class="feature-description">Socket.io, WebSocket-based instant updates and live data streaming
+                </div>
+            </div>
+            <div class="feature-card interactive-card" onclick="showVisualization('technology', 'data-stack')">
+                <div class="feature-title">💾 Data Management</div>
+                <div class="feature-description">PostgreSQL, Redis, Prisma ORM for robust data persistence and caching
+                </div>
+            </div>
+            <div class="feature-card interactive-card" onclick="showVisualization('technology', 'ui-stack')">
+                <div class="feature-title">✨ UI/UX Stack</div>
+                <div class="feature-description">Tailwind CSS, Framer Motion, shadcn/ui for beautiful interfaces</div>
+            </div>
+            <div class="feature-card interactive-card" onclick="showVisualization('technology', 'integration-stack')">
+                <div class="feature-title">🔗 Integration Layer</div>
+                <div class="feature-description">TypeScript, Zustand, MCP servers for seamless connectivity</div>
+            </div>
+        </div>
+
+        <!-- Interactive Visualization Area -->
+        <div class="visualization-area" id="viz-area-6">
+            <div class="viz-container">
+                <div class="viz-title" id="viz-title-6">👆 Click any technology stack to see the constellation</div>
+                <div class="viz-subtitle" id="viz-subtitle-6">Watch how technologies connect and communicate</div>
+                <div class="viz-content" id="viz-content-6">
+                    <div style="text-align: center; color: rgba(0, 255, 255, 0.5); font-size: 3rem; margin: 2rem 0;">🔧
+                    </div>
+                </div>
+                <div class="viz-description" id="viz-description-6">
+                    Select a technology stack to see how different tools and frameworks work together in a constellation
+                    of interconnected services.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 7: Demo -->
+    <div class="slide">
+        <h2>See It In Action</h2>
+        <p class="subtitle">Experience the immersive 3D interface</p>
+        <div class="feature-grid">
+            <div class="feature-card interactive-card" onclick="showVisualization('demo', 'interactive-experience')">
+                <div class="feature-title">🎮 Interactive Experience</div>
+                <div class="feature-description">Click, hover, and navigate through the 3D agent universe with smooth
+                    controls</div>
+            </div>
+            <div class="feature-card interactive-card" onclick="showVisualization('demo', 'live-metrics')">
+                <div class="feature-title">📊 Live Metrics</div>
+                <div class="feature-description">Watch real-time performance data flow through beautiful particle
+                    systems</div>
+            </div>
+            <div class="feature-card interactive-card" onclick="showVisualization('demo', 'voice-control')">
+                <div class="feature-title">🗣️ Voice Control</div>
+                <div class="feature-description">Command your agents using natural language voice commands</div>
+            </div>
+            <div class="feature-card interactive-card" onclick="showVisualization('demo', 'workflow-streaming')">
+                <div class="feature-title">🌊 Workflow Streaming</div>
+                <div class="feature-description">Watch live workflow execution with beautiful real-time animations</div>
+            </div>
+        </div>
+
+        <!-- Interactive Visualization Area -->
+        <div class="visualization-area" id="viz-area-7">
+            <div class="viz-container">
+                <div class="viz-title" id="viz-title-7">👆 Click any demo feature to see it in action</div>
+                <div class="viz-subtitle" id="viz-subtitle-7">Live demonstrations of the immersive 3D interface</div>
+                <div class="viz-content" id="viz-content-7">
+                    <div style="text-align: center; color: rgba(0, 255, 255, 0.5); font-size: 3rem; margin: 2rem 0;">🎬
+                    </div>
+                </div>
+                <div class="viz-description" id="viz-description-7">
+                    Select a demo feature to see how users interact with the 3D interface. Each demonstration shows the
+                    intuitive and powerful nature of the platform.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 8: Implementation Status -->
+    <div class="slide">
+        <h2>Implementation Status</h2>
+        <p class="subtitle">95% complete with 40+ components built</p>
+        <div class="feature-grid">
+            <div class="feature-card interactive-card" onclick="showVisualization('status', 'frontend-complete')">
+                <div class="feature-title">✅ 3D Frontend Complete</div>
+                <div class="feature-description">Immersive 3D interface with React Three Fiber fully implemented</div>
+            </div>
+            <div class="feature-card interactive-card" onclick="showVisualization('status', 'backend-complete')">
+                <div class="feature-title">✅ Backend Intelligence</div>
+                <div class="feature-description">Hybrid Python FastAPI + Node.js architecture operational</div>
+            </div>
+            <div class="feature-card interactive-card" onclick="showVisualization('status', 'realtime-complete')">
+                <div class="feature-title">✅ Real-time Communication</div>
+                <div class="feature-description">Socket.io live agent visualization and communication active</div>
+            </div>
+            <div class="feature-card interactive-card" onclick="showVisualization('status', 'voice-progress')">
+                <div class="feature-title">🔄 Voice Interface</div>
+                <div class="feature-description">Natural language commands and voice control in development</div>
+            </div>
+            <div class="feature-card interactive-card" onclick="showVisualization('status', 'deployment-progress')">
+                <div class="feature-title">🔄 Deployment System</div>
+                <div class="feature-description">One-click deployment and project integration being finalized</div>
+            </div>
+            <div class="feature-card interactive-card" onclick="showVisualization('status', 'testing-progress')">
+                <div class="feature-title">📋 Testing & Polish</div>
+                <div class="feature-description">Comprehensive testing suite and final polish in progress</div>
+            </div>
+        </div>
+
+        <!-- Interactive Visualization Area -->
+        <div class="visualization-area" id="viz-area-8">
+            <div class="viz-container">
+                <div class="viz-title" id="viz-title-8">👆 Click any component to see implementation progress</div>
+                <div class="viz-subtitle" id="viz-subtitle-8">Visual progress indicators and completion status</div>
+                <div class="viz-content" id="viz-content-8">
+                    <div style="text-align: center; color: rgba(0, 255, 255, 0.5); font-size: 3rem; margin: 2rem 0;">📊
+                    </div>
+                </div>
+                <div class="viz-description" id="viz-description-8">
+                    Select a component to see detailed implementation progress, completion status, and what's been built
+                    so far.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 9: Next Steps -->
+    <div class="slide">
+        <h2>Ready to Transform Your Workflow?</h2>
+        <p class="subtitle">Join the future of AI development</p>
+        <div class="feature-grid">
+            <div class="feature-card interactive-card" onclick="showVisualization('next-steps', 'immediate-impact')">
+                <div class="feature-title">🎯 Immediate Impact</div>
+                <div class="feature-description">Start visualizing and orchestrating your AI agents in minutes, not
+                    hours</div>
+            </div>
+            <div class="feature-card interactive-card" onclick="showVisualization('next-steps', 'easy-integration')">
+                <div class="feature-title">🔧 Easy Integration</div>
+                <div class="feature-description">Seamlessly integrates with existing DIRK protocol and MCP servers</div>
+            </div>
+            <div class="feature-card interactive-card" onclick="showVisualization('next-steps', 'future-ready')">
+                <div class="feature-title">🌟 Future-Ready</div>
+                <div class="feature-description">Built for scalability with cutting-edge technologies and best practices
+                </div>
+            </div>
+            <div class="feature-card interactive-card" onclick="showVisualization('next-steps', 'get-started')">
+                <div class="feature-title">🚀 Get Started Now</div>
+                <div class="feature-description">Multiple ways to begin your journey with DIRK BRAIN Portal</div>
+            </div>
+        </div>
+
+        <div class="cta-section">
+            <a href="#" class="cta-button">🚀 Launch Demo</a>
+            <a href="#" class="cta-button">📖 View Documentation</a>
+            <a href="#" class="cta-button">💻 Get Started</a>
+        </div>
+
+        <!-- Interactive Visualization Area -->
+        <div class="visualization-area" id="viz-area-9">
+            <div class="viz-container">
+                <div class="viz-title" id="viz-title-9">👆 Click any benefit to see your transformation journey</div>
+                <div class="viz-subtitle" id="viz-subtitle-9">Visualize how DIRK BRAIN Portal will change your workflow
+                </div>
+                <div class="viz-content" id="viz-content-9">
+                    <div style="text-align: center; color: rgba(0, 255, 255, 0.5); font-size: 3rem; margin: 2rem 0;">🌟
+                    </div>
+                </div>
+                <div class="viz-description" id="viz-description-9">
+                    Select a benefit to see how DIRK BRAIN Portal will transform your development workflow and
+                    accelerate your AI projects.
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" id="prev-btn" onclick="previousSlide()">← Previous</button>
+        <button class="nav-btn" id="next-btn" onclick="nextSlide()">Next →</button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 9;
+
+        function updateSlideCounter() {
+            document.getElementById('current-slide').textContent = currentSlide;
+            document.getElementById('total-slides').textContent = totalSlides;
+        }
+
+        function showSlide(n) {
+            const slides = document.querySelectorAll('.slide');
+
+            if (n > totalSlides) currentSlide = 1;
+            if (n < 1) currentSlide = totalSlides;
+
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[currentSlide - 1].classList.add('active');
+
+            // Update navigation buttons
+            document.getElementById('prev-btn').disabled = currentSlide === 1;
+            document.getElementById('next-btn').disabled = currentSlide === totalSlides;
+
+            updateSlideCounter();
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                showSlide(currentSlide);
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                showSlide(currentSlide);
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'ArrowRight' || event.key === ' ') {
+                nextSlide();
+            } else if (event.key === 'ArrowLeft') {
+                previousSlide();
+            } else if (event.key === 'Home') {
+                currentSlide = 1;
+                showSlide(currentSlide);
+            } else if (event.key === 'End') {
+                currentSlide = totalSlides;
+                showSlide(currentSlide);
+            }
+        });
+
+        // Enhanced visualization function for all slides
+        function showVisualization(slideType, itemType) {
+            // Remove active class from all interactive cards
+            document.querySelectorAll('.interactive-card').forEach(card => {
+                card.classList.remove('active');
+            });
+
+            // Add active class to clicked card
+            event.target.closest('.interactive-card').classList.add('active');
+
+            // Get the current slide number to determine which visualization area to use
+            const slideNum = currentSlide;
+            const vizTitle = document.getElementById(`viz-title-${slideNum}`);
+            const vizSubtitle = document.getElementById(`viz-subtitle-${slideNum}`);
+            const vizContent = document.getElementById(`viz-content-${slideNum}`);
+            const vizDescription = document.getElementById(`viz-description-${slideNum}`);
+
+            if (slideType === 'challenge') {
+                switch (itemType) {
+                    case 'complex-workflows':
+                        vizTitle.textContent = '🔄 Complex Workflows: Chaotic Agent Dependencies';
+                        vizSubtitle.textContent = 'Watch how agents, tasks, and dependencies spiral out of control';
+                        vizContent.innerHTML = `
+                            <div class="workflow-chaos">
+                                <div class="workflow-center">DEV</div>
+                                <div class="workflow-satellite" style="top: -20px; left: -60px;">A1</div>
+                                <div class="workflow-satellite" style="top: -20px; right: -60px;">A2</div>
+                                <div class="workflow-satellite" style="bottom: -20px; left: -60px;">T1</div>
+                                <div class="workflow-satellite" style="bottom: -20px; right: -60px;">T2</div>
+                                <div class="workflow-satellite" style="top: 50%; left: -80px; transform: translateY(-50%);">D1</div>
+                                <div class="workflow-satellite" style="top: 50%; right: -80px; transform: translateY(-50%);">D2</div>
+                            </div>
+                        `;
+                        vizDescription.textContent = 'The developer (DEV) becomes overwhelmed trying to coordinate multiple agents (A1, A2), tasks (T1, T2), and dependencies (D1, D2). Each element moves chaotically, representing the unpredictable nature of complex workflows without proper orchestration. The center pulses red when overloaded, showing developer stress.';
+                        break;
+
+                    case 'limited-visibility':
+                        vizTitle.textContent = '📊 Limited Visibility: The 2D vs 3D Reality Gap';
+                        vizSubtitle.textContent = 'Traditional tools show only flat data while reality is multidimensional';
+                        vizContent.innerHTML = `
+                            <div class="visibility-problem">
+                                <div class="flat-interface">
+                                    <div class="flat-bar"></div>
+                                    <div class="flat-bar"></div>
+                                    <div class="flat-bar"></div>
+                                    <div class="flat-bar"></div>
+                                </div>
+                                <div style="font-size: 2rem; color: #ff0066; margin: 0 2rem;">≠</div>
+                                <div class="hidden-complexity">
+                                    Complex 3D<br>
+                                    Agent Network<br>
+                                    <span style="font-size: 0.6rem; color: #ff0066;">INVISIBLE TO TRADITIONAL TOOLS</span>
+                                </div>
+                            </div>
+                        `;
+                        vizDescription.textContent = 'Traditional 2D interfaces (left) show simple bars and basic metrics that pulse weakly. But the real AI system (right) is a complex 3D network with hidden relationships, dependencies, and interactions that remain invisible. The inequality symbol emphasizes this critical gap in understanding.';
+                        break;
+
+                    case 'manual-coordination':
+                        vizTitle.textContent = '⚡ Manual Coordination: Developer Overwhelm';
+                        vizSubtitle.textContent = 'One developer manually managing multiple chaotic AI agents';
+                        vizContent.innerHTML = `
+                            <div class="coordination-problem">
+                                <div class="agent-cluster">
+                                    <div class="mini-agent">A1</div>
+                                    <div class="mini-agent">A2</div>
+                                    <div class="mini-agent">A3</div>
+                                </div>
+                                <div class="coordination-line" style="left: 25%; top: 20%;"></div>
+                                <div class="coordination-line" style="right: 25%; top: 20%;"></div>
+                                <div class="coordination-line" style="left: 25%; bottom: 20%;"></div>
+                                <div class="coordination-line" style="right: 25%; bottom: 20%;"></div>
+                                <div class="developer-icon">👨‍💻</div>
+                                <div class="agent-cluster">
+                                    <div class="mini-agent">A4</div>
+                                    <div class="mini-agent">A5</div>
+                                    <div class="mini-agent">A6</div>
+                                </div>
+                            </div>
+                        `;
+                        vizDescription.textContent = 'A single developer (center) tries to manually coordinate six different AI agents (A1-A6) that move chaotically. The coordination lines pulse frantically, showing the constant communication overhead. The developer icon scales and changes color from yellow to red, indicating increasing stress and potential burnout from manual management.';
+                        break;
+
+                    case 'fragmented-tools':
+                        vizTitle.textContent = '🎯 Fragmented Tools: Broken Development Ecosystem';
+                        vizSubtitle.textContent = 'Disconnected tools that cannot communicate or share context';
+                        vizContent.innerHTML = `
+                            <div class="fragmentation-problem">
+                                <div class="tool-fragment">
+                                    <div style="font-size: 0.6rem;">IDE</div>
+                                    <div style="font-size: 0.5rem;">Tool</div>
+                                    <div class="disconnect-symbol">✗</div>
+                                </div>
+                                <div class="tool-fragment">
+                                    <div style="font-size: 0.6rem;">AI</div>
+                                    <div style="font-size: 0.5rem;">Service</div>
+                                    <div class="disconnect-symbol">✗</div>
+                                </div>
+                                <div class="tool-fragment">
+                                    <div style="font-size: 0.6rem;">Deploy</div>
+                                    <div style="font-size: 0.5rem;">Tool</div>
+                                    <div class="disconnect-symbol">✗</div>
+                                </div>
+                            </div>
+                        `;
+                        vizDescription.textContent = 'Three essential development tools (IDE, AI Service, Deploy Tool) float independently with broken connections between them. Each tool has a red disconnect symbol (✗) that pulses, emphasizing isolation. The broken connection lines flicker weakly, showing failed attempts at integration. This fragmentation forces developers to manually transfer context between tools, creating inefficiency and errors.';
+                        break;
+                }
+            }
+
+            // Solution visualizations (Slide 3)
+            else if (slideType === 'solution') {
+                switch (itemType) {
+                    case '3d-interface':
+                        vizTitle.textContent = '🌐 Immersive 3D Interface: Revolutionary Visualization';
+                        vizSubtitle.textContent = 'Experience agents in a stunning 3D environment with real-time metrics';
+                        vizContent.innerHTML = `
+                            <div class="solution-3d">
+                                <div class="solution-sphere">3D</div>
+                                <div class="solution-orbit" style="top: -10px; left: 50%; transform: translateX(-50%);">A1</div>
+                                <div class="solution-orbit" style="bottom: -10px; left: 50%; transform: translateX(-50%);">A2</div>
+                                <div class="solution-orbit" style="top: 50%; left: -10px; transform: translateY(-50%);">M1</div>
+                                <div class="solution-orbit" style="top: 50%; right: -10px; transform: translateY(-50%);">M2</div>
+                            </div>
+                        `;
+                        vizDescription.textContent = 'The 3D interface transforms flat agent management into an immersive experience. Agents (A1, A2) and metrics (M1, M2) orbit around the central 3D visualization sphere, providing intuitive spatial understanding. The sphere rotates in 3D space while orbiting elements show real-time status, making complex systems immediately comprehensible.';
+                        break;
+
+                    case 'god-mode':
+                        vizTitle.textContent = '🤖 GOD Mode Orchestration: Intelligent Automation';
+                        vizSubtitle.textContent = 'Watch automatic task decomposition and agent selection';
+                        vizContent.innerHTML = `
+                            <div class="workflow-chaos">
+                                <div class="workflow-center" style="border-color: #00ffff; color: #00ffff; background: rgba(0, 255, 255, 0.1);">GOD</div>
+                                <div class="workflow-satellite" style="top: -20px; left: -60px; border-color: #00ff00; color: #00ff00;">A1</div>
+                                <div class="workflow-satellite" style="top: -20px; right: -60px; border-color: #00ff00; color: #00ff00;">A2</div>
+                                <div class="workflow-satellite" style="bottom: -20px; left: -60px; border-color: #ffff00; color: #ffff00;">T1</div>
+                                <div class="workflow-satellite" style="bottom: -20px; right: -60px; border-color: #ffff00; color: #ffff00;">T2</div>
+                                <div class="workflow-satellite" style="top: 50%; left: -80px; transform: translateY(-50%); border-color: #ff00ff; color: #ff00ff;">ML</div>
+                                <div class="workflow-satellite" style="top: 50%; right: -80px; transform: translateY(-50%); border-color: #ff00ff; color: #ff00ff;">AI</div>
+                            </div>
+                        `;
+                        vizDescription.textContent = 'GOD Mode orchestration replaces chaotic manual coordination with intelligent automation. The central GOD system (cyan) intelligently coordinates agents (A1, A2 in green), tasks (T1, T2 in yellow), and ML/AI systems (magenta). Unlike the chaotic developer-centered model, this moves in harmony with predictable, optimized patterns.';
+                        break;
+
+                    case 'voice-control':
+                        vizTitle.textContent = '🔊 Voice & Gesture Control: Natural Interaction';
+                        vizSubtitle.textContent = 'Command your AI ecosystem with natural language';
+                        vizContent.innerHTML = `
+                            <div style="display: flex; justify-content: center; align-items: center; height: 150px;">
+                                <div style="position: relative;">
+                                    <div style="width: 80px; height: 80px; border: 3px solid #00ffff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; animation: techTwinkle 2s ease-in-out infinite;">🎤</div>
+                                    <div style="position: absolute; top: -30px; left: 50%; transform: translateX(-50%); font-size: 0.8rem; color: #00ffff; animation: techTwinkle 1.5s ease-in-out infinite;">"Deploy agent"</div>
+                                    <div style="position: absolute; bottom: -30px; left: 50%; transform: translateX(-50%); font-size: 0.8rem; color: #ff00ff; animation: techTwinkle 2.5s ease-in-out infinite;">"Show status"</div>
+                                    <div style="position: absolute; left: -50px; top: 50%; transform: translateY(-50%); font-size: 0.8rem; color: #ffff00; animation: techTwinkle 1.8s ease-in-out infinite;">"Start workflow"</div>
+                                    <div style="position: absolute; right: -50px; top: 50%; transform: translateY(-50%); font-size: 0.8rem; color: #00ff00; animation: techTwinkle 2.2s ease-in-out infinite;">"Analyze data"</div>
+                                </div>
+                            </div>
+                        `;
+                        vizDescription.textContent = 'Voice control transforms complex command-line operations into natural conversation. The microphone icon represents the voice interface, surrounded by example commands that users can speak naturally. Each command phrase twinkles at different intervals, showing the variety of natural language inputs the system understands and processes.';
+                        break;
+
+                    case 'realtime-coordination':
+                        vizTitle.textContent = '📡 Real-time Coordination: Live Agent Communication';
+                        vizSubtitle.textContent = 'Watch live workflow streaming and performance monitoring';
+                        vizContent.innerHTML = `
+                            <div class="architecture-flow">
+                                <div class="arch-layer">
+                                    <span>Agent A1</span> <span style="color: #00ff00;">● ACTIVE</span>
+                                </div>
+                                <div class="arch-layer">
+                                    <span>Agent A2</span> <span style="color: #ffff00;">● PROCESSING</span>
+                                </div>
+                                <div class="arch-layer">
+                                    <span>Agent A3</span> <span style="color: #00ffff;">● STREAMING</span>
+                                </div>
+                                <div class="arch-layer">
+                                    <span>Workflow</span> <span style="color: #ff00ff;">● COORDINATING</span>
+                                </div>
+                            </div>
+                        `;
+                        vizDescription.textContent = 'Real-time coordination shows live agent communication through flowing data streams. Each layer represents a different agent or system component with real-time status indicators. The flowing light effects demonstrate continuous data exchange, while color-coded status indicators show each component\'s current state in the coordinated workflow.';
+                        break;
+                }
+            }
+
+            // Architecture visualizations (Slide 4)
+            else if (slideType === 'architecture') {
+                switch (itemType) {
+                    case 'frontend-layer':
+                        vizTitle.textContent = '🎨 Frontend Layer: Immersive 3D Experience';
+                        vizSubtitle.textContent = 'Next.js 15 + React 19 + Three.js + React Three Fiber';
+                        vizContent.innerHTML = `
+                            <div class="tech-constellation">
+                                <div class="tech-star" style="top: 20%; left: 20%;">Next</div>
+                                <div class="tech-star" style="top: 20%; right: 20%;">React</div>
+                                <div class="tech-star" style="bottom: 20%; left: 20%;">Three</div>
+                                <div class="tech-star" style="bottom: 20%; right: 20%;">R3F</div>
+                                <div class="tech-star" style="top: 50%; left: 50%; transform: translate(-50%, -50%); width: 40px; height: 40px; font-size: 0.7rem;">3D UI</div>
+                            </div>
+                        `;
+                        vizDescription.textContent = 'The frontend layer combines cutting-edge technologies in a constellation pattern. Next.js and React provide the foundation, while Three.js and React Three Fiber (R3F) enable immersive 3D experiences. The central 3D UI node shows how these technologies converge to create the revolutionary interface.';
+                        break;
+
+                    case 'realtime-layer':
+                        vizTitle.textContent = '🔄 Real-time Layer: Instant Communication';
+                        vizSubtitle.textContent = 'Node.js + Socket.io for live agent coordination';
+                        vizContent.innerHTML = `
+                            <div class="architecture-flow">
+                                <div class="arch-layer">
+                                    <span>Node.js Server</span> <span style="color: #00ff00;">● RUNNING</span>
+                                </div>
+                                <div class="arch-layer">
+                                    <span>Socket.io Hub</span> <span style="color: #ffff00;">● BROADCASTING</span>
+                                </div>
+                                <div class="arch-layer">
+                                    <span>Agent Sync</span> <span style="color: #00ffff;">● STREAMING</span>
+                                </div>
+                                <div class="arch-layer">
+                                    <span>Live Updates</span> <span style="color: #ff00ff;">● FLOWING</span>
+                                </div>
+                            </div>
+                        `;
+                        vizDescription.textContent = 'The real-time layer ensures instant communication across the system. Node.js provides the server foundation, Socket.io manages live connections, agent synchronization keeps everything coordinated, and live updates flow continuously through the system with scanning light effects.';
+                        break;
+
+                    case 'intelligence-layer':
+                        vizTitle.textContent = '🧠 Intelligence Layer: GOD Mode Orchestration';
+                        vizSubtitle.textContent = 'Python FastAPI + ML models for predictive analytics';
+                        vizContent.innerHTML = `
+                            <div class="solution-3d">
+                                <div class="solution-sphere">🧠</div>
+                                <div class="solution-orbit" style="top: -10px; left: 50%; transform: translateX(-50%);">ML</div>
+                                <div class="solution-orbit" style="bottom: -10px; left: 50%; transform: translateX(-50%);">AI</div>
+                                <div class="solution-orbit" style="top: 50%; left: -10px; transform: translateY(-50%);">API</div>
+                                <div class="solution-orbit" style="top: 50%; right: -10px; transform: translateY(-50%);">🐍</div>
+                            </div>
+                        `;
+                        vizDescription.textContent = 'The intelligence layer powers GOD mode orchestration with machine learning and AI. Python FastAPI (🐍) provides the robust backend, while ML and AI models orbit around the central brain, enabling predictive analytics and intelligent decision-making for optimal agent coordination.';
+                        break;
+
+                    case 'data-layer':
+                        vizTitle.textContent = '💾 Data Layer: Persistent Storage & Caching';
+                        vizSubtitle.textContent = 'PostgreSQL + Redis + Prisma ORM for robust data management';
+                        vizContent.innerHTML = `
+                            <div class="tech-constellation">
+                                <div class="tech-star" style="top: 30%; left: 30%;">PG</div>
+                                <div class="tech-star" style="top: 30%; right: 30%;">Redis</div>
+                                <div class="tech-star" style="bottom: 30%; left: 50%; transform: translateX(-50%);">Prisma</div>
+                                <div class="tech-star" style="top: 50%; left: 50%; transform: translate(-50%, -50%); width: 35px; height: 35px;">💾</div>
+                            </div>
+                        `;
+                        vizDescription.textContent = 'The data layer ensures reliable storage and lightning-fast access. PostgreSQL (PG) handles persistent data, Redis provides high-speed caching, and Prisma ORM bridges the application and database. The central storage icon shows how these technologies work together for optimal data management.';
+                        break;
+
+                    case 'integration-layer':
+                        vizTitle.textContent = '🔌 Integration Layer: Seamless Connectivity';
+                        vizSubtitle.textContent = 'MCP servers + Service integrations + DIRK protocol';
+                        vizContent.innerHTML = `
+                            <div class="architecture-flow">
+                                <div class="arch-layer">
+                                    <span>MCP Servers</span> <span style="color: #00ff00;">● CONNECTED</span>
+                                </div>
+                                <div class="arch-layer">
+                                    <span>DIRK Protocol</span> <span style="color: #ffff00;">● ACTIVE</span>
+                                </div>
+                                <div class="arch-layer">
+                                    <span>Service Bridge</span> <span style="color: #00ffff;">● BRIDGING</span>
+                                </div>
+                                <div class="arch-layer">
+                                    <span>External APIs</span> <span style="color: #ff00ff;">● INTEGRATED</span>
+                                </div>
+                            </div>
+                        `;
+                        vizDescription.textContent = 'The integration layer connects DIRK BRAIN Portal with external systems. MCP servers provide model context, DIRK protocol ensures compatibility, service bridges connect different systems, and external APIs extend functionality. Flowing effects show continuous data exchange.';
+                        break;
+                }
+            }
+
+            // Add a default case for unhandled visualizations
+            else {
+                vizTitle.textContent = '🚀 Interactive Visualization';
+                vizSubtitle.textContent = 'Click any card to see detailed demonstrations';
+                vizContent.innerHTML = `
+                    <div style="text-align: center; color: rgba(0, 255, 255, 0.5); font-size: 3rem; margin: 2rem 0;">✨</div>
+                `;
+                vizDescription.textContent = 'This interactive presentation provides detailed visualizations for every feature. Click on any card to see animated demonstrations that explain complex concepts through engaging visual storytelling.';
+            }
+        }
+
+        // Initialize
+        showSlide(currentSlide);
+        updateSlideCounter();
+
+        // Auto-advance demo (optional)
+        let autoAdvance = false;
+        if (autoAdvance) {
+            setInterval(() => {
+                if (currentSlide < totalSlides) {
+                    nextSlide();
+                } else {
+                    currentSlide = 1;
+                    showSlide(currentSlide);
+                }
+            }, 10000); // 10 seconds per slide
+        }
+    </script>
+</body>
+
+</html>

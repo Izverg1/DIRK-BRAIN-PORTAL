@@ -1,0 +1,48 @@
+{
+  "name": "dirk-brain-portal",
+  "description": "Revolutionary 3D AI orchestration platform with Cerebro-style visualization",
+  "version": "1.0.0",
+  "agents": {
+    "atlas": {
+      "role": "Chief Technology Officer & System Architect", 
+      "specialization": "Architecture, Performance, Scalability",
+      "dirk_level": "full"
+    },
+    "nexus-3d": {
+      "role": "3D Visualization & Frontend Specialist",
+      "specialization": "Three.js, React, Immersive UI",
+      "dirk_level": "quality_focused"
+    },
+    "nexus-api": {
+      "role": "Backend & Integration Specialist", 
+      "specialization": "FastAPI, WebSockets, Performance",
+      "dirk_level": "performance_focused"
+    },
+    "sage": {
+      "role": "Requirements & Quality Engineering",
+      "specialization": "Testing, UX, Security, Compliance", 
+      "dirk_level": "analysis_focused"
+    },
+    "orchestrator": {
+      "role": "Project Management Office",
+      "specialization": "Coordination, Planning, Risk Management",
+      "dirk_level": "strategic_focused"
+    }
+  },
+  "technology_stack": [
+    "TypeScript",
+    "React", 
+    "Next.js",
+    "Three.js",
+    "Python",
+    "FastAPI", 
+    "Supabase",
+    "WebGL"
+  ],
+  "quality_targets": {
+    "performance": "Sub-200ms API response, 60fps 3D rendering",
+    "reliability": "99.9% uptime",
+    "scalability": "100+ concurrent users, 50+ agents",
+    "security": "Enterprise-grade, zero critical vulnerabilities"
+  }
+}

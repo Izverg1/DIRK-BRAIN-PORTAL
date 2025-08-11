@@ -1,0 +1,242 @@
+
+> frontend@0.1.0 dev /Users/izverg/projects/dirk-brain-portal/frontend
+> next dev
+
+ ⚠ Warning: Found multiple lockfiles. Selecting /Users/izverg/projects/dirk-brain-portal/package-lock.json.
+   Consider removing the lockfiles at:
+   * /Users/izverg/projects/dirk-brain-portal/frontend/pnpm-lock.yaml
+
+   ▲ Next.js 15.4.4
+   - Local:        http://localhost:3000
+   - Network:      http://10.0.0.29:3000
+
+ ✓ Starting...
+ ✓ Ready in 1153ms
+ ○ Compiling / ...
+ ✓ Compiled / in 739ms (813 modules)
+ GET / 200 in 915ms
+ ✓ Compiled in 461ms (371 modules)
+ ⨯ ./src/components/SettingsPanel.tsx:12:1
+Module not found: Can't resolve './ui/switch'
+  10 | import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
+  11 | import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
+> 12 | import { Switch } from './ui/switch';
+     | ^
+  13 | import { Badge } from './ui/badge';
+  14 | import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from './ui/dialog';
+  15 |
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/components/DragDropPodBuilder.tsx
+./src/components/DragDropPodBuilderWrapper.tsx
+./src/app/page.tsx
+ ⨯ ./src/components/ui/switch.tsx:4:1
+Module not found: Can't resolve '@radix-ui/react-switch'
+  2 |
+  3 | import * as React from "react"
+> 4 | import * as SwitchPrimitives from "@radix-ui/react-switch"
+    | ^
+  5 |
+  6 | import { cn } from "@/lib/utils"
+  7 |
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/components/SettingsPanel.tsx
+./src/components/DragDropPodBuilder.tsx
+./src/components/DragDropPodBuilderWrapper.tsx
+./src/app/page.tsx
+ ⨯ ./src/components/ui/switch.tsx:4:1
+Module not found: Can't resolve '@radix-ui/react-switch'
+  2 |
+  3 | import * as React from "react"
+> 4 | import * as SwitchPrimitives from "@radix-ui/react-switch"
+    | ^
+  5 |
+  6 | import { cn } from "@/lib/utils"
+  7 |
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/components/SettingsPanel.tsx
+./src/components/DragDropPodBuilder.tsx
+./src/components/DragDropPodBuilderWrapper.tsx
+./src/app/page.tsx
+ ⨯ ./src/components/ui/switch.tsx:4:1
+Module not found: Can't resolve '@radix-ui/react-switch'
+  2 |
+  3 | import * as React from "react"
+> 4 | import * as SwitchPrimitives from "@radix-ui/react-switch"
+    | ^
+  5 |
+  6 | import { cn } from "@/lib/utils"
+  7 |
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/components/SettingsPanel.tsx
+./src/components/DragDropPodBuilder.tsx
+./src/components/DragDropPodBuilderWrapper.tsx
+./src/app/page.tsx
+ ⨯ ./src/components/ui/switch.tsx:4:1
+Module not found: Can't resolve '@radix-ui/react-switch'
+  2 |
+  3 | import * as React from "react"
+> 4 | import * as SwitchPrimitives from "@radix-ui/react-switch"
+    | ^
+  5 |
+  6 | import { cn } from "@/lib/utils"
+  7 |
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/components/SettingsPanel.tsx
+./src/components/CommandComposer.tsx
+./src/app/page.tsx
+ ⨯ ./src/components/ui/switch.tsx:4:1
+Module not found: Can't resolve '@radix-ui/react-switch'
+  2 |
+  3 | import * as React from "react"
+> 4 | import * as SwitchPrimitives from "@radix-ui/react-switch"
+    | ^
+  5 |
+  6 | import { cn } from "@/lib/utils"
+  7 |
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/components/SettingsPanel.tsx
+./src/components/CommandComposer.tsx
+./src/app/page.tsx
+ ⨯ ./src/components/ui/switch.tsx:4:1
+Module not found: Can't resolve '@radix-ui/react-switch'
+  2 |
+  3 | import * as React from "react"
+> 4 | import * as SwitchPrimitives from "@radix-ui/react-switch"
+    | ^
+  5 |
+  6 | import { cn } from "@/lib/utils"
+  7 |
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/components/SettingsPanel.tsx
+./src/components/CommandComposer.tsx
+./src/app/page.tsx
+ ○ Compiling /_not-found ...
+ ⨯ ./src/components/ui/switch.tsx:4:1
+Module not found: Can't resolve '@radix-ui/react-switch'
+  2 |
+  3 | import * as React from "react"
+> 4 | import * as SwitchPrimitives from "@radix-ui/react-switch"
+    | ^
+  5 |
+  6 | import { cn } from "@/lib/utils"
+  7 |
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/components/SettingsPanel.tsx
+./src/components/CommandComposer.tsx
+./src/app/page.tsx
+ GET / 500 in 1798ms
+ ⨯ ./src/components/ui/switch.tsx:4:1
+Module not found: Can't resolve '@radix-ui/react-switch'
+  2 |
+  3 | import * as React from "react"
+> 4 | import * as SwitchPrimitives from "@radix-ui/react-switch"
+    | ^
+  5 |
+  6 | import { cn } from "@/lib/utils"
+  7 |
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/components/SettingsPanel.tsx
+./src/components/CommandComposer.tsx
+./src/app/page.tsx
+ GET / 500 in 23ms
+ ⨯ ./src/components/ui/switch.tsx:4:1
+Module not found: Can't resolve '@radix-ui/react-switch'
+  2 |
+  3 | import * as React from "react"
+> 4 | import * as SwitchPrimitives from "@radix-ui/react-switch"
+    | ^
+  5 |
+  6 | import { cn } from "@/lib/utils"
+  7 |
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/components/SettingsPanel.tsx
+./src/components/CommandComposer.tsx
+./src/app/page.tsx
+ ⨯ ./src/components/ui/switch.tsx:4:1
+Module not found: Can't resolve '@radix-ui/react-switch'
+  2 |
+  3 | import * as React from "react"
+> 4 | import * as SwitchPrimitives from "@radix-ui/react-switch"
+    | ^
+  5 |
+  6 | import { cn } from "@/lib/utils"
+  7 |
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/components/SettingsPanel.tsx
+./src/components/CommandComposer.tsx
+./src/app/page.tsx
+ ⨯ ./src/components/ui/switch.tsx:4:1
+Module not found: Can't resolve '@radix-ui/react-switch'
+  2 |
+  3 | import * as React from "react"
+> 4 | import * as SwitchPrimitives from "@radix-ui/react-switch"
+    | ^
+  5 |
+  6 | import { cn } from "@/lib/utils"
+  7 |
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/components/SettingsPanel.tsx
+./src/components/CommandComposer.tsx
+./src/app/page.tsx
+ ⨯ ./src/components/ui/switch.tsx:4:1
+Module not found: Can't resolve '@radix-ui/react-switch'
+  2 |
+  3 | import * as React from "react"
+> 4 | import * as SwitchPrimitives from "@radix-ui/react-switch"
+    | ^
+  5 |
+  6 | import { cn } from "@/lib/utils"
+  7 |
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/components/SettingsPanel.tsx
+./src/components/CommandComposer.tsx
+./src/app/page.tsx
+ ✓ Compiled /favicon.ico in 753ms (1188 modules)
+ ✓ Compiled in 270ms (1073 modules)
+ ✓ Compiled in 158ms (1073 modules)
+ ✓ Compiled in 179ms (1073 modules)
+ ✓ Compiled in 180ms (1073 modules)
+ ✓ Compiled in 225ms (1073 modules)
+ ✓ Compiled in 186ms (1073 modules)
+ ✓ Compiled in 105ms (1073 modules)
+ ✓ Compiled in 115ms (1073 modules)
+[?25h

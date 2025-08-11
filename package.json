@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "@grpc/grpc-js": "^1.13.4",
+    "@grpc/proto-loader": "^0.8.0",
+    "compromise": "^14.14.4",
+    "grpc-tools": "^1.13.0",
+    "natural": "^8.1.0",
+    "sentiment": "^5.0.2"
+  }
+}

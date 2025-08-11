@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIRK BRAIN Portal - Master Reference & Interactive Guide</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Fira+Code:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Fira Code', monospace;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 25%, #16213e 50%, #0f0f23 75%, #000000 100%);
+            color: #00ffff;
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Animated background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 0, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(0, 255, 0, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 1;
+            animation: backgroundShift 15s ease-in-out infinite;
+        }
+
+        @keyframes backgroundShift {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.05); }
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .master-header {
+            text-align: center;
+            padding: 60px 0;
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0.9) 100%);
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            border-radius: 20px;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .master-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.2), transparent);
+            animation: headerScan 4s linear infinite;
+        }
+
+        @keyframes headerScan {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .master-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 4rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00ffff 0%, #ff00ff 50%, #00ff00 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            text-shadow: 0 0 30px rgba(0, 255, 255, 0.8);
+            letter-spacing: 3px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .master-subtitle {
+            font-size: 1.4rem;
+            color: #00ffff;
+            margin-bottom: 30px;
+            font-weight: 300;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 10px 20px;
+            background: rgba(0, 255, 0, 0.2);
+            border: 2px solid #00ff00;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            animation: statusPulse 2s ease-in-out infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes statusPulse {
+            0%, 100% { box-shadow: 0 0 15px rgba(0, 255, 0, 0.3); }
+            50% { box-shadow: 0 0 30px rgba(0, 255, 0, 0.6); }
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .nav-tab {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(0, 0, 0, 0.8));
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            border-radius: 25px;
+            color: #00ffff;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-family: 'Orbitron', monospace;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .nav-tab:hover, .nav-tab.active {
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.4), rgba(0, 0, 0, 0.9));
+            border-color: rgba(0, 255, 255, 0.8);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 255, 255, 0.3);
+        }
+
+        /* Content Sections */
+        .content-section {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #00ffff;
+            text-align: center;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
+        }
+
+        /* Interactive Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .interactive-card {
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0.9) 100%);
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            border-radius: 15px;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .interactive-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .interactive-card:hover::before {
+            left: 100%;
+        }
+
+        .interactive-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(0, 255, 255, 0.8);
+            box-shadow: 0 15px 40px rgba(0, 255, 255, 0.3);
+        }
+
+        .interactive-card.active {
+            border-color: rgba(255, 0, 255, 0.8);
+            box-shadow: 0 0 30px rgba(255, 0, 255, 0.4);
+            transform: scale(1.02);
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            display: block;
+            text-align: center;
+        }
+
+        .card-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #00ffff;
+            margin-bottom: 15px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .card-description {
+            color: #ffffff;
+            line-height: 1.6;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .card-details {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+            font-size: 0.9rem;
+            color: #00ff00;
+            display: none;
+        }
+
+        .card-details.active {
+            display: block;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; max-height: 0; }
+            to { opacity: 1; max-height: 200px; }
+        }
+
+        /* Visualization Area */
+        .visualization-area {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 255, 255, 0.05) 100%);
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 40px 0;
+            min-height: 400px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .visualization-area::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 30% 30%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 70% 70%, rgba(255, 0, 255, 0.1) 0%, transparent 50%);
+            animation: vizGlow 8s ease-in-out infinite;
+        }
+
+        @keyframes vizGlow {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.8; }
+        }
+
+        .viz-container {
+            position: relative;
+            z-index: 2;
+        }
+
+        .viz-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #00ffff;
+            text-align: center;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .viz-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 250px;
+            position: relative;
+        }
+
+        .viz-description {
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+            font-size: 1rem;
+            color: #ffffff;
+            line-height: 1.6;
+            text-align: center;
+        }
+
+        /* Agent Network Visualization */
+        .agent-network {
+            position: relative;
+            width: 400px;
+            height: 300px;
+            margin: 0 auto;
+        }
+
+        .god-mode-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, rgba(255, 0, 255, 0.8), rgba(255, 0, 255, 0.3));
+            border: 3px solid #ff00ff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Orbitron', monospace;
+            font-size: 1rem;
+            color: #ffffff;
+            font-weight: 900;
+            animation: godModePulse 3s ease-in-out infinite;
+            z-index: 10;
+        }
+
+        @keyframes godModePulse {
+            0%, 100% { 
+                transform: translate(-50%, -50%) scale(1);
+                box-shadow: 0 0 30px rgba(255, 0, 255, 0.5);
+            }
+            50% { 
+                transform: translate(-50%, -50%) scale(1.1);
+                box-shadow: 0 0 50px rgba(255, 0, 255, 0.8);
+            }
+        }
+
+        .agent-satellite {
+            position: absolute;
+            width: 70px;
+            height: 70px;
+            background: radial-gradient(circle, rgba(0, 255, 255, 0.8), rgba(0, 255, 255, 0.3));
+            border: 2px solid #00ffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Orbitron', monospace;
+            font-size: 0.8rem;
+            color: #ffffff;
+            font-weight: 700;
+            animation: satelliteOrbit 8s linear infinite;
+        }
+
+        .agent-satellite:nth-child(2) { 
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation-delay: 0s;
+        }
+        .agent-satellite:nth-child(3) { 
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            animation-delay: -2s;
+        }
+        .agent-satellite:nth-child(4) { 
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation-delay: -4s;
+        }
+        .agent-satellite:nth-child(5) { 
+            top: 50%;
+            left: 20px;
+            transform: translateY(-50%);
+            animation-delay: -6s;
+        }
+
+        @keyframes satelliteOrbit {
+            0% { 
+                box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+                border-color: #00ffff;
+            }
+            25% { 
+                box-shadow: 0 0 25px rgba(0, 255, 255, 0.6);
+                border-color: #00ff00;
+            }
+            50% { 
+                box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+                border-color: #ff00ff;
+            }
+            75% { 
+                box-shadow: 0 0 30px rgba(0, 255, 255, 0.7);
+                border-color: #ffff00;
+            }
+            100% { 
+                box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+                border-color: #00ffff;
+            }
+        }
+
+        /* Data Flow Visualization */
+        .data-flow {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .flow-layer {
+            background: linear-gradient(90deg, rgba(0, 255, 255, 0.1), transparent);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .flow-layer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.3), transparent);
+            animation: dataFlow 3s linear infinite;
+        }
+
+        @keyframes dataFlow {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        /* Architecture Layers */
+        .architecture-layers {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .layer-card {
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .layer-card:hover {
+            border-color: rgba(0, 255, 255, 0.8);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 255, 255, 0.2);
+        }
+
+        .layer-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #00ffff, #ff00ff, #00ff00);
+            animation: layerPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes layerPulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .layer-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #00ffff;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .layer-tech {
+            color: #00ff00;
+            font-size: 1rem;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .layer-description {
+            color: #ffffff;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* Code Blocks */
+        .code-block {
+            background: #000000;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 10px;
+            padding: 25px;
+            margin: 20px 0;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            color: #00ff00;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .code-block::before {
+            content: attr(data-lang);
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background: #000000;
+            color: #00ffff;
+            padding: 0 10px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .code-comment { color: #00ffff; font-style: italic; }
+        .code-keyword { color: #ff00ff; font-weight: 600; }
+        .code-string { color: #ffff00; }
+        .code-function { color: #00ff00; }
+
+        /* Workflow Examples */
+        .workflow-example {
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid rgba(255, 0, 255, 0.3);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .workflow-step {
+            background: rgba(255, 0, 255, 0.1);
+            border-left: 4px solid #ff00ff;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .workflow-step:hover {
+            background: rgba(255, 0, 255, 0.2);
+            border-left-width: 6px;
+        }
+
+        .workflow-step h4 {
+            color: #ff00ff;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .master-title {
+                font-size: 2.5rem;
+            }
+            
+            .nav-tabs {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .agent-network {
+                width: 300px;
+                height: 250px;
+            }
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #00ffff, #ff00ff);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #ff00ff, #00ff00);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="master-header">
+            <h1 class="master-title">DIRK BRAIN Portal</h1>
+            <p class="master-subtitle">Master Reference & Interactive Architecture Guide</p>
+            <div class="status-badge">🟢 95% Complete - 40+ Components Built</div>
+            <p style="font-size: 1.1rem; color: #ffffff; max-width: 900px; margin: 0 auto; line-height: 1.6;">
+                The ultimate AI agent orchestration platform with immersive 3D visualization, intelligent coordination, 
+                and cutting-edge automation. Click through the interactive sections below to explore the complete system.
+            </p>
+        </div>
+
+        <!-- Navigation -->
+        <div class="nav-tabs">
+            <div class="nav-tab active" onclick="showSection('overview')">🎯 Overview</div>
+            <div class="nav-tab" onclick="showSection('architecture')">🏗️ Architecture</div>
+            <div class="nav-tab" onclick="showSection('features')">✨ Features</div>
+            <div class="nav-tab" onclick="showSection('workflows')">🔄 Workflows</div>
+            <div class="nav-tab" onclick="showSection('deployment')">🚀 Deployment</div>
+        </div>
+
+        <!-- Overview Section -->
+        <div id="overview" class="content-section active">
+            <h2 class="section-title">🎯 System Overview</h2>
+            
+            <div class="cards-grid">
+                <div class="interactive-card" onclick="toggleCardDetails(this, 'godmode')">
+                    <div class="card-icon">🤖</div>
+                    <h3 class="card-title">GOD Mode Orchestration</h3>
+                    <p class="card-description">
+                        Intelligent task decomposition and automatic agent selection with machine learning-based 
+                        optimization and predictive analytics.
+                    </p>
+                    <div class="card-details" id="godmode-details">
+                        <strong>How it works:</strong><br>
+                        1. Analyzes complex user requests<br>
+                        2. Decomposes into optimal subtasks<br>
+                        3. Selects best agents for each task<br>
+                        4. Coordinates parallel execution<br>
+                        5. Handles failure recovery automatically<br><br>
+                        <strong>Supported Agents:</strong> Claude, Gemini, GPT-4, Custom Agents
+                    </div>
+                </div>
+
+                <div class="interactive-card" onclick="toggleCardDetails(this, '3d-viz')">
+                    <div class="card-icon">🌐</div>
+                    <h3 class="card-title">Immersive 3D Interface</h3>
+                    <p class="card-description">
+                        Visualize your AI agents in a stunning 3D environment with real-time performance metrics 
+                        and intuitive spatial controls.
+                    </p>
+                    <div class="card-details" id="3d-viz-details">
+                        <strong>Technologies:</strong><br>
+                        • React Three Fiber for 3D rendering<br>
+                        • WebGL for hardware acceleration<br>
+                        • Real-time performance monitoring<br>
+                        • Interactive spatial controls<br><br>
+                        <strong>Features:</strong> Agent visualization, Network topology, Performance dashboards
+                    </div>
+                </div>
+
+                <div class="interactive-card" onclick="toggleCardDetails(this, 'realtime')">
+                    <div class="card-icon">📡</div>
+                    <h3 class="card-title">Real-time Coordination</h3>
+                    <p class="card-description">
+                        Live agent communication, workflow streaming, and performance monitoring with 
+                        beautiful data visualizations.
+                    </p>
+                    <div class="card-details" id="realtime-details">
+                        <strong>Communication Stack:</strong><br>
+                        • WebSocket connections for instant messaging<br>
+                        • Redis Pub/Sub for event broadcasting<br>
+                        • WebRTC for peer-to-peer communication<br>
+                        • Real-time status updates<br><br>
+                        <strong>Monitoring:</strong> Live metrics, Health checks, Performance analytics
+                    </div>
+                </div>
+
+                <div class="interactive-card" onclick="toggleCardDetails(this, 'voice')">
+                    <div class="card-icon">🗣️</div>
+                    <h3 class="card-title">Voice & Natural Language</h3>
+                    <p class="card-description">
+                        Natural language commands and intuitive gesture controls for seamless interaction 
+                        with your AI ecosystem.
+                    </p>
+                    <div class="card-details" id="voice-details">
+                        <strong>NLP Pipeline:</strong><br>
+                        • Speech-to-text conversion<br>
+                        • Intent recognition and parsing<br>
+                        • Command routing to agents<br>
+                        • Context-aware responses<br><br>
+                        <strong>Examples:</strong> "Deploy Claude to analyze code", "Create workflow for testing"
+                    </div>
+                </div>
+            </div>
+
+            <div class="visualization-area">
+                <div class="viz-container">
+                    <div class="viz-title">Live Agent Network</div>
+                    <div class="viz-content">
+                        <div class="agent-network">
+                            <div class="god-mode-center">GOD</div>
+                            <div class="agent-satellite">CLAUDE</div>
+                            <div class="agent-satellite">GEMINI</div>
+                            <div class="agent-satellite">GPT-4</div>
+                            <div class="agent-satellite">CUSTOM</div>
+                        </div>
+                    </div>
+                    <div class="viz-description">
+                        <strong>GOD Mode Central Hub:</strong> Intelligent orchestrator managing task distribution and agent coordination<br>
+                        <strong>Agent Satellites:</strong> Specialized AI agents (Claude, Gemini, GPT-4, Custom) working in coordinated swarms<br>
+                        <strong>Real-time Visualization:</strong> Watch agents communicate and collaborate in the 3D environment
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Architecture Section -->
+        <div id="architecture" class="content-section">
+            <h2 class="section-title">🏗️ System Architecture</h2>
+            
+            <div class="architecture-layers">
+                <div class="layer-card">
+                    <h4 class="layer-title">🎨 Frontend Layer</h4>
+                    <div class="layer-tech">Next.js 15 + React 19 + Three.js + React Three Fiber</div>
+                    <p class="layer-description">
+                        Immersive 3D user interface with real-time data visualization, gesture controls, 
+                        and responsive design. Handles all user interactions and visual representations 
+                        through cutting-edge web technologies.
+                    </p>
+                </div>
+
+                <div class="layer-card">
+                    <h4 class="layer-title">🔄 Real-time Communication Layer</h4>
+                    <div class="layer-tech">Node.js + Socket.io + WebRTC + Redis Pub/Sub</div>
+                    <p class="layer-description">
+                        High-performance real-time communication infrastructure enabling instant agent coordination, 
+                        live workflow streaming, and multi-user collaboration with minimal latency.
+                    </p>
+                </div>
+
+                <div class="layer-card">
+                    <h4 class="layer-title">🧠 Intelligence & Orchestration Layer</h4>
+                    <div class="layer-tech">Python FastAPI + ML Models + Agent Coordination</div>
+                    <p class="layer-description">
+                        Core intelligence system powered by machine learning models for intelligent task analysis, 
+                        optimal agent selection, and sophisticated orchestration with predictive optimization.
+                    </p>
+                </div>
+
+                <div class="layer-card">
+                    <h4 class="layer-title">💾 Data Persistence Layer</h4>
+                    <div class="layer-tech">PostgreSQL + Redis + Vector Database + Prisma ORM</div>
+                    <p class="layer-description">
+                        Robust data architecture combining relational database, high-speed caching, 
+                        vector storage for AI embeddings, and type-safe ORM for seamless data access.
+                    </p>
+                </div>
+
+                <div class="layer-card">
+                    <h4 class="layer-title">🤖 Agent Integration Layer</h4>
+                    <div class="layer-tech">Claude + Gemini + GPT-4 + Custom Agents + MCP</div>
+                    <p class="layer-description">
+                        Integration with multiple AI providers, custom agent definitions, 
+                        Model Context Protocol support, and extensible plugin architecture.
+                    </p>
+                </div>
+            </div>
+
+            <div class="visualization-area">
+                <div class="viz-container">
+                    <div class="viz-title">Data Flow Architecture</div>
+                    <div class="viz-content">
+                        <div class="data-flow">
+                            <div class="flow-layer">
+                                <span style="color: #00ffff;">User Input</span>
+                                <span style="color: #ffff00;">→</span>
+                                <span style="color: #ff00ff;">3D Interface</span>
+                            </div>
+                            <div class="flow-layer">
+                                <span style="color: #00ffff;">WebSocket</span>
+                                <span style="color: #ffff00;">→</span>
+                                <span style="color: #ff00ff;">Node.js Server</span>
+                            </div>
+                            <div class="flow-layer">
+                                <span style="color: #00ffff;">FastAPI Backend</span>
+                                <span style="color: #ffff00;">→</span>
+                                <span style="color: #ff00ff;">GOD Mode</span>
+                            </div>
+                            <div class="flow-layer">
+                                <span style="color: #00ffff;">Agent Execution</span>
+                                <span style="color: #ffff00;">→</span>
+                                <span style="color: #ff00ff;">Result Processing</span>
+                            </div>
+                            <div class="flow-layer">
+                                <span style="color: #00ffff;">Real-time Updates</span>
+                                <span style="color: #ffff00;">→</span>
+                                <span style="color: #ff00ff;">3D Visualization</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="viz-description">
+                        <strong>Request Flow:</strong> User interactions flow through the 3D interface to WebSocket connections, 
+                        then to the FastAPI backend where GOD Mode processes and distributes tasks to optimal agents.<br><br>
+                        <strong>Response Flow:</strong> Agent results are processed, validated, and streamed back through 
+                        real-time connections to update the 3D visualization instantly.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div id="features" class="content-section">
+            <h2 class="section-title">✨ Revolutionary Features</h2>
+            
+            <div class="cards-grid">
+                <div class="interactive-card" onclick="toggleCardDetails(this, 'holographic')">
+                    <div class="card-icon">📊</div>
+                    <h3 class="card-title">Holographic Dashboards</h3>
+                    <p class="card-description">
+                        Floating 3D panels displaying real-time metrics, charts, and system status with 
+                        interactive controls and contextual information.
+                    </p>
+                    <div class="card-details" id="holographic-details">
+                        <strong>Dashboard Types:</strong><br>
+                        • Performance monitoring panels<br>
+                        • Agent status displays<br>
+                        • Network topology views<br>
+                        • Resource utilization charts<br><br>
+                        <strong>Interaction:</strong> Touch, voice, and gesture controls
+                    </div>
+                </div>
+
+                <div class="interactive-card" onclick="toggleCardDetails(this, 'predictive')">
+                    <div class="card-icon">🔮</div>
+                    <h3 class="card-title">Predictive Intelligence</h3>
+                    <p class="card-description">
+                        Machine learning-powered forecasting, performance optimization, and intelligent 
+                        recommendations for system improvements.
+                    </p>
+                    <div class="card-details" id="predictive-details">
+                        <strong>ML Capabilities:</strong><br>
+                        • Performance prediction models<br>
+                        • Resource optimization algorithms<br>
+                        • Failure prevention systems<br>
+                        • Usage pattern analysis<br><br>
+                        <strong>Benefits:</strong> Proactive optimization, Cost reduction, Improved reliability
+                    </div>
+                </div>
+
+                <div class="interactive-card" onclick="toggleCardDetails(this, 'security')">
+                    <div class="card-icon">🛡️</div>
+                    <h3 class="card-title">Enterprise Security</h3>
+                    <p class="card-description">
+                        Advanced security protocols, encrypted communications, and comprehensive audit trails 
+                        for enterprise-grade deployments.
+                    </p>
+                    <div class="card-details" id="security-details">
+                        <strong>Security Features:</strong><br>
+                        • End-to-end encryption<br>
+                        • OAuth 2.0 integration<br>
+                        • Role-based access control<br>
+                        • Comprehensive audit logging<br><br>
+                        <strong>Compliance:</strong> SOC 2, GDPR, HIPAA ready
+                    </div>
+                </div>
+
+                <div class="interactive-card" onclick="toggleCardDetails(this, 'extensible')">
+                    <div class="card-icon">🔧</div>
+                    <h3 class="card-title">Extensible Architecture</h3>
+                    <p class="card-description">
+                        Plugin system for custom agents, integrations, and workflows with comprehensive 
+                        API and SDK support.
+                    </p>
+                    <div class="card-details" id="extensible-details">
+                        <strong>Extension Points:</strong><br>
+                        • Custom agent plugins<br>
+                        • Workflow templates<br>
+                        • Integration connectors<br>
+                        • UI component library<br><br>
+                        <strong>Developer Tools:</strong> SDK, CLI tools, Documentation
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Workflows Section -->
+        <div id="workflows" class="content-section">
+            <h2 class="section-title">🔄 Intelligent Workflows</h2>
+            
+            <div class="workflow-example">
+                <h3 style="color: #ff00ff; text-align: center; margin-bottom: 30px; font-size: 1.8rem;">
+                    Real-World Example: Full-Stack Application Development
+                </h3>
+                
+                <div class="workflow-step">
+                    <h4>1. User Request: "Build a full-stack React app with authentication"</h4>
+                    <p>GOD Mode receives the request and begins intelligent analysis of requirements and complexity.</p>
+                </div>
+                
+                <div class="workflow-step">
+                    <h4>2. Intelligent Task Decomposition</h4>
+                    <p>
+                        • <strong>Frontend:</strong> React components, routing, UI/UX design<br>
+                        • <strong>Backend:</strong> API endpoints, middleware, authentication logic<br>
+                        • <strong>Database:</strong> Schema design, migrations, data models<br>
+                        • <strong>Testing:</strong> Unit tests, integration tests, E2E testing<br>
+                        • <strong>Deployment:</strong> CI/CD pipeline, containerization, hosting
+                    </p>
+                </div>
+                
+                <div class="workflow-step">
+                    <h4>3. Optimal Agent Assignment</h4>
+                    <p>
+                        • <strong>DIRK.c (Claude):</strong> Frontend React implementation and testing<br>
+                        • <strong>DIRK.g (Gemini):</strong> Backend API development and database design<br>
+                        • <strong>DIRK.desktop:</strong> DevOps, deployment, and infrastructure<br>
+                        • <strong>Custom Agents:</strong> Specialized security and performance optimization
+                    </p>
+                </div>
+                
+                <div class="workflow-step">
+                    <h4>4. Parallel Execution with Coordination</h4>
+                    <p>All agents work simultaneously with dependency management, progress synchronization, and real-time communication through the 3D interface.</p>
+                </div>
+                
+                <div class="workflow-step">
+                    <h4>5. Intelligent Failure Recovery</h4>
+                    <p>
+                        <span style="color: #ff6666;">Issue Detected:</span> Claude encounters authentication complexity<br>
+                        <span style="color: #ffff66;">Auto-Recovery:</span> GOD Mode detects pattern and reassigns to Gemini<br>
+                        <span style="color: #66ff66;">Resolution:</span> Alternative approach implemented successfully
+                    </p>
+                </div>
+                
+                <div class="workflow-step">
+                    <h4>6. Quality Assurance & Integration</h4>
+                    <p>Cross-agent validation ensures code quality, security compliance, and performance optimization before final delivery.</p>
+                </div>
+                
+                <div class="workflow-step">
+                    <h4>7. Success: Complete Application Delivered</h4>
+                    <p>Fully functional full-stack application with authentication, testing, documentation, and deployment pipeline - all coordinated through intelligent orchestration.</p>
+                </div>
+            </div>
+
+            <div class="code-block" data-lang="workflow-config">
+<span class="code-comment"># Example workflow configuration</span>
+<span class="code-keyword">workflow:</span>
+  <span class="code-string">name:</span> <span class="code-function">"full-stack-development"</span>
+  <span class="code-string">trigger:</span> <span class="code-function">"natural-language-request"</span>
+  
+  <span class="code-keyword">agents:</span>
+    - <span class="code-string">claude:</span> <span class="code-function">["frontend", "testing"]</span>
+    - <span class="code-string">gemini:</span> <span class="code-function">["backend", "database"]</span>
+    - <span class="code-string">desktop:</span> <span class="code-function">["devops", "deployment"]</span>
+  
+  <span class="code-keyword">coordination:</span>
+    <span class="code-string">parallel_execution:</span> <span class="code-function">true</span>
+    <span class="code-string">failure_recovery:</span> <span class="code-function">automatic</span>
+    <span class="code-string">quality_gates:</span> <span class="code-function">enabled</span>
+            </div>
+        </div>
+
+        <!-- Deployment Section -->
+        <div id="deployment" class="content-section">
+            <h2 class="section-title">🚀 One-Script Deployment</h2>
+            
+            <div class="cards-grid">
+                <div class="interactive-card" onclick="toggleCardDetails(this, 'quick-deploy')">
+                    <div class="card-icon">⚡</div>
+                    <h3 class="card-title">Quick Deployment</h3>
+                    <p class="card-description">
+                        Deploy the entire DIRK BRAIN Portal ecosystem with a single command in under 5 minutes.
+                    </p>
+                    <div class="card-details" id="quick-deploy-details">
+                        <strong>What gets deployed:</strong><br>
+                        • Frontend (Next.js + 3D interface)<br>
+                        • Backend services (FastAPI + Node.js)<br>
+                        • Database (PostgreSQL + Redis)<br>
+                        • Agent configurations<br>
+                        • Monitoring and logging<br><br>
+                        <strong>Requirements:</strong> Docker, Node.js 18+, Python 3.11+
+                    </div>
+                </div>
+
+                <div class="interactive-card" onclick="toggleCardDetails(this, 'enterprise-deploy')">
+                    <div class="card-icon">🏢</div>
+                    <h3 class="card-title">Enterprise Deployment</h3>
+                    <p class="card-description">
+                        Production-ready deployment with scaling, security, and monitoring for enterprise environments.
+                    </p>
+                    <div class="card-details" id="enterprise-deploy-details">
+                        <strong>Enterprise Features:</strong><br>
+                        • Kubernetes orchestration<br>
+                        • Load balancing and auto-scaling<br>
+                        • SSL/TLS encryption<br>
+                        • Backup and disaster recovery<br>
+                        • 24/7 monitoring and alerting<br><br>
+                        <strong>Support:</strong> Professional support and SLA available
+                    </div>
+                </div>
+            </div>
+
+            <div class="code-block" data-lang="bash">
+<span class="code-comment"># Quick deployment (recommended)</span>
+<span class="code-keyword">curl</span> -sSL https://dirk-brain.com/install | <span class="code-keyword">bash</span>
+
+<span class="code-comment"># Manual deployment</span>
+<span class="code-keyword">git clone</span> <span class="code-string">https://github.com/dirk-brain/portal.git</span>
+<span class="code-keyword">cd</span> portal
+<span class="code-keyword">./deploy-dirk-brain.sh</span>
+
+<span class="code-comment"># Advanced deployment with custom configuration</span>
+<span class="code-keyword">dirk deploy</span> --agents <span class="code-string">claude,gemini,gpt4</span> \
+  --features <span class="code-string">3d-ui,voice-control,predictive-ai</span> \
+  --environment <span class="code-string">production</span> \
+  --scaling <span class="code-string">auto</span>
+
+<span class="code-comment"># GOD Mode deployment for complex projects</span>
+<span class="code-keyword">godmode deploy</span> <span class="code-string">"Enterprise React app with microservices"</span> \
+  --parallel --auto-recovery --enterprise-security
+            </div>
+
+            <div class="visualization-area">
+                <div class="viz-container">
+                    <div class="viz-title">Deployment Timeline</div>
+                    <div class="viz-content">
+                        <div class="data-flow">
+                            <div class="flow-layer">
+                                <span style="color: #00ffff;">Download & Setup</span>
+                                <span style="color: #ffff00;">→</span>
+                                <span style="color: #00ff00;">30 seconds</span>
+                            </div>
+                            <div class="flow-layer">
+                                <span style="color: #00ffff;">Infrastructure Provisioning</span>
+                                <span style="color: #ffff00;">→</span>
+                                <span style="color: #00ff00;">2 minutes</span>
+                            </div>
+                            <div class="flow-layer">
+                                <span style="color: #00ffff;">Service Deployment</span>
+                                <span style="color: #ffff00;">→</span>
+                                <span style="color: #00ff00;">90 seconds</span>
+                            </div>
+                            <div class="flow-layer">
+                                <span style="color: #00ffff;">Agent Configuration</span>
+                                <span style="color: #ffff00;">→</span>
+                                <span style="color: #00ff00;">60 seconds</span>
+                            </div>
+                            <div class="flow-layer">
+                                <span style="color: #00ffff;">System Ready</span>
+                                <span style="color: #ffff00;">→</span>
+                                <span style="color: #00ff00;">Total: 5 minutes</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="viz-description">
+                        <strong>Automated Deployment:</strong> Complete system deployment in under 5 minutes with intelligent 
+                        configuration, health checks, and automatic rollback on failure.<br><br>
+                        <strong>Post-Deployment:</strong> Immediate access to 3D interface, agent orchestration, and all 
+                        platform features with guided onboarding and tutorials.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Section navigation
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+
+        // Card details toggle
+        function toggleCardDetails(card, detailsId) {
+            // Remove active class from all cards
+            document.querySelectorAll('.interactive-card').forEach(c => {
+                c.classList.remove('active');
+                const details = c.querySelector('.card-details');
+                if (details) details.classList.remove('active');
+            });
+
+            // Toggle current card
+            card.classList.add('active');
+            const details = document.getElementById(detailsId + '-details');
+            if (details) {
+                details.classList.add('active');
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add some dynamic effects to the agent network
+            setInterval(() => {
+                const satellites = document.querySelectorAll('.agent-satellite');
+                satellites.forEach((satellite, index) => {
+                    const randomDelay = Math.random() * 2;
+                    satellite.style.animationDelay = `-${randomDelay}s`;
+                });
+            }, 10000);
+
+            // Add keyboard navigation
+            document.addEventListener('keydown', function(e) {
+                const sections = ['overview', 'architecture', 'features', 'workflows', 'deployment'];
+                const currentIndex = sections.findIndex(section => 
+                    document.getElementById(section).classList.contains('active')
+                );
+
+                if (e.key === 'ArrowRight' && currentIndex < sections.length - 1) {
+                    e.preventDefault();
+                    const nextSection = sections[currentIndex + 1];
+                    document.querySelector(`[onclick="showSection('${nextSection}')"]`).click();
+                } else if (e.key === 'ArrowLeft' && currentIndex > 0) {
+                    e.preventDefault();
+                    const prevSection = sections[currentIndex - 1];
+                    document.querySelector(`[onclick="showSection('${prevSection}')"]`).click();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

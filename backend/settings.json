@@ -1,0 +1,73 @@
+{
+  "projectSources": [
+    {
+      "id": "1",
+      "name": "Local Projects",
+      "type": "local",
+      "path": "~/projects",
+      "enabled": true
+    },
+    {
+      "id": "2",
+      "name": "DIRK Projects",
+      "type": "local",
+      "path": "/Users/izverg/projects/dirk-brain-portal",
+      "enabled": true
+    },
+    {
+      "id": "3",
+      "name": "GitHub Repos",
+      "type": "remote",
+      "url": "https://api.github.com/user/repos",
+      "apiKey": "",
+      "enabled": false
+    }
+  ],
+  "aiProviders": {
+    "anthropic": {
+      "apiKey": "",
+      "enabled": false
+    },
+    "google": {
+      "apiKey": "",
+      "enabled": false
+    },
+    "openai": {
+      "apiKey": "",
+      "enabled": false
+    },
+    "local": {
+      "endpoint": "http://localhost:11434",
+      "enabled": true
+    }
+  },
+  "mcp": {
+    "enabled": true,
+    "servers": [
+      {
+        "id": "1",
+        "name": "Filesystem MCP",
+        "endpoint": "localhost:3100",
+        "enabled": true
+      },
+      {
+        "id": "2",
+        "name": "Docker MCP",
+        "endpoint": "localhost:3101",
+        "enabled": false
+      },
+      {
+        "id": "3",
+        "name": "Supabase MCP",
+        "endpoint": "localhost:3102",
+        "enabled": false
+      }
+    ]
+  },
+  "deployment": {
+    "defaultTarget": "local",
+    "localPath": "/Users/izverg/projects",
+    "remoteEndpoint": "",
+    "cloudProvider": "aws"
+  }
+}

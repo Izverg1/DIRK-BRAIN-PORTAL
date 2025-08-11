@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIRK.g Complete Guide - Business Analyst & Solutions Architect</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Include the same CSS from index.html for consistency */
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --bg-color: #ecf0f1;
+            --text-color: #2c3e50;
+            --border-color: #bdc3c7;
+            --code-bg: #f8f9fa;
+            --dirk-g-color: #9b59b6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--dirk-g-color), #8e44ad);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .nav {
+            background: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .nav a {
+            text-decoration: none;
+            color: var(--primary-color);
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .nav a:hover {
+            background-color: var(--dirk-g-color);
+            color: white;
+        }
+
+        .main-content {
+            padding: 2rem 0;
+        }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-left: 5px solid var(--dirk-g-color);
+        }
+
+        .command-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .command-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-top: 4px solid var(--dirk-g-color);
+        }
+
+        .command-card h4 {
+            color: var(--dirk-g-color);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .code-block {
+            background: var(--code-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .code-block::before {
+            content: attr(data-lang);
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: var(--dirk-g-color);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 3px;
+            font-size: 0.8rem;
+        }
+
+        .example-section {
+            background: linear-gradient(135deg, var(--dirk-g-color), #8e44ad);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+        }
+
+        .example-card {
+            background: rgba(255,255,255,0.1);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            backdrop-filter: blur(10px);
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+            border-left: 4px solid;
+        }
+
+        .alert.info {
+            background: #d4edda;
+            border-left-color: var(--success-color);
+            color: #155724;
+        }
+
+        .alert.warning {
+            background: #fff3cd;
+            border-left-color: var(--warning-color);
+            color: #856404;
+        }
+
+        .workflow-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .workflow-step {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-left: 4px solid var(--dirk-g-color);
+            position: relative;
+        }
+
+        .step-number {
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: var(--dirk-g-color);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .principles-showcase {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .principle-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-top: 3px solid var(--dirk-g-color);
+        }
+
+        .principle-card h4 {
+            color: var(--dirk-g-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 2rem;
+            padding: 0.5rem 1rem;
+            background: var(--dirk-g-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            background: #8e44ad;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1>🧠 DIRK.g Complete Guide</h1>
+            <p>Business Analyst & Solutions Architect System</p>
+        </div>
+    </header>
+
+    <nav class="nav">
+        <div class="container">
+            <ul>
+                <li><a href="index.html">← Back to Main</a></li>
+                <li><a href="#overview">Overview</a></li>
+                <li><a href="#commands">Commands</a></li>
+                <li><a href="#workflow">Workflow</a></li>
+                <li><a href="#examples">Examples</a></li>
+                <li><a href="#principles">DIRK Principles</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="container">
+            
+            <section id="overview">
+                <div class="card">
+                    <h2>🎯 What is DIRK.g?</h2>
+                    <p><strong>DIRK.g</strong> is the Business Analyst and Solutions Architect component of the DIRK system, powered by Google's Gemini AI. It specializes in analyzing business requirements, designing solution architectures, and creating detailed specifications that DIRK.c can implement.</p>
+                    
+                    <h3>Key Capabilities</h3>
+                    <ul>
+                        <li><strong>Business Requirements Analysis</strong> - Stakeholder analysis, acceptance criteria, business rules</li>
+                        <li><strong>Solution Architecture Design</strong> - Technology selection, design patterns, integration strategies</li>
+                        <li><strong>Risk Assessment</strong> - Security analysis, performance considerations, scalability planning</li>
+                        <li><strong>Implementation Planning</strong> - Development phases, resource requirements, timelines</li>
+                        <li><strong>DIRK Principles Application</strong> - Systematic application of all 8 cognitive principles</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="commands">
+                <div class="card">
+                    <h2>📋 DIRK.g Commands Reference</h2>
+                    
+                    <div class="command-grid">
+                        <div class="command-card">
+                            <h4>dirk_g_ba</h4>
+                            <p><strong>Business Analysis Command</strong></p>
+                            <div class="code-block" data-lang="bash">
+dirk_g_ba "requirement description"
+                            </div>
+                            <p>Analyzes business requirements and generates comprehensive specifications including stakeholder analysis, functional requirements, acceptance criteria, and risk assessment.</p>
+                            
+                            <h5>Example:</h5>
+                            <div class="code-block" data-lang="bash">
+dirk_g_ba "user authentication system with OAuth2 and multi-factor authentication"
+                            </div>
+                        </div>
+
+                        <div class="command-card">
+                            <h4>dirk_g_sa</h4>
+                            <p><strong>Solution Architecture Command</strong></p>
+                            <div class="code-block" data-lang="bash">
+dirk_g_sa "architectural requirement"
+                            </div>
+                            <p>Designs solution architecture with technology recommendations, design patterns, security considerations, and implementation strategies.</p>
+                            
+                            <h5>Example:</h5>
+                            <div class="code-block" data-lang="bash">
+dirk_g_sa "scalable rate limiting system with Redis backend for API protection"
+                            </div>
+                        </div>
+
+                        <div class="command-card">
+                            <h4>dirk_g_workflow</h4>
+                            <p><strong>Complete Analysis Workflow</strong></p>
+                            <div class="code-block" data-lang="bash">
+dirk_g_workflow "complete requirement"
+                            </div>
+                            <p>Runs complete Business Analysis → Solution Architecture workflow, generating comprehensive specifications ready for DIRK.c implementation.</p>
+                            
+                            <h5>Example:</h5>
+                            <div class="code-block" data-lang="bash">
+dirk_g_workflow "real-time web crawler monitoring dashboard with performance analytics"
+                            </div>
+                        </div>
+
+                        <div class="command-card">
+                            <h4>dirk_g_test</h4>
+                            <p><strong>System Test Command</strong></p>
+                            <div class="code-block" data-lang="bash">
+dirk_g_test
+                            </div>
+                            <p>Tests DIRK.g integration and displays available commands with usage examples.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="workflow">
+                <div class="card">
+                    <h2>🔄 DIRK.g Analysis Workflow</h2>
+                    
+                    <div class="workflow-steps">
+                        <div class="workflow-step">
+                            <div class="step-number">1</div>
+                            <h4>Requirements Gathering</h4>
+                            <p>Systematic elicitation of business needs, stakeholder analysis, and problem definition using structured frameworks.</p>
+                        </div>
+
+                        <div class="workflow-step">
+                            <div class="step-number">2</div>
+                            <h4>Business Analysis</h4>
+                            <p>Detailed analysis applying DIRK principles to create functional and non-functional requirements with acceptance criteria.</p>
+                        </div>
+
+                        <div class="workflow-step">
+                            <div class="step-number">3</div>
+                            <h4>Solution Architecture</h4>
+                            <p>Technical design with technology selection, design patterns, security architecture, and performance considerations.</p>
+                        </div>
+
+                        <div class="workflow-step">
+                            <div class="step-number">4</div>
+                            <h4>Implementation Strategy</h4>
+                            <p>Development approach with phases, resource requirements, risk mitigation, and handoff specifications for DIRK.c.</p>
+                        </div>
+
+                        <div class="workflow-step">
+                            <div class="step-number">5</div>
+                            <h4>Quality Validation</h4>
+                            <p>Review specifications against DIRK principles, validate completeness, and ensure implementability.</p>
+                        </div>
+
+                        <div class="workflow-step">
+                            <div class="step-number">6</div>
+                            <h4>DIRK.c Handoff</h4>
+                            <p>Generate structured specifications that DIRK.c can directly implement with all necessary context and requirements.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="examples" class="example-section">
+                <div class="container">
+                    <h2>🎯 Practical Examples</h2>
+                    
+                    <div class="example-card">
+                        <h3>Example 1: Web Crawler Rate Limiting</h3>
+                        <div class="code-block" data-lang="bash">
+dirk_g_workflow "intelligent rate limiting system for web crawler to prevent being blocked by target websites"
+                        </div>
+                        <p><strong>Generated Output:</strong></p>
+                        <ul>
+                            <li>Business requirements with crawler protection needs</li>
+                            <li>Rate limiting algorithms and strategies</li>
+                            <li>Technology recommendations (Redis, algorithms)</li>
+                            <li>Security and performance considerations</li>
+                            <li>Implementation phases and testing strategy</li>
+                        </ul>
+                    </div>
+
+                    <div class="example-card">
+                        <h3>Example 2: User Authentication System</h3>
+                        <div class="code-block" data-lang="bash">
+dirk_g_ba "secure user authentication with OAuth2, JWT tokens, and role-based access control"
+                        </div>
+                        <p><strong>Generated Output:</strong></p>
+                        <ul>
+                            <li>Stakeholder analysis (users, administrators, security team)</li>
+                            <li>Authentication flow requirements</li>
+                            <li>Security requirements and threat modeling</li>
+                            <li>Acceptance criteria for each authentication method</li>
+                            <li>Integration requirements with existing systems</li>
+                        </ul>
+                    </div>
+
+                    <div class="example-card">
+                        <h3>Example 3: Monitoring Dashboard</h3>
+                        <div class="code-block" data-lang="bash">
+dirk_g_sa "real-time monitoring dashboard architecture for web crawler performance and health metrics"
+                        </div>
+                        <p><strong>Generated Output:</strong></p>
+                        <ul>
+                            <li>Dashboard architecture with microservices</li>
+                            <li>Real-time data pipeline design</li>
+                            <li>Technology stack recommendations (React, WebSockets, InfluxDB)</li>
+                            <li>Scalability and performance architecture</li>
+                            <li>Security design for sensitive metrics</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section id="principles">
+                <div class="card">
+                    <h2>🧠 DIRK Principles in Business Analysis</h2>
+                    <p>DIRK.g applies all 8 core DIRK principles systematically to ensure high-quality analysis and architecture:</p>
+                    
+                    <div class="principles-showcase">
+                        <div class="principle-card">
+                            <h4>1. Systematic Doubt</h4>
+                            <p><strong>In BA:</strong> Challenge business assumptions, question unstated requirements, validate stakeholder needs.</p>
+                            <p><strong>In SA:</strong> Question technology choices, challenge performance assumptions, validate architecture decisions.</p>
+                        </div>
+
+                        <div class="principle-card">
+                            <h4>2. Foundational Reasoning</h4>
+                            <p><strong>In BA:</strong> Anchor requirements to business objectives, ensure alignment with enterprise strategy.</p>
+                            <p><strong>In SA:</strong> Base architecture on proven patterns, align with enterprise architecture principles.</p>
+                        </div>
+
+                        <div class="principle-card">
+                            <h4>3. Formal Logic</h4>
+                            <p><strong>In BA:</strong> Ensure requirements are complete, consistent, and testable with clear acceptance criteria.</p>
+                            <p><strong>In SA:</strong> Apply proven design patterns, ensure logical component interactions.</p>
+                        </div>
+
+                        <div class="principle-card">
+                            <h4>4. Empirical Grounding</h4>
+                            <p><strong>In BA:</strong> Validate requirements against real user needs and market research.</p>
+                            <p><strong>In SA:</strong> Base technology decisions on performance metrics and real-world constraints.</p>
+                        </div>
+
+                        <div class="principle-card">
+                            <h4>5. Abstraction</h4>
+                            <p><strong>In BA:</strong> Break complex business needs into manageable, understandable components.</p>
+                            <p><strong>In SA:</strong> Design clean interfaces, clear separation of concerns, modular architecture.</p>
+                        </div>
+
+                        <div class="principle-card">
+                            <h4>6. Inference to Best Explanation</h4>
+                            <p><strong>In BA:</strong> Identify the real business problem behind stated requirements.</p>
+                            <p><strong>In SA:</strong> Select optimal technology and architecture patterns with clear rationale.</p>
+                        </div>
+
+                        <div class="principle-card">
+                            <h4>7. Understanding Limits</h4>
+                            <p><strong>In BA:</strong> Acknowledge scope, budget, timeline, and resource constraints.</p>
+                            <p><strong>In SA:</strong> Document technical constraints, performance limits, and trade-offs.</p>
+                        </div>
+
+                        <div class="principle-card">
+                            <h4>8. Cognitive Awareness</h4>
+                            <p><strong>In BA:</strong> Consider stakeholder perspectives, communication clarity, change management.</p>
+                            <p><strong>In SA:</strong> Focus on long-term maintainability, team capabilities, operational complexity.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="output">
+                <div class="card">
+                    <h2>📄 DIRK.g Output Structure</h2>
+                    
+                    <h3>Business Analysis Output</h3>
+                    <div class="code-block" data-lang="markdown">
+🧠 DIRK.g BUSINESS ANALYSIS
+
+PROBLEM STATEMENT:
+[Clear business context and need]
+
+STAKEHOLDER ANALYSIS:
+[Who are the users and their needs]
+
+FUNCTIONAL REQUIREMENTS:
+[What the system must do]
+
+NON-FUNCTIONAL REQUIREMENTS:
+[Performance, security, scalability]
+
+ACCEPTANCE CRITERIA:
+[How to test success]
+
+BUSINESS RULES:
+[Constraints and policies]
+
+RISK ANALYSIS:
+[What could go wrong]
+
+IMPLEMENTATION NOTES:
+[Guidance for DIRK.c developer]
+                    </div>
+
+                    <h3>Solution Architecture Output</h3>
+                    <div class="code-block" data-lang="markdown">
+🏗️ DIRK.g SOLUTION ARCHITECTURE
+
+ARCHITECTURE DECISION RECORDS:
+[Why specific technical choices]
+
+COMPONENT DESIGN:
+[How system parts interact]
+
+TECHNOLOGY STACK:
+[Tools and frameworks to use]
+
+SECURITY ARCHITECTURE:
+[How to protect the system]
+
+PERFORMANCE DESIGN:
+[How to ensure scalability]
+
+IMPLEMENTATION STRATEGY:
+[Development phases and approach]
+                    </div>
+                </div>
+            </section>
+
+            <section id="validation">
+                <div class="card">
+                    <h2>🔍 DIRK.g Validation of DIRK.c Work</h2>
+                    <p>DIRK.g can analyze and validate DIRK.c implementations to ensure they meet specifications and enterprise standards.</p>
+                    
+                    <h3>📊 Validation Commands</h3>
+                    <div class="command-grid">
+                        <div class="command-card">
+                            <h4>dirk_g_validate</h4>
+                            <p><strong>Implementation Validation</strong></p>
+                            <div class="code-block" data-lang="bash">
+dirk_g_validate "path/to/implementation.ts" "specification.md"
+                            </div>
+                            <p>Validates DIRK.c implementation against original DIRK.g specifications and requirements.</p>
+                            
+                            <h5>Validation Areas:</h5>
+                            <ul>
+                                <li>Business requirements compliance</li>
+                                <li>Solution architecture adherence</li>
+                                <li>Security implementation verification</li>
+                                <li>Performance requirements validation</li>
+                                <li>Enterprise pattern compliance</li>
+                            </ul>
+                        </div>
+
+                        <div class="command-card">
+                            <h4>dirk_g_quality_review</h4>
+                            <p><strong>Quality Assessment</strong></p>
+                            <div class="code-block" data-lang="bash">
+dirk_g_quality_review "implementation_directory/"
+                            </div>
+                            <p>Comprehensive quality review of DIRK.c implementations with improvement recommendations.</p>
+                            
+                            <h5>Quality Dimensions:</h5>
+                            <ul>
+                                <li>Code architecture assessment</li>
+                                <li>Security vulnerability analysis</li>
+                                <li>Performance bottleneck identification</li>
+                                <li>Maintainability evaluation</li>
+                                <li>Enterprise standard compliance</li>
+                            </ul>
+                        </div>
+
+                        <div class="command-card">
+                            <h4>dirk_g_compliance_check</h4>
+                            <p><strong>Specification Compliance</strong></p>
+                            <div class="code-block" data-lang="bash">
+dirk_g_compliance_check --comprehensive --report
+                            </div>
+                            <p>Detailed compliance analysis against DIRK.g specifications with certification scoring.</p>
+                            
+                            <h5>Compliance Areas:</h5>
+                            <ul>
+                                <li>Functional requirements coverage</li>
+                                <li>Non-functional requirements validation</li>
+                                <li>API contract compliance</li>
+                                <li>Security requirement implementation</li>
+                                <li>Performance target achievement</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="tips">
+                <div class="card">
+                    <h2>💡 Best Practices & Tips</h2>
+                    
+                    <div class="alert info">
+                        <strong>Tip 1:</strong> Be specific and detailed in your requirement descriptions. The more context you provide, the better the analysis.
+                    </div>
+
+                    <div class="alert info">
+                        <strong>Tip 2:</strong> Use dirk_g_workflow for complete features. Use dirk_g_ba and dirk_g_sa separately for focused analysis.
+                    </div>
+
+                    <div class="alert info">
+                        <strong>Tip 3:</strong> Review the generated specifications before handing off to DIRK.c to ensure they match your vision.
+                    </div>
+
+                    <div class="alert warning">
+                        <strong>Note:</strong> DIRK.g requires Gemini CLI to be installed and configured. Make sure you have API access.
+                    </div>
+
+                    <h3>Common Usage Patterns</h3>
+                    <ul>
+                        <li><strong>New Feature Development:</strong> Use dirk_g_workflow for complete analysis</li>
+                        <li><strong>Architecture Reviews:</strong> Use dirk_g_sa to evaluate existing designs</li>
+                        <li><strong>Requirements Clarification:</strong> Use dirk_g_ba to refine unclear requirements</li>
+                        <li><strong>Technical Decisions:</strong> Use dirk_g_sa to compare technology options</li>
+                    </ul>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <footer style="background: var(--primary-color); color: white; text-align: center; padding: 2rem 0; margin-top: 3rem;">
+        <div class="container">
+            <p><a href="index.html" style="color: white;">← Back to Main Documentation</a></p>
+            <p>DIRK.g - Business Analyst & Solutions Architect System</p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add copy functionality to code blocks
+        document.querySelectorAll('.code-block').forEach(block => {
+            const copyBtn = document.createElement('button');
+            copyBtn.textContent = 'Copy';
+            copyBtn.style.cssText = `
+                position: absolute;
+                top: 0.5rem;
+                left: 0.5rem;
+                background: var(--success-color);
+                color: white;
+                border: none;
+                padding: 0.25rem 0.5rem;
+                border-radius: 3px;
+                cursor: pointer;
+                font-size: 0.8rem;
+                z-index: 10;
+            `;
+            
+            copyBtn.addEventListener('click', () => {
+                navigator.clipboard.writeText(block.textContent).then(() => {
+                    copyBtn.textContent = 'Copied!';
+                    setTimeout(() => {
+                        copyBtn.textContent = 'Copy';
+                    }, 2000);
+                });
+            });
+            
+            block.style.position = 'relative';
+            block.appendChild(copyBtn);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIRK BRAIN Portal - Ultimate AI Agent Orchestration Showcase</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Fira+Code:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Fira Code', monospace;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0a1a 25%, #0a1a1a 50%, #1a1a0a 75%, #0a0a0a 100%);
+            color: #00ff00;
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Matrix-style background effect */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(0, 255, 0, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(255, 0, 255, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 1;
+            animation: backgroundPulse 10s ease-in-out infinite;
+        }
+
+        @keyframes backgroundPulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.6; }
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Section */
+        .hero-section {
+            text-align: center;
+            padding: 60px 0;
+            background: linear-gradient(135deg, rgba(0, 255, 0, 0.1) 0%, rgba(0, 0, 0, 0.9) 100%);
+            border: 2px solid rgba(0, 255, 0, 0.3);
+            border-radius: 20px;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 0, 0.1), transparent);
+            animation: heroScan 4s linear infinite;
+        }
+
+        @keyframes heroScan {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .hero-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 4rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00ff00 0%, #00ffff 50%, #ff00ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            text-shadow: 0 0 30px rgba(0, 255, 0, 0.8);
+            letter-spacing: 3px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.4rem;
+            color: #00ffff;
+            margin-bottom: 30px;
+            font-weight: 300;
+            text-shadow: 0 0 15px rgba(0, 255, 255, 0.6);
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 30px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(0, 255, 0, 0.3);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-number {
+            font-family: 'Orbitron', monospace;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #00ff00;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #00ffff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Feature Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, rgba(0, 255, 0, 0.1) 0%, rgba(0, 0, 0, 0.9) 100%);
+            border: 2px solid rgba(0, 255, 0, 0.3);
+            border-radius: 15px;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 0, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .feature-card:hover::before {
+            left: 100%;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(0, 255, 0, 0.8);
+            box-shadow: 0 15px 40px rgba(0, 255, 0, 0.3);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            display: block;
+            text-align: center;
+        }
+
+        .feature-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #00ff00;
+            margin-bottom: 15px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .feature-description {
+            color: #00ffff;
+            line-height: 1.6;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .feature-details {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(0, 255, 0, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+            font-size: 0.9rem;
+            color: #ffffff;
+        }
+
+        /* Architecture Section */
+        .architecture-section {
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0.9) 100%);
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 40px 0;
+            position: relative;
+        }
+
+        .section-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #00ffff;
+            text-align: center;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
+        }
+
+        .architecture-layers {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .layer-card {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .layer-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #00ffff, #ff00ff, #00ff00);
+            animation: layerPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes layerPulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        .layer-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #00ffff;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .layer-tech {
+            color: #00ff00;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .layer-description {
+            color: #ffffff;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        /* Demo Section */
+        .demo-section {
+            background: linear-gradient(135deg, rgba(255, 0, 255, 0.1) 0%, rgba(0, 0, 0, 0.9) 100%);
+            border: 2px solid rgba(255, 0, 255, 0.3);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 40px 0;
+            text-align: center;
+        }
+
+        .demo-visualization {
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid rgba(255, 0, 255, 0.3);
+            border-radius: 15px;
+            padding: 40px;
+            margin: 30px 0;
+            min-height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .demo-visualization::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 30% 30%, rgba(255, 0, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 70% 70%, rgba(0, 255, 255, 0.1) 0%, transparent 50%);
+            animation: demoGlow 5s ease-in-out infinite;
+        }
+
+        @keyframes demoGlow {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.8; }
+        }
+
+        .agent-network {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            z-index: 2;
+        }
+
+        .central-node {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle, rgba(255, 0, 255, 0.8), rgba(255, 0, 255, 0.3));
+            border: 3px solid #ff00ff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Orbitron', monospace;
+            font-size: 0.8rem;
+            color: #ffffff;
+            font-weight: 700;
+            animation: centralPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes centralPulse {
+            0%, 100% { 
+                transform: translate(-50%, -50%) scale(1);
+                box-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
+            }
+            50% { 
+                transform: translate(-50%, -50%) scale(1.1);
+                box-shadow: 0 0 40px rgba(255, 0, 255, 0.8);
+            }
+        }
+
+        .agent-node {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: radial-gradient(circle, rgba(0, 255, 0, 0.8), rgba(0, 255, 0, 0.3));
+            border: 2px solid #00ff00;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            color: #ffffff;
+            font-weight: 600;
+            animation: agentOrbit 8s linear infinite;
+        }
+
+        .agent-node:nth-child(2) { 
+            top: 20px; 
+            left: 50%; 
+            transform: translateX(-50%);
+            animation-delay: 0s;
+        }
+        .agent-node:nth-child(3) { 
+            top: 50%; 
+            right: 20px; 
+            transform: translateY(-50%);
+            animation-delay: -2s;
+        }
+        .agent-node:nth-child(4) { 
+            bottom: 20px; 
+            left: 50%; 
+            transform: translateX(-50%);
+            animation-delay: -4s;
+        }
+        .agent-node:nth-child(5) { 
+            top: 50%; 
+            left: 20px; 
+            transform: translateY(-50%);
+            animation-delay: -6s;
+        }
+
+        @keyframes agentOrbit {
+            0% { 
+                box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+            }
+            25% { 
+                box-shadow: 0 0 20px rgba(0, 255, 0, 0.6);
+            }
+            50% { 
+                box-shadow: 0 0 15px rgba(0, 255, 0, 0.4);
+            }
+            75% { 
+                box-shadow: 0 0 25px rgba(0, 255, 0, 0.7);
+            }
+            100% { 
+                box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+            }
+        }
+
+        /* Code Example Section */
+        .code-section {
+            background: linear-gradient(135deg, rgba(0, 255, 0, 0.1) 0%, rgba(0, 0, 0, 0.95) 100%);
+            border: 2px solid rgba(0, 255, 0, 0.3);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 40px 0;
+        }
+
+        .code-block {
+            background: #000000;
+            border: 1px solid rgba(0, 255, 0, 0.3);
+            border-radius: 10px;
+            padding: 25px;
+            margin: 20px 0;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            color: #00ff00;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .code-block::before {
+            content: '> DIRK BRAIN DEPLOYMENT';
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background: #000000;
+            color: #00ff00;
+            padding: 0 10px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+
+        .code-comment {
+            color: #00ffff;
+            font-style: italic;
+        }
+
+        .code-string {
+            color: #ff00ff;
+        }
+
+        .code-keyword {
+            color: #ffff00;
+            font-weight: 600;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, rgba(255, 255, 0, 0.1) 0%, rgba(0, 0, 0, 0.9) 100%);
+            border: 2px solid rgba(255, 255, 0, 0.3);
+            border-radius: 20px;
+            padding: 60px 40px;
+            margin: 40px 0;
+            text-align: center;
+        }
+
+        .cta-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 2.8rem;
+            font-weight: 900;
+            color: #ffff00;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 25px rgba(255, 255, 0, 0.8);
+        }
+
+        .cta-description {
+            font-size: 1.2rem;
+            color: #ffffff;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #ffff00, #ff00ff);
+            color: #000000;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 30px;
+            font-family: 'Orbitron', monospace;
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(255, 255, 0, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(255, 255, 0, 0.5);
+            background: linear-gradient(135deg, #ff00ff, #00ffff);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-stats {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .architecture-layers {
+                grid-template-columns: 1fr;
+            }
+            
+            .agent-network {
+                width: 250px;
+                height: 250px;
+            }
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #00ff00, #00ffff);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #00ffff, #ff00ff);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <h1 class="hero-title">DIRK BRAIN Portal</h1>
+            <p class="hero-subtitle">Revolutionary AI Agent Orchestration Platform</p>
+            <p style="font-size: 1.1rem; color: #ffffff; max-width: 800px; margin: 0 auto; line-height: 1.6;">
+                Transform your development workflow with immersive 3D visualization, intelligent agent coordination, 
+                and cutting-edge automation. Experience the most advanced AI orchestration platform ever created.
+            </p>
+            
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <span class="stat-number">95%</span>
+                    <span class="stat-label">Complete</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">40+</span>
+                    <span class="stat-label">Components</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">3D</span>
+                    <span class="stat-label">Immersive</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">AI</span>
+                    <span class="stat-label">Powered</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features Grid -->
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🌐</div>
+                <h3 class="feature-title">Immersive 3D Interface</h3>
+                <p class="feature-description">
+                    Visualize your AI agents in a stunning 3D environment with real-time performance metrics 
+                    and intuitive spatial controls.
+                </p>
+                <div class="feature-details">
+                    <strong>Technologies:</strong> React Three Fiber, Three.js, WebGL<br>
+                    <strong>Features:</strong> Real-time rendering, Interactive controls, Performance monitoring
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🤖</div>
+                <h3 class="feature-title">GOD Mode Orchestration</h3>
+                <p class="feature-description">
+                    Intelligent task decomposition and automatic agent selection with machine learning-based 
+                    optimization and predictive analytics.
+                </p>
+                <div class="feature-details">
+                    <strong>Capabilities:</strong> Task decomposition, Agent selection, Failure recovery<br>
+                    <strong>AI Models:</strong> Claude, Gemini, GPT-4, Custom agents
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🗣️</div>
+                <h3 class="feature-title">Voice & Gesture Control</h3>
+                <p class="feature-description">
+                    Natural language commands and intuitive gesture controls for seamless interaction 
+                    with your AI ecosystem.
+                </p>
+                <div class="feature-details">
+                    <strong>Input Methods:</strong> Voice commands, Gesture recognition, Natural language<br>
+                    <strong>Integration:</strong> Web Speech API, Computer vision, NLP processing
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">📡</div>
+                <h3 class="feature-title">Real-time Coordination</h3>
+                <p class="feature-description">
+                    Live agent communication, workflow streaming, and performance monitoring with 
+                    beautiful data visualizations.
+                </p>
+                <div class="feature-details">
+                    <strong>Communication:</strong> WebSocket connections, Real-time updates, Live streaming<br>
+                    <strong>Monitoring:</strong> Performance metrics, Health checks, Alert systems
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🔮</div>
+                <h3 class="feature-title">Predictive Intelligence</h3>
+                <p class="feature-description">
+                    Machine learning-powered forecasting, performance optimization, and intelligent 
+                    recommendations for system improvements.
+                </p>
+                <div class="feature-details">
+                    <strong>ML Features:</strong> Predictive analytics, Performance optimization, Smart recommendations<br>
+                    <strong>Learning:</strong> Pattern recognition, Failure prediction, Resource optimization
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🛡️</div>
+                <h3 class="feature-title">Enterprise Security</h3>
+                <p class="feature-description">
+                    Advanced security protocols, encrypted communications, and comprehensive audit trails 
+                    for enterprise-grade deployments.
+                </p>
+                <div class="feature-details">
+                    <strong>Security:</strong> End-to-end encryption, OAuth integration, Role-based access<br>
+                    <strong>Compliance:</strong> Audit trails, Data protection, Security monitoring
+                </div>
+            </div>
+        </div>
+
+        <!-- Architecture Section -->
+        <div class="architecture-section">
+            <h2 class="section-title">System Architecture</h2>
+            <p style="text-align: center; font-size: 1.1rem; color: #ffffff; margin-bottom: 30px;">
+                Multi-layered hybrid architecture combining cutting-edge technologies for optimal performance and user experience.
+            </p>
+            
+            <div class="architecture-layers">
+                <div class="layer-card">
+                    <h4 class="layer-title">🎨 Frontend Layer</h4>
+                    <div class="layer-tech">Next.js 15 + React 19 + Three.js + React Three Fiber</div>
+                    <p class="layer-description">
+                        Immersive 3D experiences with smooth animations, responsive design, and real-time data visualization. 
+                        Advanced UI components with gesture and voice control integration.
+                    </p>
+                </div>
+
+                <div class="layer-card">
+                    <h4 class="layer-title">🔄 Real-time Layer</h4>
+                    <div class="layer-tech">Node.js + Socket.io + WebRTC + Redis Pub/Sub</div>
+                    <p class="layer-description">
+                        Instant agent communication and live workflow streaming with WebSocket connections. 
+                        Real-time collaboration and multi-user synchronization capabilities.
+                    </p>
+                </div>
+
+                <div class="layer-card">
+                    <h4 class="layer-title">🧠 Intelligence Layer</h4>
+                    <div class="layer-tech">Python FastAPI + ML Models + TensorFlow + PyTorch</div>
+                    <p class="layer-description">
+                        GOD mode orchestration and predictive analytics for optimal agent coordination. 
+                        Machine learning models for pattern recognition and intelligent decision making.
+                    </p>
+                </div>
+
+                <div class="layer-card">
+                    <h4 class="layer-title">💾 Data Layer</h4>
+                    <div class="layer-tech">PostgreSQL + Redis + Prisma ORM + Vector DB</div>
+                    <p class="layer-description">
+                        Robust persistent storage, high-speed caching, and seamless data access. 
+                        Vector database for AI embeddings and semantic search capabilities.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Demo Visualization -->
+        <div class="demo-section">
+            <h2 class="section-title">Live Agent Network</h2>
+            <p style="font-size: 1.1rem; color: #ffffff; margin-bottom: 30px;">
+                Watch AI agents coordinate in real-time through the DIRK BRAIN Portal's 3D visualization system.
+            </p>
+            
+            <div class="demo-visualization">
+                <div class="agent-network">
+                    <div class="central-node">GOD</div>
+                    <div class="agent-node">C</div>
+                    <div class="agent-node">G</div>
+                    <div class="agent-node">D</div>
+                    <div class="agent-node">S</div>
+                </div>
+            </div>
+            
+            <p style="font-size: 0.9rem; color: #00ffff; margin-top: 20px;">
+                <strong>GOD:</strong> Central orchestrator managing task distribution<br>
+                <strong>C:</strong> Claude agent for implementation<br>
+                <strong>G:</strong> Gemini agent for analysis<br>
+                <strong>D:</strong> Desktop agent for system integration<br>
+                <strong>S:</strong> Specialized sub-agents for specific tasks
+            </p>
+        </div>
+
+        <!-- Code Example -->
+        <div class="code-section">
+            <h2 class="section-title">One-Script Deployment</h2>
+            <p style="text-align: center; font-size: 1.1rem; color: #ffffff; margin-bottom: 30px;">
+                Deploy the entire DIRK BRAIN Portal ecosystem with a single command.
+            </p>
+            
+            <div class="code-block">
+<span class="code-comment"># Download and run the DIRK BRAIN Portal installer</span>
+<span class="code-keyword">curl</span> -sSL https://dirk-brain.com/install | <span class="code-keyword">bash</span>
+
+<span class="code-comment"># Or clone and deploy manually</span>
+<span class="code-keyword">git clone</span> <span class="code-string">https://github.com/dirk-brain/portal.git</span>
+<span class="code-keyword">cd</span> portal
+<span class="code-keyword">./deploy-dirk-brain.sh</span>
+
+<span class="code-comment"># Advanced deployment with custom configuration</span>
+<span class="code-keyword">dirk deploy</span> --agents <span class="code-string">claude,gemini,sub-agents</span> \
+  --hooks <span class="code-string">git,file-watch,godmode</span> \
+  --project <span class="code-string">/path/to/project</span> \
+  --template <span class="code-string">react-enterprise</span>
+
+<span class="code-comment"># GOD Mode deployment for complex projects</span>
+<span class="code-keyword">godmode deploy</span> <span class="code-string">"Full-stack React app with auth"</span> \
+  --parallel --auto-recovery --3d-visualization
+            </div>
+        </div>
+
+        <!-- Call to Action -->
+        <div class="cta-section">
+            <h2 class="cta-title">Transform Your Workflow</h2>
+            <p class="cta-description">
+                Ready to experience the most advanced AI agent orchestration platform ever built? 
+                Join the revolution in AI-powered development and transform how you build software.
+            </p>
+            <a href="#" class="cta-button">Start Your Journey</a>
+            
+            <div style="margin-top: 40px; font-size: 0.9rem; color: #00ffff;">
+                <p><strong>✨ What you get:</strong></p>
+                <p>• Immersive 3D agent visualization</p>
+                <p>• Intelligent task orchestration</p>
+                <p>• Voice and gesture controls</p>
+                <p>• Real-time collaboration</p>
+                <p>• Enterprise-grade security</p>
+                <p>• One-script deployment</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add some interactive effects
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate feature cards on scroll
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animation = 'fadeInUp 0.6s ease-out forwards';
+                    }
+                });
+            }, observerOptions);
+
+            // Observe all feature cards
+            document.querySelectorAll('.feature-card, .layer-card').forEach(card => {
+                observer.observe(card);
+            });
+
+            // Add click effects to feature cards
+            document.querySelectorAll('.feature-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = 'translateY(-5px)';
+                    }, 150);
+                });
+            });
+        });
+
+        // Add CSS animation for fade in effect
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

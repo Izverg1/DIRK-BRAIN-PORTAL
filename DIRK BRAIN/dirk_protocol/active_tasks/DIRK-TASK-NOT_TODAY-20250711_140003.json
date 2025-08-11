@@ -1,0 +1,61 @@
+{
+  "task_id": "DIRK-TASK-NOT_TODAY-20250711_140003",
+  "project": "NOT_TODAY",
+  "project_path": "/Users/izverg/projects/NOT_TODAY/v0-untitled-project/",
+  "project_identifier": {
+    "name": "NOT_TODAY",
+    "package_name": "my-DIRK-project", 
+    "has_brain_folder": true,
+    "working_directory_pattern": "**/NOT_TODAY/v0-untitled-project",
+    "next_js_version": "15.2.4",
+    "react_version": "19"
+  },
+  "validation_checksum": "sha256_brain_validated_20250711",
+  "priority": "MEDIUM",
+  "status": "ASSIGNED", 
+  "assigned_to": "DIRK.c",
+  "deadline": "2025-07-16",
+  "title": "Build AI Coping Buddy Generation & Safety Guardrail System",
+  "description": "Implement the sophisticated AI personality generation system with dynamic prompt creation, substance-specific knowledge bases, multi-layer content filtering, and crisis detection protocols. Ensure 100% guardrail effectiveness for recovery-focused conversations.",
+  "requirements": {
+    "typescript_types": true,
+    "test_coverage": "100%",
+    "ai_safety": "enterprise_grade",
+    "dirk_compliance": true,
+    "claude_api_integration": true,
+    "crisis_detection": "real_time"
+  },
+  "dependencies": ["DIRK-TASK-NOT_TODAY-20250711_140002"],
+  "brain_references": [
+    "/Users/izverg/projects/NOT_TODAY/v0-untitled-project/BRAIN/not_today_dynamic_addiction_architecture.md",
+    "/Users/izverg/projects/NOT_TODAY/v0-untitled-project/BRAIN/crisis_relay_architecture_svg.svg"
+  ],
+  "validation_required": {
+    "check_working_directory": true,
+    "verify_brain_folder_exists": true, 
+    "validate_referenced_files": true,
+    "confirm_project_identity": true,
+    "verify_claude_api_access": true
+  },
+  "technical_specifications": {
+    "components_to_create": [
+      "lib/ai/buddy-generator.ts",
+      "lib/ai/content-guardrails.ts",
+      "lib/ai/crisis-detector.ts",
+      "lib/ai/knowledge-base.ts",
+      "components/chat/ai-buddy-interface.tsx"
+    ],
+    "ai_integration": {
+      "provider": "anthropic_claude",
+      "model": "claude-3-sonnet",
+      "safety_layers": 4,
+      "response_filtering": "multi_modal"
+    },
+    "guardrail_system": {
+      "keyword_filtering": "substance_specific",
+      "semantic_analysis": "recovery_context_only",
+      "crisis_triggers": "immediate_escalation",
+      "redirect_templates": "personalized_by_addiction_type"
+    }
+  }
+}

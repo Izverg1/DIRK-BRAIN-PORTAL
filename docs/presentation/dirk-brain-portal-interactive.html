@@ -1,0 +1,1699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIRK BRAIN Portal - Interactive Presentation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Orbitron', 'Courier New', monospace;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 25%, #16213e 50%, #0f0f23 75%, #000000 100%);
+            color: #00ffff;
+            overflow: hidden;
+            height: 100vh;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 0, 255, 0.1) 0%, transparent 50%),
+                linear-gradient(45deg, transparent 49%, rgba(0, 255, 255, 0.03) 50%, transparent 51%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .presentation-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+        }
+
+        .slide {
+            display: none;
+            width: 95%;
+            max-width: 1400px;
+            height: 90vh;
+            padding: 30px;
+            text-align: center;
+            animation: slideIn 0.5s ease-in-out;
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.05) 0%, rgba(0, 0, 0, 0.8) 100%);
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 
+                0 0 50px rgba(0, 255, 255, 0.2),
+                inset 0 0 50px rgba(0, 255, 255, 0.05);
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            display: block;
+        } 
+       @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #00ffff 0%, #ff00ff 50%, #ffff00 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(0, 255, 255, 0.8);
+            line-height: 1.1;
+            font-family: 'Orbitron', monospace;
+            letter-spacing: 2px;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #00ffff;
+            text-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
+            font-family: 'Orbitron', monospace;
+            letter-spacing: 1px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #ffff00;
+            margin-bottom: 1.5rem;
+            font-weight: 300;
+            text-shadow: 0 0 10px rgba(255, 255, 0, 0.6);
+            font-family: 'Courier New', monospace;
+        }
+
+        .description {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #b0e0e6;
+            margin-bottom: 2rem;
+            font-family: 'Courier New', monospace;
+        }
+
+        .detailed-description {
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #87ceeb;
+            margin-bottom: 2rem;
+            text-align: left;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 255, 255, 0.2);
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .interactive-card {
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0.9) 100%);
+            border: 1px solid rgba(0, 255, 255, 0.4);
+            border-radius: 15px;
+            padding: 1.2rem;
+            text-align: left;
+            transition: all 0.3s ease;
+            box-shadow: 
+                0 5px 15px rgba(0, 255, 255, 0.2),
+                inset 0 1px 0 rgba(0, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }  
+      .interactive-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .interactive-card:hover::before {
+            left: 100%;
+        }
+
+        .interactive-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 15px 30px rgba(0, 255, 255, 0.3),
+                inset 0 1px 0 rgba(0, 255, 255, 0.2);
+            border-color: rgba(0, 255, 255, 0.8);
+        }
+
+        .interactive-card.active {
+            border-color: rgba(255, 0, 255, 0.8);
+            box-shadow: 0 0 25px rgba(255, 0, 255, 0.4);
+            transform: scale(1.02);
+        }
+
+        .interactive-card::after {
+            content: '👆 Click to explore';
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.6rem;
+            color: rgba(0, 255, 255, 0.6);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            font-family: 'Courier New', monospace;
+        }
+
+        .interactive-card:hover::after {
+            opacity: 1;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #00ffff;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.6);
+            font-family: 'Orbitron', monospace;
+            letter-spacing: 0.5px;
+        }
+
+        .card-description {
+            font-size: 0.85rem;
+            color: #b0e0e6;
+            line-height: 1.4;
+            font-family: 'Courier New', monospace;
+        }
+
+        .visualization-area {
+            margin-top: 2rem;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 255, 255, 0.05) 100%);
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            border-radius: 15px;
+            padding: 1.5rem;
+            min-height: 300px;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .visualization-area::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 0, 255, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }        .v
+iz-container {
+            position: relative;
+            z-index: 2;
+        }
+
+        .viz-title {
+            font-size: 1.2rem;
+            color: #00ffff;
+            text-align: center;
+            margin-bottom: 0.5rem;
+            font-family: 'Orbitron', monospace;
+            text-shadow: 0 0 15px rgba(0, 255, 255, 0.8);
+        }
+
+        .viz-subtitle {
+            font-size: 0.8rem;
+            color: #ffff00;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-family: 'Courier New', monospace;
+            opacity: 0.8;
+        }
+
+        .viz-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 180px;
+            position: relative;
+            justify-content: center;
+        }
+
+        .viz-description {
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 1rem;
+            font-size: 0.8rem;
+            color: #b0e0e6;
+            font-family: 'Courier New', monospace;
+            line-height: 1.4;
+            text-align: center;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 1rem;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(0, 0, 0, 0.8));
+            color: #00ffff;
+            border: 1px solid rgba(0, 255, 255, 0.5);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+            font-family: 'Orbitron', monospace;
+            font-size: 0.8rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 255, 255, 0.5);
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.3), rgba(0, 0, 0, 0.9));
+            border-color: rgba(0, 255, 255, 0.8);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .slide-counter {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 8px 16px;
+            border-radius: 15px;
+            border: 1px solid rgba(0, 255, 255, 0.5);
+            color: #00ffff;
+            font-weight: 600;
+            font-family: 'Orbitron', monospace;
+            font-size: 0.8rem;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+            z-index: 1000;
+        }     
+   /* Animation Styles */
+        .chaos-center {
+            width: 80px;
+            height: 80px;
+            border: 3px solid #ffff00;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            color: #ffff00;
+            background: rgba(255, 255, 0, 0.1);
+            animation: centerOverload 2s ease-in-out infinite;
+            position: relative;
+        }
+
+        .chaos-satellite {
+            position: absolute;
+            width: 35px;
+            height: 35px;
+            border: 2px solid #ff0066;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            color: #ff0066;
+            background: rgba(255, 0, 102, 0.1);
+            animation: satelliteChaos 3s ease-in-out infinite;
+        }
+
+        @keyframes centerOverload {
+            0%, 100% { 
+                transform: scale(1); 
+                border-color: #ffff00;
+                box-shadow: 0 0 10px rgba(255, 255, 0, 0.3);
+            }
+            50% { 
+                transform: scale(1.2); 
+                border-color: #ff0066;
+                box-shadow: 0 0 25px rgba(255, 0, 102, 0.6);
+            }
+        }
+
+        @keyframes satelliteChaos {
+            0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
+            25% { transform: translateY(-15px) rotate(90deg) scale(1.1); }
+            50% { transform: translateY(10px) rotate(180deg) scale(0.9); }
+            75% { transform: translateY(-5px) rotate(270deg) scale(1.05); }
+        }
+
+        .solution-sphere {
+            width: 80px;
+            height: 80px;
+            border: 3px solid #00ffff;
+            border-radius: 50%;
+            position: relative;
+            animation: solution3DRotate 4s linear infinite;
+            background: radial-gradient(circle, rgba(0, 255, 255, 0.2), transparent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #00ffff;
+            font-weight: bold;
+        }
+
+        .solution-orbit {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ff00ff;
+            border-radius: 50%;
+            background: rgba(255, 0, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            color: #ff00ff;
+            animation: orbitRotate 3s linear infinite;
+        }
+
+        @keyframes solution3DRotate {
+            0% { transform: rotateY(0deg) rotateX(0deg); }
+            25% { transform: rotateY(90deg) rotateX(15deg); }
+            50% { transform: rotateY(180deg) rotateX(0deg); }
+            75% { transform: rotateY(270deg) rotateX(-15deg); }
+            100% { transform: rotateY(360deg) rotateX(0deg); }
+        }
+
+        @keyframes orbitRotate {
+            0% { transform: rotate(0deg) translateX(50px) rotate(0deg); }
+            100% { transform: rotate(360deg) translateX(50px) rotate(-360deg); }
+        }
+
+        .flow-layer {
+            background: linear-gradient(90deg, rgba(0, 255, 255, 0.1), transparent);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 8px;
+            padding: 0.8rem;
+            margin: 0.5rem 0;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .flow-layer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.2), transparent);
+            animation: dataFlow 3s linear infinite;
+        }
+
+        @keyframes dataFlow {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+    </style>
+</head><b
+ody>
+    <div class="presentation-container">
+        <div class="slide-counter">
+            <span id="current-slide">1</span> / <span id="total-slides">6</span>
+        </div>
+
+        <!-- Slide 1: Introduction -->
+        <div class="slide active">
+            <h1>DIRK BRAIN Portal</h1>
+            <p class="subtitle">The Ultimate AI Agent Orchestration Platform</p>
+            <p class="description">
+                Transform your development workflow with immersive 3D visualization, intelligent agent coordination, and cutting-edge automation.
+            </p>
+            
+            <div class="detailed-description">
+                <h3 style="color: #00ffff; margin-bottom: 1rem;">What is DIRK BRAIN Portal?</h3>
+                <p style="margin-bottom: 1rem;">
+                    DIRK BRAIN Portal is a revolutionary AI agent orchestration platform that transforms how developers interact with artificial intelligence systems. Instead of managing multiple disconnected tools and manually coordinating AI agents, developers can now visualize, control, and orchestrate their entire AI ecosystem through an immersive 3D interface.
+                </p>
+                <p style="margin-bottom: 1rem;">
+                    The platform combines cutting-edge technologies including Next.js 15, React Three Fiber, Python FastAPI, and Node.js to create a hybrid architecture that delivers both powerful backend intelligence and stunning frontend experiences. With features like GOD Mode orchestration, voice control, real-time agent communication, and holographic dashboards, DIRK BRAIN Portal represents the future of AI development.
+                </p>
+                <p>
+                    Currently 95% complete with over 40 components built, the platform is ready to transform how you build, deploy, and manage AI-powered applications. Experience the most advanced AI agent orchestration platform ever created.
+                </p>
+            </div>
+
+            <div class="card-grid">
+                <div class="interactive-card" onclick="showVisualization('intro', 'immersive-3d')">
+                    <div class="card-title">🌐 Immersive 3D Interface</div>
+                    <div class="card-description">Visualize your AI agents in a stunning 3D environment with real-time performance metrics and intuitive spatial controls.</div>
+                </div>
+                <div class="interactive-card" onclick="showVisualization('intro', 'god-mode')">
+                    <div class="card-title">🤖 GOD Mode Orchestration</div>
+                    <div class="card-description">Intelligent task decomposition and automatic agent selection with machine learning-based optimization and predictive analytics.</div>
+                </div>
+                <div class="interactive-card" onclick="showVisualization('intro', 'voice-control')">
+                    <div class="card-title">🗣️ Voice & Gesture Control</div>
+                    <div class="card-description">Natural language commands and intuitive gesture controls for seamless interaction with your AI ecosystem.</div>
+                </div>
+                <div class="interactive-card" onclick="showVisualization('intro', 'realtime-coordination')">
+                    <div class="card-title">📡 Real-time Coordination</div>
+                    <div class="card-description">Live agent communication, workflow streaming, and performance monitoring with beautiful data visualizations.</div>
+                </div>
+            </div>
+
+            <div class="visualization-area" id="viz-area-1">
+                <div class="viz-container">
+                    <div class="viz-title" id="viz-title-1">👆 Click any feature above to see it in action</div>
+                    <div class="viz-subtitle" id="viz-subtitle-1">Interactive demonstrations of revolutionary capabilities</div>
+                    <div class="viz-content" id="viz-content-1">
+                        <div style="text-align: center; color: rgba(0, 255, 255, 0.5); font-size: 4rem; margin: 2rem 0;">🚀</div>
+                    </div>
+                    <div class="viz-description" id="viz-description-1">
+                        Welcome to DIRK BRAIN Portal! Click on any feature card above to see interactive demonstrations of how this revolutionary platform transforms AI development through immersive 3D visualization and intelligent orchestration.
+                    </div>
+                </div>
+            </div>
+        </div>        <
+!-- Slide 2: The Problem -->
+        <div class="slide">
+            <h2>The Challenge</h2>
+            <p class="subtitle">Modern AI development faces critical orchestration challenges</p>
+            <p class="description">
+                Developers struggle with fragmented tools, manual coordination, and limited visibility into complex AI systems.
+            </p>
+
+            <div class="card-grid">
+                <div class="interactive-card" onclick="showVisualization('problem', 'chaos-coordination')">
+                    <div class="card-title">🔄 Chaotic Agent Coordination</div>
+                    <div class="card-description">Developers become overwhelmed trying to manually coordinate multiple AI agents, tasks, and dependencies without proper orchestration tools.</div>
+                </div>
+                <div class="interactive-card" onclick="showVisualization('problem', 'visibility-gap')">
+                    <div class="card-title">📊 Limited System Visibility</div>
+                    <div class="card-description">Traditional 2D interfaces fail to represent the complex, interconnected nature of AI systems, hiding critical relationships and dependencies.</div>
+                </div>
+                <div class="interactive-card" onclick="showVisualization('problem', 'fragmented-tools')">
+                    <div class="card-title">🎯 Fragmented Tool Ecosystem</div>
+                    <div class="card-description">Multiple disconnected tools create friction, reduce productivity, and force manual context switching between different systems.</div>
+                </div>
+                <div class="interactive-card" onclick="showVisualization('problem', 'manual-overhead')">
+                    <div class="card-title">⚡ Manual Management Overhead</div>
+                    <div class="card-description">Developers spend excessive time on coordination tasks instead of focusing on creative problem-solving and innovation.</div>
+                </div>
+            </div>
+
+            <div class="visualization-area" id="viz-area-2">
+                <div class="viz-container">
+                    <div class="viz-title" id="viz-title-2">👆 Click any problem above to see the challenge visualization</div>
+                    <div class="viz-subtitle" id="viz-subtitle-2">Interactive animations showing real development pain points</div>
+                    <div class="viz-content" id="viz-content-2">
+                        <div style="text-align: center; color: rgba(255, 0, 102, 0.5); font-size: 4rem; margin: 2rem 0;">⚠️</div>
+                    </div>
+                    <div class="viz-description" id="viz-description-2">
+                        Select a challenge card to see animated demonstrations of the problems facing modern AI development. Each visualization shows the real-world impact on developer productivity and system reliability.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: The Solution -->
+        <div class="slide">
+            <h2>DIRK BRAIN Portal Solution</h2>
+            <p class="subtitle">Revolutionary 3D AI agent orchestration platform</p>
+            <p class="description">
+                Transform chaotic AI development into organized, visual, and intelligent workflows.
+            </p>
+
+            <div class="card-grid">
+                <div class="interactive-card" onclick="showVisualization('solution', '3d-visualization')">
+                    <div class="card-title">🌐 3D Agent Visualization</div>
+                    <div class="card-description">Immersive 3D environment where AI agents appear as dynamic entities with real-time performance indicators and spatial relationships.</div>
+                </div>
+                <div class="interactive-card" onclick="showVisualization('solution', 'intelligent-orchestration')">
+                    <div class="card-title">🧠 Intelligent Orchestration</div>
+                    <div class="card-description">GOD Mode automatically decomposes complex tasks, selects optimal agents, and coordinates parallel execution with failure recovery.</div>
+                </div>
+                <div class="interactive-card" onclick="showVisualization('solution', 'unified-interface')">
+                    <div class="card-title">🔗 Unified Interface</div>
+                    <div class="card-description">Single platform that integrates all AI tools, services, and workflows with seamless context sharing and communication.</div>
+                </div>
+                <div class="interactive-card" onclick="showVisualization('solution', 'automated-coordination')">
+                    <div class="card-title">⚡ Automated Coordination</div>
+                    <div class="card-description">Real-time agent communication, workflow streaming, and performance monitoring eliminate manual coordination overhead.</div>
+                </div>
+            </div>
+
+            <div class="visualization-area" id="viz-area-3">
+                <div class="viz-container">
+                    <div class="viz-title" id="viz-title-3">👆 Click any solution to see how DIRK BRAIN Portal works</div>
+                    <div class="viz-subtitle" id="viz-subtitle-3">Interactive demonstrations of revolutionary problem-solving</div>
+                    <div class="viz-content" id="viz-content-3">
+                        <div style="text-align: center; color: rgba(0, 255, 255, 0.5); font-size: 4rem; margin: 2rem 0;">✨</div>
+                    </div>
+                    <div class="viz-description" id="viz-description-3">
+                        Select a solution card to see how DIRK BRAIN Portal transforms each development challenge into an elegant, automated, and visually intuitive experience.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Architecture -->
+        <div class="slide">
+            <h2>System Architecture</h2>
+            <p class="subtitle">Hybrid backend with immersive frontend experience</p>
+            <p class="description">
+                Multi-layered architecture combining cutting-edge technologies for optimal performance and user experience.
+            </p>
+
+            <div class="card-grid">
+                <div class="interactive-card" onclick="showVisualization('architecture', 'frontend-layer')">
+                    <div class="card-title">🎨 Frontend Layer</div>
+                    <div class="card-description">Next.js 15 + React 19 + Three.js + React Three Fiber creating immersive 3D experiences with smooth animations.</div>
+                </div>
+                <div class="interactive-card" onclick="showVisualization('architecture', 'realtime-layer')">
+                    <div class="card-title">🔄 Real-time Layer</div>
+                    <div class="card-description">Node.js + Socket.io enabling instant agent communication and live workflow streaming with WebSocket connections.</div>
+                </div>
+                <div class="interactive-card" onclick="showVisualization('architecture', 'intelligence-layer')">
+                    <div class="card-title">🧠 Intelligence Layer</div>
+                    <div class="card-description">Python FastAPI + ML models powering GOD mode orchestration and predictive analytics for optimal agent coordination.</div>
+                </div>
+                <div class="interactive-card" onclick="showVisualization('architecture', 'data-layer')">
+                    <div class="card-title">💾 Data Layer</div>
+                    <div class="card-description">PostgreSQL + Redis + Prisma ORM providing robust persistent storage, high-speed caching, and seamless data access.</div>
+                </div>
+            </div>
+
+            <div class="visualization-area" id="viz-area-4">
+                <div class="viz-container">
+                    <div class="viz-title" id="viz-title-4">👆 Click any layer to see architectural data flow</div>
+                    <div class="viz-subtitle" id="viz-subtitle-4">Watch how data flows through the hybrid system architecture</div>
+                    <div class="viz-content" id="viz-content-4">
+                        <div style="text-align: center; color: rgba(0, 255, 255, 0.5); font-size: 4rem; margin: 2rem 0;">🏗️</div>
+                    </div>
+                    <div class="viz-description" id="viz-description-4">
+                        Select an architectural layer to see how data flows through the system. Each layer has specific responsibilities and communicates through well-defined interfaces with other components.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Key Features -->
+        <div class="slide">
+            <h2>Revolutionary Features</h2>
+            <p class="subtitle">Experience the future of AI development</p>
+            <p class="description">
+                Cutting-edge capabilities that transform how developers interact with AI systems.
+            </p>
+
+            <div class="card-grid">
+                <div class="interactive-card" onclick="showVisualization('features', 'holographic-dashboards')">
+                    <div class="card-title">📊 Holographic Dashboards</div>
+                    <div class="card-description">Floating 3D panels displaying real-time metrics, charts, and system status with interactive controls and contextual information.</div>
+                </div>
+                <div class="interactive-card" onclick="showVisualization('features', 'voice-commands')">
+                    <div class="card-title">🗣️ Voice Commands</div>
+                    <div class="card-description">Natural language workflow creation and agent control through advanced speech recognition and command processing.</div>
+                </div>
+                <div class="interactive-card" onclick="showVisualization('features', 'network-topology')">
+                    <div class="card-title">🕸️ Network Topology</div>
+                    <div class="card-description">Interactive visualization of agent connections, data flow, and system dependencies with real-time status indicators.</div>
+                </div>
+                <div class="interactive-card" onclick="showVisualization('features', 'predictive-intelligence')">
+                    <div class="card-title">🔮 Predictive Intelligence</div>
+                    <div class="card-description">Machine learning-powered forecasting, performance optimization, and intelligent recommendations for system improvements.</div>
+                </div>
+            </div>
+
+            <div class="visualization-area" id="viz-area-5">
+                <div class="viz-container">
+                    <div class="viz-title" id="viz-title-5">👆 Click any feature to see it in action</div>
+                    <div class="viz-subtitle" id="viz-subtitle-5">Revolutionary capabilities transforming development experience</div>
+                    <div class="viz-content" id="viz-content-5">
+                        <div style="text-align: center; color: rgba(0, 255, 255, 0.5); font-size: 4rem; margin: 2rem 0;">🔮</div>
+                    </div>
+                    <div class="viz-description" id="viz-description-5">
+                        Select a feature to see how each revolutionary capability enhances the development experience through advanced AI and immersive visualization.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Get Started -->
+        <div class="slide">
+            <h2>Transform Your Workflow</h2>
+            <p class="subtitle">Ready to revolutionize AI development</p>
+            <p class="description">
+                Experience the most advanced AI agent orchestration platform ever built.
+            </p>
+
+            <div class="card-grid">
+                <div class="interactive-card" onclick="showVisualization('start', 'immediate-impact')">
+                    <div class="card-title">⚡ Immediate Impact</div>
+                    <div class="card-description">Start visualizing and orchestrating your AI agents within minutes of deployment with pre-configured templates and intelligent defaults.</div>
+                </div>
+                <div class="interactive-card" onclick="showVisualization('start', 'one-script-deploy')">
+                    <div class="card-title">🚀 One-Script Deployment</div>
+                    <div class="card-description">Deploy the entire DIRK BRAIN Portal ecosystem with a single command - complete with agents, workflows, and 3D visualization.</div>
+                </div>
+                <div class="interactive-card" onclick="showVisualization('start', 'enterprise-ready')">
+                    <div class="card-title">🏢 Enterprise Ready</div>
+                    <div class="card-description">Built-in security, scalability, and compliance features make it ready for production deployment in enterprise environments.</div>
+                </div>
+                <div class="interactive-card" onclick="showVisualization('start', 'community-support')">
+                    <div class="card-title">🤝 Community & Support</div>
+                    <div class="card-description">Join a growing community of developers transforming AI development with comprehensive documentation and active support.</div>
+                </div>
+            </div>
+
+            <div class="visualization-area" id="viz-area-6">
+                <div class="viz-container">
+                    <div class="viz-title" id="viz-title-6">🚀 Ready to Begin Your Journey?</div>
+                    <div class="viz-subtitle" id="viz-subtitle-6">Transform your development workflow today</div>
+                    <div class="viz-content" id="viz-content-6">
+                        <div style="text-align: center; margin: 2rem 0;">
+                            <div style="font-size: 2rem; color: #00ffff; margin-bottom: 1rem;">curl -sSL https://dirk-brain.com/install | bash</div>
+                            <div style="font-size: 1rem; color: #ffff00;">One command. Infinite possibilities.</div>
+                        </div>
+                    </div>
+                    <div class="viz-description" id="viz-description-6">
+                        Click any getting started option to see how quickly you can transform your development workflow with DIRK BRAIN Portal's revolutionary AI orchestration platform.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="navigation">
+        <button class="nav-btn" onclick="previousSlide()" id="prevBtn">← Previous</button>
+        <button class="nav-btn" onclick="nextSlide()" id="nextBtn">Next →</button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 6;
+
+        // Update slide counter
+        document.getElementById('total-slides').textContent = totalSlides;
+
+        // Slide navigation
+        function showSlide(n) {
+            const slides = document.querySelectorAll('.slide');
+            
+            if (n > totalSlides) currentSlide = 1;
+            if (n < 1) currentSlide = totalSlides;
+            
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[currentSlide - 1].classList.add('active');
+            
+            document.getElementById('current-slide').textContent = currentSlide;
+            
+            // Update navigation buttons
+            document.getElementById('prevBtn').disabled = currentSlide === 1;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides;
+        }
+
+        function nextSlide() {
+            currentSlide++;
+            showSlide(currentSlide);
+        }
+
+        function previousSlide() {
+            currentSlide--;
+            showSlide(currentSlide);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                previousSlide();
+            }
+        });
+
+        // Interactive visualization functions
+        function showVisualization(section, type) {
+            const vizArea = document.querySelector(`#viz-area-${currentSlide}`);
+            const vizTitle = document.querySelector(`#viz-title-${currentSlide}`);
+            const vizSubtitle = document.querySelector(`#viz-subtitle-${currentSlide}`);
+            const vizContent = document.querySelector(`#viz-content-${currentSlide}`);
+            const vizDescription = document.querySelector(`#viz-description-${currentSlide}`);
+
+            // Remove active class from all cards
+            document.querySelectorAll('.interactive-card').forEach(card => {
+                card.classList.remove('active');
+            });
+
+            // Add active class to clicked card
+            event.target.closest('.interactive-card').classList.add('active');
+
+            // Update visualization based on section and type
+            switch(section) {
+                case 'intro':
+                    showIntroVisualization(type, vizTitle, vizSubtitle, vizContent, vizDescription);
+                    break;
+                case 'problem':
+                    showProblemVisualization(type, vizTitle, vizSubtitle, vizContent, vizDescription);
+                    break;
+                case 'solution':
+                    showSolutionVisualization(type, vizTitle, vizSubtitle, vizContent, vizDescription);
+                    break;
+                case 'architecture':
+                    showArchitectureVisualization(type, vizTitle, vizSubtitle, vizContent, vizDescription);
+                    break;
+                case 'features':
+                    showFeaturesVisualization(type, vizTitle, vizSubtitle, vizContent, vizDescription);
+                    break;
+                case 'start':
+                    showStartVisualization(type, vizTitle, vizSubtitle, vizContent, vizDescription);
+                    break;
+            }
+        }
+
+        function showIntroVisualization(type, title, subtitle, content, description) {
+            switch(type) {
+                case 'immersive-3d':
+                    title.textContent = '🌐 Immersive 3D Visualization Active';
+                    subtitle.textContent = 'WebGL-powered real-time rendering';
+                    content.innerHTML = `
+                        <div class="solution-sphere">3D</div>
+                        <div class="solution-orbit" style="top: 10px; left: 50%; transform: translateX(-50%);">UI</div>
+                        <div class="solution-orbit" style="top: 50%; right: 10px; transform: translateY(-50%);">VR</div>
+                        <div class="solution-orbit" style="bottom: 10px; left: 50%; transform: translateX(-50%);">AR</div>
+                        <div class="solution-orbit" style="top: 50%; left: 10px; transform: translateY(-50%);">XR</div>
+                    `;
+                    description.textContent = 'Experience AI agents as spatial entities in a fully immersive 3D environment with real-time performance indicators, interactive controls, and intuitive navigation.';
+                    break;
+                case 'god-mode':
+                    title.textContent = '🤖 GOD Mode Orchestration System';
+                    subtitle.textContent = 'Intelligent task decomposition and agent coordination';
+                    content.innerHTML = `
+                        <div class="chaos-center">GOD</div>
+                        <div class="chaos-satellite" style="top: 20px; left: 50%; transform: translateX(-50%);">C</div>
+                        <div class="chaos-satellite" style="top: 50%; right: 20px; transform: translateY(-50%);">G</div>
+                        <div class="chaos-satellite" style="bottom: 20px; left: 50%; transform: translateX(-50%);">4</div>
+                        <div class="chaos-satellite" style="top: 50%; left: 20px; transform: translateY(-50%);">S</div>
+                    `;
+                    description.textContent = 'Watch as GOD Mode analyzes complex requests, decomposes them into optimal subtasks, and intelligently assigns them to the most suitable AI agents for parallel execution.';
+                    break;
+                case 'voice-control':
+                    title.textContent = '🗣️ Voice & Natural Language Processing';
+                    subtitle.textContent = 'Advanced speech recognition and NLP pipeline';
+                    content.innerHTML = `
+                        <div style="display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 400px;">
+                            <div class="flow-layer"><span style="color: #00ffff;">Voice Input</span> <span style="color: #ffff00;">→</span> <span style="color: #ff00ff;">Speech-to-Text</span></div>
+                            <div class="flow-layer"><span style="color: #00ffff;">NLP Processing</span> <span style="color: #ffff00;">→</span> <span style="color: #ff00ff;">Intent Recognition</span></div>
+                            <div class="flow-layer"><span style="color: #00ffff;">Command Parsing</span> <span style="color: #ffff00;">→</span> <span style="color: #ff00ff;">Agent Execution</span></div>
+                        </div>
+                    `;
+                    description.textContent = 'Speak naturally to create workflows, control agents, and manage your AI ecosystem. Advanced NLP understands context and intent for seamless voice interaction.';
+                    break;
+                case 'realtime-coordination':
+                    title.textContent = '📡 Real-time Agent Coordination';
+                    subtitle.textContent = 'Live communication and workflow streaming';
+                    content.innerHTML = `
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; width: 100%;">
+                            <div style="background: rgba(0, 255, 0, 0.2); border: 1px solid #00ff00; border-radius: 8px; padding: 15px; text-align: center;">
+                                <div style="color: #00ff00; font-weight: bold;">Agent A</div>
+                                <div style="color: #ffffff; font-size: 0.8rem;">Active</div>
+                            </div>
+                            <div style="background: rgba(0, 255, 255, 0.2); border: 1px solid #00ffff; border-radius: 8px; padding: 15px; text-align: center;">
+                                <div style="color: #00ffff; font-weight: bold;">Agent B</div>
+                                <div style="color: #ffffff; font-size: 0.8rem;">Processing</div>
+                            </div>
+                            <div style="background: rgba(255, 0, 255, 0.2); border: 1px solid #ff00ff; border-radius: 8px; padding: 15px; text-align: center;">
+                                <div style="color: #ff00ff; font-weight: bold;">Agent C</div>
+                                <div style="color: #ffffff; font-size: 0.8rem;">Standby</div>
+                            </div>
+                        </div>
+                    `;
+                    description.textContent = 'Monitor all agents in real-time with live status updates, performance metrics, and instant communication through WebSocket connections and streaming data visualization.';
+                    break;
+            }
+        }
+
+        function showProblemVisualization(type, title, subtitle, content, description) {
+            switch(type) {
+                case 'chaos-coordination':
+                    title.textContent = '🔄 Chaotic Agent Coordination';
+                    subtitle.textContent = 'Manual coordination leads to developer overwhelm';
+                    content.innerHTML = `
+                        <div class="chaos-center">DEV</div>
+                        <div class="chaos-satellite" style="top: 20px; left: 50%; transform: translateX(-50%);">A1</div>
+                        <div class="chaos-satellite" style="top: 50%; right: 20px; transform: translateY(-50%);">A2</div>
+                        <div class="chaos-satellite" style="bottom: 20px; left: 50%; transform: translateX(-50%);">A3</div>
+                        <div class="chaos-satellite" style="top: 50%; left: 20px; transform: translateY(-50%);">A4</div>
+                    `;
+                    description.textContent = 'Developers struggle to manually coordinate multiple AI agents, leading to context switching, task conflicts, and overwhelming complexity that reduces productivity and increases errors.';
+                    break;
+                case 'visibility-gap':
+                    title.textContent = '📊 Limited System Visibility';
+                    subtitle.textContent = 'Traditional interfaces hide system complexity';
+                    content.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
+                            <div style="background: rgba(255, 0, 0, 0.2); border: 1px solid #ff0000; padding: 20px; border-radius: 8px;">
+                                <div style="color: #ff0000; font-weight: bold;">2D Interface</div>
+                                <div style="color: #ffffff; font-size: 0.8rem;">Limited View</div>
+                            </div>
+                            <div style="color: #ffff00; font-size: 2rem;">vs</div>
+                            <div style="background: rgba(0, 255, 0, 0.2); border: 1px solid #00ff00; padding: 20px; border-radius: 8px;">
+                                <div style="color: #00ff00; font-weight: bold;">3D Portal</div>
+                                <div style="color: #ffffff; font-size: 0.8rem;">Full Visibility</div>
+                            </div>
+                        </div>
+                    `;
+                    description.textContent = 'Traditional 2D interfaces cannot effectively represent the complex, interconnected nature of AI systems, hiding critical relationships and dependencies that are essential for effective management.';
+                    break;
+                case 'fragmented-tools':
+                    title.textContent = '🎯 Fragmented Tool Ecosystem';
+                    subtitle.textContent = 'Multiple disconnected tools create friction';
+                    content.innerHTML = `
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 100%;">
+                            <div style="background: rgba(255, 0, 0, 0.2); border: 1px solid #ff0000; padding: 10px; border-radius: 6px; text-align: center; color: #ff0000;">Tool A</div>
+                            <div style="background: rgba(255, 0, 0, 0.2); border: 1px solid #ff0000; padding: 10px; border-radius: 6px; text-align: center; color: #ff0000;">Tool B</div>
+                            <div style="background: rgba(255, 0, 0, 0.2); border: 1px solid #ff0000; padding: 10px; border-radius: 6px; text-align: center; color: #ff0000;">Tool C</div>
+                            <div style="background: rgba(255, 0, 0, 0.2); border: 1px solid #ff0000; padding: 10px; border-radius: 6px; text-align: center; color: #ff0000;">Tool D</div>
+                        </div>
+                        <div style="color: #ffff00; margin-top: 15px; font-size: 0.9rem;">No Integration • Manual Context Switching • Reduced Productivity</div>
+                    `;
+                    description.textContent = 'Developers are forced to use multiple disconnected tools, creating friction through manual context switching, data silos, and inefficient workflows that significantly reduce overall productivity.';
+                    break;
+                case 'manual-overhead':
+                    title.textContent = '⚡ Manual Management Overhead';
+                    subtitle.textContent = 'Time spent on coordination instead of innovation';
+                    content.innerHTML = `
+                        <div style="display: flex; flex-direction: column; gap: 10px; width: 100%;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="color: #ff0000;">Coordination Tasks</span>
+                                <div style="background: #ff0000; height: 20px; width: 70%; border-radius: 10px;"></div>
+                                <span style="color: #ff0000;">70%</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="color: #00ff00;">Creative Work</span>
+                                <div style="background: #00ff00; height: 20px; width: 30%; border-radius: 10px;"></div>
+                                <span style="color: #00ff00;">30%</span>
+                            </div>
+                        </div>
+                    `;
+                    description.textContent = 'Developers spend the majority of their time on manual coordination and management tasks rather than focusing on creative problem-solving and innovation that drives real value.';
+                    break;
+            }
+        }
+
+        function showSolutionVisualization(type, title, subtitle, content, description) {
+            switch(type) {
+                case '3d-visualization':
+                    title.textContent = '🌐 3D Agent Universe';
+                    subtitle.textContent = 'Immersive spatial representation of AI ecosystem';
+                    content.innerHTML = `
+                        <div class="solution-sphere">HUB</div>
+                        <div class="solution-orbit" style="top: 10px; left: 50%; transform: translateX(-50%);">C</div>
+                        <div class="solution-orbit" style="top: 50%; right: 10px; transform: translateY(-50%);">G</div>
+                        <div class="solution-orbit" style="bottom: 10px; left: 50%; transform: translateX(-50%);">4</div>
+                        <div class="solution-orbit" style="top: 50%; left: 10px; transform: translateY(-50%);">S</div>
+                    `;
+                    description.textContent = 'Transform your AI agents into spatial entities within an immersive 3D environment, providing intuitive visualization of relationships, performance, and real-time status with natural interaction patterns.';
+                    break;
+                case 'intelligent-orchestration':
+                    title.textContent = '🧠 GOD Mode Control System';
+                    subtitle.textContent = 'Automated task decomposition and optimal agent selection';
+                    content.innerHTML = `
+                        <div style="display: flex; flex-direction: column; gap: 8px; width: 100%; max-width: 400px;">
+                            <div class="flow-layer"><span style="color: #00ffff;">Complex Task</span> <span style="color: #ffff00;">→</span> <span style="color: #ff00ff;">Analysis</span></div>
+                            <div class="flow-layer"><span style="color: #00ffff;">Decomposition</span> <span style="color: #ffff00;">→</span> <span style="color: #ff00ff;">Subtasks</span></div>
+                            <div class="flow-layer"><span style="color: #00ffff;">Agent Selection</span> <span style="color: #ffff00;">→</span> <span style="color: #ff00ff;">Execution</span></div>
+                            <div class="flow-layer"><span style="color: #00ffff;">Coordination</span> <span style="color: #ffff00;">→</span> <span style="color: #ff00ff;">Results</span></div>
+                        </div>
+                    `;
+                    description.textContent = 'GOD Mode intelligently analyzes complex requests, automatically decomposes them into optimal subtasks, selects the best agents for each task, and coordinates parallel execution with failure recovery.';
+                    break;
+                case 'unified-interface':
+                    title.textContent = '🔗 Unified Platform Integration';
+                    subtitle.textContent = 'Single interface for all AI tools and services';
+                    content.innerHTML = `
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 100%;">
+                            <div style="background: rgba(0, 255, 0, 0.2); border: 1px solid #00ff00; padding: 15px; border-radius: 8px; text-align: center;">
+                                <div style="color: #00ff00; font-weight: bold;">Claude</div>
+                                <div style="color: #ffffff; font-size: 0.8rem;">Integrated</div>
+                            </div>
+                            <div style="background: rgba(0, 255, 0, 0.2); border: 1px solid #00ff00; padding: 15px; border-radius: 8px; text-align: center;">
+                                <div style="color: #00ff00; font-weight: bold;">Gemini</div>
+                                <div style="color: #ffffff; font-size: 0.8rem;">Integrated</div>
+                            </div>
+                            <div style="background: rgba(0, 255, 0, 0.2); border: 1px solid #00ff00; padding: 15px; border-radius: 8px; text-align: center;">
+                                <div style="color: #00ff00; font-weight: bold;">GPT-4</div>
+                                <div style="color: #ffffff; font-size: 0.8rem;">Integrated</div>
+                            </div>
+                            <div style="background: rgba(0, 255, 0, 0.2); border: 1px solid #00ff00; padding: 15px; border-radius: 8px; text-align: center;">
+                                <div style="color: #00ff00; font-weight: bold;">Custom</div>
+                                <div style="color: #ffffff; font-size: 0.8rem;">Integrated</div>
+                            </div>
+                        </div>
+                    `;
+                    description.textContent = 'All AI tools, services, and workflows unified in a single platform with seamless context sharing, communication, and coordination - eliminating tool fragmentation and context switching.';
+                    break;
+                case 'automated-coordination':
+                    title.textContent = '⚡ Automated Workflow Coordination';
+                    subtitle.textContent = 'Real-time communication eliminates manual overhead';
+                    content.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                            <div style="display: flex; flex-direction: column; gap: 8px;">
+                                <span style="color: #00ff00;">Automated Tasks</span>
+                                <div style="background: #00ff00; height: 20px; width: 200px; border-radius: 10px;"></div>
+                                <span style="color: #00ff00; font-size: 0.9rem;">85%</span>
+                            </div>
+                            <div style="color: #ffff00; font-size: 2rem;">→</div>
+                            <div style="display: flex; flex-direction: column; gap: 8px;">
+                                <span style="color: #00ffff;">Creative Focus</span>
+                                <div style="background: #00ffff; height: 20px; width: 200px; border-radius: 10px;"></div>
+                                <span style="color: #00ffff; font-size: 0.9rem;">85%</span>
+                            </div>
+                        </div>
+                    `;
+                    description.textContent = 'Automated real-time coordination eliminates manual overhead, allowing developers to focus 85% of their time on creative problem-solving and innovation rather than coordination tasks.';
+                    break;
+            }
+        }
+
+        function showArchitectureVisualization(type, title, subtitle, content, description) {
+            switch(type) {
+                case 'frontend-layer':
+                    title.textContent = '🎨 Frontend Layer Architecture';
+                    subtitle.textContent = 'Next.js 15 + React 19 + Three.js + React Three Fiber';
+                    content.innerHTML = `
+                        <div style="display: flex; flex-direction: column; gap: 8px; width: 100%; max-width: 400px;">
+                            <div class="flow-layer"><span style="color: #00ffff;">User Interface</span> <span style="color: #ffff00;">→</span> <span style="color: #ff00ff;">React Components</span></div>
+                            <div class="flow-layer"><span style="color: #00ffff;">3D Rendering</span> <span style="color: #ffff00;">→</span> <span style="color: #ff00ff;">Three.js Engine</span></div>
+                            <div class="flow-layer"><span style="color: #00ffff;">State Management</span> <span style="color: #ffff00;">→</span> <span style="color: #ff00ff;">Zustand Store</span></div>
+                            <div class="flow-layer"><span style="color: #00ffff;">Real-time Updates</span> <span style="color: #ffff00;">→</span> <span style="color: #ff00ff;">WebSocket Client</span></div>
+                        </div>
+                    `;
+                    description.textContent = 'Modern frontend stack delivering immersive 3D experiences with smooth animations, responsive design, and real-time data visualization through cutting-edge web technologies.';
+                    break;
+                case 'realtime-layer':
+                    title.textContent = '🔄 Real-time Communication Layer';
+                    subtitle.textContent = 'Node.js + Socket.io + WebRTC + Redis Pub/Sub';
+                    content.innerHTML = `
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; width: 100%;">
+                            <div style="background: rgba(0, 255, 255, 0.2); border: 1px solid #00ffff; padding: 15px; border-radius: 8px; text-align: center;">
+                                <div style="color: #00ffff; font-weight: bold;">WebSocket</div>
+                                <div style="color: #ffffff; font-size: 0.8rem;">Instant Messaging</div>
+                            </div>
+                            <div style="background: rgba(255, 0, 255, 0.2); border: 1px solid #ff00ff; padding: 15px; border-radius: 8px; text-align: center;">
+                                <div style="color: #ff00ff; font-weight: bold;">WebRTC</div>
+                                <div style="color: #ffffff; font-size: 0.8rem;">P2P Communication</div>
+                            </div>
+                            <div style="background: rgba(255, 255, 0, 0.2); border: 1px solid #ffff00; padding: 15px; border-radius: 8px; text-align: center;">
+                                <div style="color: #ffff00; font-weight: bold;">Redis Pub/Sub</div>
+                                <div style="color: #ffffff; font-size: 0.8rem;">Event Broadcasting</div>
+                            </div>
+                            <div style="background: rgba(0, 255, 0, 0.2); border: 1px solid #00ff00; padding: 15px; border-radius: 8px; text-align: center;">
+                                <div style="color: #00ff00; font-weight: bold;">Node.js</div>
+                                <div style="color: #ffffff; font-size: 0.8rem;">Server Runtime</div>
+                            </div>
+                        </div>
+                    `;
+                    description.textContent = 'High-performance real-time communication infrastructure enabling instant agent coordination, live workflow streaming, and multi-user collaboration with minimal latency.';
+                    break;
+                case 'intelligence-layer':
+                    title.textContent = '🧠 Intelligence & Orchestration Layer';
+                    subtitle.textContent = 'Python FastAPI + ML Models + Agent Coordination';
+                    content.innerHTML = `
+                        <div style="display: flex; flex-direction: column; gap: 8px; width: 100%; max-width: 400px;">
+                            <div class="flow-layer"><span style="color: #00ffff;">Request Analysis</span> <span style="color: #ffff00;">→</span> <span style="color: #ff00ff;">ML Processing</span></div>
+                            <div class="flow-layer"><span style="color: #00ffff;">Task Decomposition</span> <span style="color: #ffff00;">→</span> <span style="color: #ff00ff;">GOD Mode</span></div>
+                            <div class="flow-layer"><span style="color: #00ffff;">Agent Selection</span> <span style="color: #ffff00;">→</span> <span style="color: #ff00ff;">Optimization</span></div>
+                            <div class="flow-layer"><span style="color: #00ffff;">Execution Control</span> <span style="color: #ffff00;">→</span> <span style="color: #ff00ff;">Coordination</span></div>
+                        </div>
+                    `;
+                    description.textContent = 'Core intelligence system powered by machine learning models for intelligent task analysis, optimal agent selection, and sophisticated orchestration with predictive optimization.';
+                    break;
+                case 'data-layer':
+                    title.textContent = '💾 Data Persistence Layer';
+                    subtitle.textContent = 'PostgreSQL + Redis + Vector Database + Prisma ORM';
+                    content.innerHTML = `
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; width: 100%;">
+                            <div style="background: rgba(0, 255, 255, 0.2); border: 1px solid #00ffff; padding: 15px; border-radius: 8px; text-align: center;">
+                                <div style="color: #00ffff; font-weight: bold;">PostgreSQL</div>
+                                <div style="color: #ffffff; font-size: 0.8rem;">Primary Database</div>
+                            </div>
+                            <div style="background: rgba(255, 0, 0, 0.2); border: 1px solid #ff0000; padding: 15px; border-radius: 8px; text-align: center;">
+                                <div style="color: #ff0000; font-weight: bold;">Redis</div>
+                                <div style="color: #ffffff; font-size: 0.8rem;">High-Speed Cache</div>
+                            </div>
+                            <div style="background: rgba(255, 0, 255, 0.2); border: 1px solid #ff00ff; padding: 15px; border-radius: 8px; text-align: center;">
+                                <div style="color: #ff00ff; font-weight: bold;">Vector DB</div>
+                                <div style="color: #ffffff; font-size: 0.8rem;">AI Embeddings</div>
+                            </div>
+                            <div style="background: rgba(0, 255, 0, 0.2); border: 1px solid #00ff00; padding: 15px; border-radius: 8px; text-align: center;">
+                                <div style="color: #00ff00; font-weight: bold;">Prisma ORM</div>
+                                <div style="color: #ffffff; font-size: 0.8rem;">Type-Safe Access</div>
+                            </div>
+                        </div>
+                    `;
+                    description.textContent = 'Robust data architecture combining relational database, high-speed caching, vector storage for AI embeddings, and type-safe ORM for seamless data access and management.';
+                    break;
+            }
+        }
+
+        function showFeaturesVisualization(type, title, subtitle, content, description) {
+            switch(type) {
+                case 'holographic-dashboards':
+                    title.textContent = '📊 Holographic Dashboard System';
+                    subtitle.textContent = 'Floating 3D panels with real-time metrics';
+                    content.innerHTML = `
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%;">
+                            <div style="background: rgba(0, 255, 255, 0.3); border: 2px solid #00ffff; padding: 12px; border-radius: 8px; text-align: center; transform: rotateX(15deg);">
+                                <div style="color: #00ffff; font-weight: bold; font-size: 0.9rem;">Performance</div>
+                                <div style="color: #00ff00; font-size: 1.2rem;">98.7%</div>
+                            </div>
+                            <div style="background: rgba(255, 0, 255, 0.3); border: 2px solid #ff00ff; padding: 12px; border-radius: 8px; text-align: center; transform: rotateY(15deg);">
+                                <div style="color: #ff00ff; font-weight: bold; font-size: 0.9rem;">Agents</div>
+                                <div style="color: #00ff00; font-size: 1.2rem;">5 Active</div>
+                            </div>
+                            <div style="background: rgba(255, 255, 0, 0.3); border: 2px solid #ffff00; padding: 12px; border-radius: 8px; text-align: center; transform: rotateX(-15deg);">
+                                <div style="color: #ffff00; font-weight: bold; font-size: 0.9rem;">Tasks</div>
+                                <div style="color: #00ff00; font-size: 1.2rem;">1,247</div>
+                            </div>
+                        </div>
+                    `;
+                    description.textContent = 'Interactive floating 3D panels display real-time system metrics, performance data, and agent status with contextual information and intuitive controls for immersive monitoring.';
+                    break;
+                case 'voice-commands':
+                    title.textContent = '🗣️ Advanced Voice Command System';
+                    subtitle.textContent = 'Natural language workflow creation and control';
+                    content.innerHTML = `
+                        <div style="display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 400px;">
+                            <div style="background: rgba(0, 255, 0, 0.2); border: 1px solid #00ff00; padding: 12px; border-radius: 8px;">
+                                <div style="color: #00ff00; font-weight: bold;">"Deploy Claude to analyze this codebase"</div>
+                                <div style="color: #ffffff; font-size: 0.8rem; margin-top: 5px;">→ Agent deployment initiated</div>
+                            </div>
+                            <div style="background: rgba(0, 255, 255, 0.2); border: 1px solid #00ffff; padding: 12px; border-radius: 8px;">
+                                <div style="color: #00ffff; font-weight: bold;">"Create workflow for data processing"</div>
+                                <div style="color: #ffffff; font-size: 0.8rem; margin-top: 5px;">→ Workflow template generated</div>
+                            </div>
+                            <div style="background: rgba(255, 0, 255, 0.2); border: 1px solid #ff00ff; padding: 12px; border-radius: 8px;">
+                                <div style="color: #ff00ff; font-weight: bold;">"Show me agent performance metrics"</div>
+                                <div style="color: #ffffff; font-size: 0.8rem; margin-top: 5px;">→ Holographic dashboard activated</div>
+                            </div>
+                        </div>
+                    `;
+                    description.textContent = 'Advanced speech recognition with natural language understanding enables intuitive voice control for workflow creation, agent management, and system interaction through conversational commands.';
+                    break;
+                case 'network-topology':
+                    title.textContent = '🕸️ Interactive Network Topology';
+                    subtitle.textContent = 'Real-time visualization of agent connections and data flow';
+                    content.innerHTML = `
+                        <div style="position: relative; width: 300px; height: 200px;">
+                            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 40px; height: 40px; background: rgba(255, 0, 255, 0.8); border: 2px solid #ff00ff; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #ffffff; font-weight: bold; font-size: 0.8rem;">HUB</div>
+                            
+                            <div style="position: absolute; top: 20px; left: 50%; transform: translateX(-50%); width: 30px; height: 30px; background: rgba(0, 255, 0, 0.8); border: 2px solid #00ff00; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #ffffff; font-weight: bold; font-size: 0.7rem;">A1</div>
+                            
+                            <div style="position: absolute; top: 50%; right: 20px; transform: translateY(-50%); width: 30px; height: 30px; background: rgba(0, 255, 255, 0.8); border: 2px solid #00ffff; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #ffffff; font-weight: bold; font-size: 0.7rem;">A2</div>
+                            
+                            <div style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); width: 30px; height: 30px; background: rgba(255, 255, 0, 0.8); border: 2px solid #ffff00; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #000000; font-weight: bold; font-size: 0.7rem;">A3</div>
+                            
+                            <div style="position: absolute; top: 50%; left: 20px; transform: translateY(-50%); width: 30px; height: 30px; background: rgba(255, 0, 0, 0.8); border: 2px solid #ff0000; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #ffffff; font-weight: bold; font-size: 0.7rem;">A4</div>
+                            
+                            <!-- Connection lines -->
+                            <div style="position: absolute; top: 50%; left: 50%; width: 80px; height: 2px; background: linear-gradient(90deg, #ff00ff, #00ff00); transform: translate(-50%, -50%) rotate(-90deg); opacity: 0.7;"></div>
+                            <div style="position: absolute; top: 50%; left: 50%; width: 80px; height: 2px; background: linear-gradient(90deg, #ff00ff, #00ffff); transform: translate(-50%, -50%) rotate(0deg); opacity: 0.7;"></div>
+                            <div style="position: absolute; top: 50%; left: 50%; width: 80px; height: 2px; background: linear-gradient(90deg, #ff00ff, #ffff00); transform: translate(-50%, -50%) rotate(90deg); opacity: 0.7;"></div>
+                            <div style="position: absolute; top: 50%; left: 50%; width: 80px; height: 2px; background: linear-gradient(90deg, #ff00ff, #ff0000); transform: translate(-50%, -50%) rotate(180deg); opacity: 0.7;"></div>
+                        </div>
+                    `;
+                    description.textContent = 'Interactive 3D network topology visualization shows real-time agent connections, data flow patterns, and system dependencies with dynamic status indicators and performance metrics.';
+                    break;
+                case 'predictive-intelligence':
+                    title.textContent = '🔮 Predictive Intelligence System';
+                    subtitle.textContent = 'Machine learning-powered forecasting and optimization';
+                    content.innerHTML = `
+                        <div style="display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 400px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="color: #00ffff;">Performance Prediction</span>
+                                <div style="background: linear-gradient(90deg, #00ff00, #ffff00, #ff0000); height: 15px; width: 150px; border-radius: 8px; position: relative;">
+                                    <div style="position: absolute; left: 75%; top: -5px; width: 2px; height: 25px; background: #ffffff;"></div>
+                                </div>
+                                <span style="color: #00ff00;">Optimal</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="color: #ff00ff;">Resource Usage</span>
+                                <div style="background: linear-gradient(90deg, #00ff00, #ffff00, #ff0000); height: 15px; width: 150px; border-radius: 8px; position: relative;">
+                                    <div style="position: absolute; left: 45%; top: -5px; width: 2px; height: 25px; background: #ffffff;"></div>
+                                </div>
+                                <span style="color: #ffff00;">Moderate</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="color: #ffff00;">Failure Risk</span>
+                                <div style="background: linear-gradient(90deg, #00ff00, #ffff00, #ff0000); height: 15px; width: 150px; border-radius: 8px; position: relative;">
+                                    <div style="position: absolute; left: 15%; top: -5px; width: 2px; height: 25px; background: #ffffff;"></div>
+                                </div>
+                                <span style="color: #00ff00;">Low</span>
+                            </div>
+                        </div>
+                    `;
+                    description.textContent = 'Advanced machine learning models provide predictive analytics for performance optimization, resource management, and intelligent recommendations to prevent issues before they occur.';
+                    break;
+            }
+        }
+
+        function showStartVisualization(type, title, subtitle, content, description) {
+            switch(type) {
+                case 'immediate-impact':
+                    title.textContent = '⚡ Immediate Impact & Quick Start';
+                    subtitle.textContent = 'Productive within minutes of deployment';
+                    content.innerHTML = `
+                        <div style="display: flex; flex-direction: column; gap: 8px; width: 100%; max-width: 400px;">
+                            <div class="flow-layer"><span style="color: #00ffff;">Install Script</span> <span style="color: #ffff00;">→</span> <span style="color: #00ff00;">2 minutes</span></div>
+                            <div class="flow-layer"><span style="color: #00ffff;">Agent Setup</span> <span style="color: #ffff00;">→</span> <span style="color: #00ff00;">3 minutes</span></div>
+                            <div class="flow-layer"><span style="color: #00ffff;">3D Interface</span> <span style="color: #ffff00;">→</span> <span style="color: #00ff00;">Instant</span></div>
+                            <div class="flow-layer"><span style="color: #00ffff;">First Workflow</span> <span style="color: #ffff00;">→</span> <span style="color: #00ff00">5 minutes</span></div>
+                        </div>
+                    `;
+                    description.textContent = 'Experience immediate productivity with pre-configured templates, intelligent defaults, and guided setup that gets you orchestrating AI agents within minutes of deployment.';
+                    break;
+                case 'one-script-deploy':
+                    title.textContent = '🚀 One-Script Deployment System';
+                    subtitle.textContent = 'Complete ecosystem deployment with single command';
+                    content.innerHTML = `
+                        <div style="background: rgba(0, 0, 0, 0.8); border: 1px solid #00ff00; border-radius: 8px; padding: 20px; font-family: monospace; color: #00ff00; text-align: left;">
+                            <div style="color: #00ffff; margin-bottom: 10px;"># One command deployment</div>
+                            <div style="color: #ffff00; margin-bottom: 15px;">curl -sSL https://dirk-brain.com/install | bash</div>
+                            <div style="color: #00ff00; font-size: 0.9rem;">
+                                ✓ Frontend deployed<br>
+                                ✓ Backend services started<br>
+                                ✓ Database initialized<br>
+                                ✓ Agents configured<br>
+                                ✓ 3D interface ready<br>
+                                ✓ System online
+                            </div>
+                        </div>
+                    `;
+                    description.textContent = 'Deploy the entire DIRK BRAIN Portal ecosystem with a single command - complete with agents, workflows, 3D visualization, and all supporting infrastructure automatically configured.';
+                    break;
+                case 'enterprise-ready':
+                    title.textContent = '🏢 Enterprise-Grade Platform';
+                    subtitle.textContent = 'Production-ready with security and scalability';
+                    content.innerHTML = `
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; width: 100%;">
+                            <div style="background: rgba(0, 255, 0, 0.2); border: 1px solid #00ff00; padding: 15px; border-radius: 8px; text-align: center;">
+                                <div style="color: #00ff00; font-weight: bold;">🔒 Security</div>
+                                <div style="color: #ffffff; font-size: 0.8rem;">End-to-end encryption</div>
+                            </div>
+                            <div style="background: rgba(0, 255, 255, 0.2); border: 1px solid #00ffff; padding: 15px; border-radius: 8px; text-align: center;">
+                                <div style="color: #00ffff; font-weight: bold;">📈 Scalability</div>
+                                <div style="color: #ffffff; font-size: 0.8rem;">Auto-scaling infrastructure</div>
+                            </div>
+                            <div style="background: rgba(255, 0, 255, 0.2); border: 1px solid #ff00ff; padding: 15px; border-radius: 8px; text-align: center;">
+                                <div style="color: #ff00ff; font-weight: bold;">📋 Compliance</div>
+                                <div style="color: #ffffff; font-size: 0.8rem;">Audit trails & governance</div>
+                            </div>
+                            <div style="background: rgba(255, 255, 0, 0.2); border: 1px solid #ffff00; padding: 15px; border-radius: 8px; text-align: center;">
+                                <div style="color: #ffff00; font-weight: bold;">🛠️ Support</div>
+                                <div style="color: #ffffff; font-size: 0.8rem;">24/7 enterprise support</div>
+                            </div>
+                        </div>
+                    `;
+                    description.textContent = 'Enterprise-grade platform with comprehensive security, scalability, compliance features, and professional support ready for production deployment in demanding business environments.';
+                    break;
+                case 'community-support':
+                    title.textContent = '🤝 Community & Ecosystem';
+                    subtitle.textContent = 'Growing developer community and comprehensive resources';
+                    content.innerHTML = `
+                        <div style="display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 400px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(0, 255, 0, 0.2); border: 1px solid #00ff00; padding: 10px; border-radius: 6px;">
+                                <span style="color: #00ff00;">📚 Documentation</span>
+                                <span style="color: #ffffff;">Comprehensive guides</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(0, 255, 255, 0.2); border: 1px solid #00ffff; padding: 10px; border-radius: 6px;">
+                                <span style="color: #00ffff;">💬 Community</span>
+                                <span style="color: #ffffff;">Active Discord & Forums</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255, 0, 255, 0.2); border: 1px solid #ff00ff; padding: 10px; border-radius: 6px;">
+                                <span style="color: #ff00ff;">🎓 Tutorials</span>
+                                <span style="color: #ffffff;">Step-by-step learning</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 0, 0.2); border: 1px solid #ffff00; padding: 10px; border-radius: 6px;">
+                                <span style="color: #ffff00;">🔧 Extensions</span>
+                                <span style="color: #ffffff;">Plugin marketplace</span>
+                            </div>
+                        </div>
+                    `;
+                    description.textContent = 'Join a thriving community of developers transforming AI development with comprehensive documentation, active support forums, learning resources, and an extensible plugin ecosystem.';
+                    break;
+            }
+        }
+
+        // Initialize presentation
+        document.addEventListener('DOMContentLoaded', function() {
+            showSlide(1);
+            
+            // Add some dynamic effects
+            setInterval(() => {
+                const satellites = document.querySelectorAll('.chaos-satellite, .solution-orbit');
+                satellites.forEach(satellite => {
+                    satellite.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                });
+            }, 5000);
+        });
+    </script>
+</body>
+</html>
+                        Select a solution card to see how DIRK BRAIN Portal transforms each development challenge into an elegant, automated, and visually intuitive experience.
+                    </div>
+                </div>
+            </div>
+        </div>  
+      <!-- Slide 4: Architecture -->
+        <div class="slide">
+            <h2>System Architecture</h2>
+            <p class="subtitle">Hybrid backend with immersive frontend experience</p>
+            <p class="description">
+                Multi-layered architecture combining cutting-edge technologies for optimal performance and user experience.
+            </p>
+
+            <div class="card-grid">
+                <div class="interactive-card" onclick="showVisualization('architecture', 'frontend-layer')">
+                    <div class="card-title">🎨 Frontend Layer</div>
+                    <div class="card-description">Next.js 15 + React 19 + Three.js + React Three Fiber creating immersive 3D experiences with smooth animations.</div>
+                </div>
+                <div class="interactive-card" onclick="showVisualization('architecture', 'realtime-layer')">
+                    <div class="card-title">🔄 Real-time Layer</div>
+                    <div class="card-description">Node.js + Socket.io enabling instant agent communication and live workflow streaming with WebSocket connections.</div>
+                </div>
+                <div class="interactive-card" onclick="showVisualization('architecture', 'intelligence-layer')">
+                    <div class="card-title">🧠 Intelligence Layer</div>
+                    <div class="card-description">Python FastAPI + ML models powering GOD mode orchestration and predictive analytics for optimal agent coordination.</div>
+                </div>
+                <div class="interactive-card" onclick="showVisualization('architecture', 'data-layer')">
+                    <div class="card-title">💾 Data Layer</div>
+                    <div class="card-description">PostgreSQL + Redis + Prisma ORM providing robust persistent storage, high-speed caching, and seamless data access.</div>
+                </div>
+            </div>
+
+            <div class="visualization-area" id="viz-area-4">
+                <div class="viz-container">
+                    <div class="viz-title" id="viz-title-4">👆 Click any layer to see architectural data flow</div>
+                    <div class="viz-subtitle" id="viz-subtitle-4">Watch how data flows through the hybrid system architecture</div>
+                    <div class="viz-content" id="viz-content-4">
+                        <div style="text-align: center; color: rgba(0, 255, 255, 0.5); font-size: 4rem; margin: 2rem 0;">🏗️</div>
+                    </div>
+                    <div class="viz-description" id="viz-description-4">
+                        Select an architectural layer to see how data flows through the system. Each layer has specific responsibilities and communicates through well-defined interfaces with other components.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Key Features -->
+        <div class="slide">
+            <h2>Revolutionary Features</h2>
+            <p class="subtitle">Experience the future of AI development</p>
+            <p class="description">
+                Cutting-edge capabilities that transform how developers interact with AI systems.
+            </p>
+
+            <div class="card-grid">
+                <div class="interactive-card" onclick="showVisualization('features', 'holographic-dashboards')">
+                    <div class="card-title">📊 Holographic Dashboards</div>
+                    <div class="card-description">Floating 3D panels displaying real-time metrics, charts, and system status with interactive controls and contextual information.</div>
+                </div>
+                <div class="interactive-card" onclick="showVisualization('features', 'voice-commands')">
+                    <div class="card-title">🗣️ Voice Commands</div>
+                    <div class="card-description">Natural language workflow creation and agent control through advanced speech recognition and command processing.</div>
+                </div>
+                <div class="interactive-card" onclick="showVisualization('features', 'network-topology')">
+                    <div class="card-title">🕸️ Network Topology</div>
+                    <div class="card-description">Interactive visualization of agent connections, data flow, and system dependencies with real-time status indicators.</div>
+                </div>
+                <div class="interactive-card" onclick="showVisualization('features', 'predictive-intelligence')">
+                    <div class="card-title">🔮 Predictive Intelligence</div>
+                    <div class="card-description">Machine learning-powered forecasting, performance optimization, and intelligent recommendations for system improvements.</div>
+                </div>
+            </div>
+
+            <div class="visualization-area" id="viz-area-5">
+                <div class="viz-container">
+                    <div class="viz-title" id="viz-title-5">👆 Click any feature to see it in action</div>
+                    <div class="viz-subtitle" id="viz-subtitle-5">Interactive demonstrations of revolutionary capabilities</div>
+                    <div class="viz-content" id="viz-content-5">
+                        <div style="text-align: center; color: rgba(0, 255, 255, 0.5); font-size: 4rem; margin: 2rem 0;">⚡</div>
+                    </div>
+                    <div class="viz-description" id="viz-description-5">
+                        Select a feature card to see animated demonstrations of how each revolutionary capability enhances the development experience and transforms AI workflows.
+                    </div>
+                </div>
+            </div>
+        </div>       
+ <!-- Slide 6: Get Started -->
+        <div class="slide">
+            <h2>Ready to Transform Your Workflow?</h2>
+            <p class="subtitle">Join the future of AI development</p>
+            <p class="description">
+                Experience the most advanced AI agent orchestration platform ever built.
+            </p>
+
+            <div class="card-grid">
+                <div class="interactive-card" onclick="showVisualization('start', 'immediate-impact')">
+                    <div class="card-title">🎯 Immediate Impact</div>
+                    <div class="card-description">Start visualizing and orchestrating your AI agents in minutes with intuitive 3D interfaces and automated workflows.</div>
+                </div>
+                <div class="interactive-card" onclick="showVisualization('start', 'easy-integration')">
+                    <div class="card-title">🔧 Easy Integration</div>
+                    <div class="card-description">Seamlessly integrates with existing DIRK protocol, MCP servers, and current development workflows without disruption.</div>
+                </div>
+                <div class="interactive-card" onclick="showVisualization('start', 'scalable-architecture')">
+                    <div class="card-title">📈 Scalable Architecture</div>
+                    <div class="card-description">Built for growth with cutting-edge technologies, best practices, and enterprise-ready infrastructure capabilities.</div>
+                </div>
+                <div class="interactive-card" onclick="showVisualization('start', 'comprehensive-support')">
+                    <div class="card-title">🛠️ Comprehensive Support</div>
+                    <div class="card-description">Complete documentation, interactive tutorials, and ongoing support to ensure successful adoption and optimization.</div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin: 2rem 0;">
+                <button class="nav-btn" style="margin: 0 0.5rem; padding: 12px 24px; font-size: 1rem;">🚀 Launch Demo</button>
+                <button class="nav-btn" style="margin: 0 0.5rem; padding: 12px 24px; font-size: 1rem;">📖 Documentation</button>
+                <button class="nav-btn" style="margin: 0 0.5rem; padding: 12px 24px; font-size: 1rem;">💻 Get Started</button>
+            </div>
+
+            <div class="visualization-area" id="viz-area-6">
+                <div class="viz-container">
+                    <div class="viz-title" id="viz-title-6">👆 Click any benefit to see your transformation journey</div>
+                    <div class="viz-subtitle" id="viz-subtitle-6">Visualize how DIRK BRAIN Portal will revolutionize your development</div>
+                    <div class="viz-content" id="viz-content-6">
+                        <div style="text-align: center; color: rgba(0, 255, 255, 0.5); font-size: 4rem; margin: 2rem 0;">🌟</div>
+                    </div>
+                    <div class="viz-description" id="viz-description-6">
+                        Select a benefit card to see how DIRK BRAIN Portal will transform your development workflow, accelerate your AI projects, and unlock new possibilities in intelligent automation.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" id="prev-btn" onclick="previousSlide()">← Previous</button>
+        <button class="nav-btn" id="next-btn" onclick="nextSlide()">Next →</button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 6;
+
+        function updateSlideCounter() {
+            document.getElementById('current-slide').textContent = currentSlide;
+            document.getElementById('total-slides').textContent = totalSlides;
+        }
+
+        function showSlide(n) {
+            const slides = document.querySelectorAll('.slide');
+            
+            if (n > totalSlides) currentSlide = 1;
+            if (n < 1) currentSlide = totalSlides;
+            
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[currentSlide - 1].classList.add('active');
+            
+            document.getElementById('prev-btn').disabled = currentSlide === 1;
+            document.getElementById('next-btn').disabled = currentSlide === totalSlides;
+            
+            updateSlideCounter();
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                showSlide(currentSlide);
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                showSlide(currentSlide);
+            }
+        }      
+  // Comprehensive visualization function
+        function showVisualization(slideType, itemType) {
+            // Remove active class from all cards
+            document.querySelectorAll('.interactive-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            
+            // Add active class to clicked card
+            event.target.closest('.interactive-card').classList.add('active');
+            
+            const slideNum = currentSlide;
+            const vizTitle = document.getElementById(`viz-title-${slideNum}`);
+            const vizSubtitle = document.getElementById(`viz-subtitle-${slideNum}`);
+            const vizContent = document.getElementById(`viz-content-${slideNum}`);
+            const vizDescription = document.getElementById(`viz-description-${slideNum}`);
+            
+            // Introduction slide visualizations
+            if (slideType === 'intro') {
+                switch(itemType) {
+                    case 'immersive-3d':
+                        vizTitle.textContent = '🌐 Immersive 3D Interface: Revolutionary Visualization';
+                        vizSubtitle.textContent = 'Experience AI agents in a stunning 3D environment';
+                        vizContent.innerHTML = `
+                            <div style="display: flex; justify-content: center; align-items: center; height: 180px;">
+                                <div class="solution-sphere">3D</div>
+                                <div class="solution-orbit" style="top: -10px; left: 50%; transform: translateX(-50%);">A1</div>
+                                <div class="solution-orbit" style="bottom: -10px; left: 50%; transform: translateX(-50%);">A2</div>
+                                <div class="solution-orbit" style="top: 50%; left: -10px; transform: translateY(-50%);">M1</div>
+                                <div class="solution-orbit" style="top: 50%; right: -10px; transform: translateY(-50%);">M2</div>
+                            </div>
+                        `;
+                        vizDescription.textContent = 'The 3D interface transforms flat agent management into an immersive spatial experience. AI agents (A1, A2) and metrics (M1, M2) orbit around the central visualization sphere, providing intuitive understanding of system relationships. The sphere rotates in 3D space while elements show real-time status, making complex AI systems immediately comprehensible through spatial positioning and visual cues.';
+                        break;
+                        
+                    case 'god-mode':
+                        vizTitle.textContent = '🤖 GOD Mode Orchestration: Intelligent Automation';
+                        vizSubtitle.textContent = 'Watch automatic task decomposition and agent selection';
+                        vizContent.innerHTML = `
+                            <div style="display: flex; justify-content: center; align-items: center; height: 180px; position: relative;">
+                                <div class="chaos-center" style="border-color: #00ffff; color: #00ffff; background: rgba(0, 255, 255, 0.1);">GOD</div>
+                                <div class="chaos-satellite" style="top: -20px; left: -60px; border-color: #00ff00; color: #00ff00; animation-delay: 0s;">A1</div>
+                                <div class="chaos-satellite" style="top: -20px; right: -60px; border-color: #00ff00; color: #00ff00; animation-delay: 0.5s;">A2</div>
+                                <div class="chaos-satellite" style="bottom: -20px; left: -60px; border-color: #ffff00; color: #ffff00; animation-delay: 1s;">T1</div>
+                                <div class="chaos-satellite" style="bottom: -20px; right: -60px; border-color: #ffff00; color: #ffff00; animation-delay: 1.5s;">T2</div>
+                                <div class="chaos-satellite" style="top: 50%; left: -80px; transform: translateY(-50%); border-color: #ff00ff; color: #ff00ff; animation-delay: 2s;">ML</div>
+                                <div class="chaos-satellite" style="top: 50%; right: -80px; transform: translateY(-50%); border-color: #ff00ff; color: #ff00ff; animation-delay: 2.5s;">AI</div>
+                            </div>
+                        `;
+                        vizDescription.textContent = 'GOD Mode orchestration replaces chaotic manual coordination with intelligent automation. The central GOD system (cyan) intelligently coordinates agents (A1, A2 in green), tasks (T1, T2 in yellow), and ML/AI systems (magenta). Unlike chaotic developer-centered models, this moves in harmony with predictable, optimized patterns. Each element follows coordinated timing, demonstrating systematic rather than random behavior.';
+                        break;
+                        
+                    case 'voice-control':
+                        vizTitle.textContent = '🗣️ Voice & Gesture Control: Natural Interaction';
+                        vizSubtitle.textContent = 'Command your AI ecosystem with natural language';
+                        vizContent.innerHTML = `
+                            <div style="display: flex; justify-content: center; align-items: center; height: 180px;">
+                                <div style="position: relative;">
+                                    <div style="width: 80px; height: 80px; border: 3px solid #00ffff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; animation: centerOverload 2s ease-in-out infinite;">🎤</div>
+                                    <div style="position: absolute; top: -40px; left: 50%; transform: translateX(-50%); font-size: 0.7rem; color: #00ffff; animation: satelliteChaos 3s ease-in-out infinite; animation-delay: 0s;">"Deploy agent"</div>
+                                    <div style="position: absolute; bottom: -40px; left: 50%; transform: translateX(-50%); font-size: 0.7rem; color: #ff00ff; animation: satelliteChaos 3s ease-in-out infinite; animation-delay: 1s;">"Show status"</div>
+                                    <div style="position: absolute; left: -60px; top: 50%; transform: translateY(-50%); font-size: 0.7rem; color: #ffff00; animation: satelliteChaos 3s ease-in-out infinite; animation-delay: 2s;">"Start workflow"</div>
+                                    <div style="position: absolute; right: -60px; top: 50%; transform: translateY(-50%); font-size: 0.7rem; color: #00ff00; animation: satelliteChaos 3s ease-in-out infinite; animation-delay: 0.5s;">"Analyze data"</div>
+                                </div>
+                            </div>
+                        `;
+                        vizDescription.textContent = 'Voice control transforms complex command-line operations into natural conversation. The microphone icon represents the voice interface, surrounded by example commands that users can speak naturally. Each command phrase moves with different timing, showing the variety of natural language inputs the system understands and processes. This eliminates the need for complex syntax or memorizing specific commands.';
+                        break;
+                        
+                    case 'realtime-coordination':
+                        vizTitle.textContent = '📡 Real-time Coordination: Live Agent Communication';
+                        vizSubtitle.textContent = 'Watch live workflow streaming and performance monitoring';
+                        vizContent.innerHTML = `
+                            <div style="display: flex; flex-direction: column; gap: 0.5rem; width: 100%;">
+                                <div class="flow-layer" style="animation-delay: 0s;">
+                                    <span>Agent A1</span> <span style="color: #00ff00;">● ACTIVE</span>
+                                </div>
+                                <div class="flow-layer" style="animation-delay: 0.5s;">
+                                    <span>Agent A2</span> <span style="color: #ffff00;">● PROCESSING</span>
+                                </div>
+                                <div class="flow-layer" style="animation-delay: 1s;">
+                                    <span>Agent A3</span> <span style="color: #00ffff;">● STREAMING</span>
+                                </div>
+                                <div class="flow-layer" style="animation-delay: 1.5s;">
+                                    <span>Workflow</span> <span style="color: #ff00ff;">● COORDINATING</span>
+                                </div>
+                            </div>
+                        `;
+                        vizDescription.textContent = 'Real-time coordination shows live agent communication through flowing data streams. Each layer represents a different agent or system component with real-time status indicators. The flowing light effects demonstrate continuous data exchange with staggered timing, while color-coded status indicators show each component\'s current state in the coordinated workflow. Data flows seamlessly between layers, ensuring synchronized operation.';
+                        break;
+                }
+            }
+            
+            // Problem slide visualizations
+            else if (slideType === 'problem') {
+                switch(itemType) {
+                    case 'chaos-coordination':
+                        vizTitle.textContent = '🔄 Chaotic Agent Coordination: Developer Overwhelm';
+                        vizSubtitle.textContent = 'Watch how manual coordination spirals out of control';
+                        vizContent.innerHTML = `
+                            <div style="display: flex; justify-content: center; align-items: center; height: 180px; position: relative;">
+                                <div class="chaos-center">DEV</div>
+                                <div class="chaos-satellite" style="top: -20px; left: -60px;">A1</div>
+                                <div class="chaos-satellite" style="top: -20px; right: -60px;">A2</div>
+                                <div class="chaos-satellite" style="bottom: -20px; left: -60px;">T1</div>
+                                <div class="chaos-satellite" style="bottom: -20px; right: -60px;">T2</div>
+                                <div class="chaos-satellite" style="top: 50%; left: -80px; transform: translateY(-50%);">D1</div>
+                                <div class="chaos-satellite" style="top: 50%; right: -80px; transform: translateY(-50%);">D2</div>
+                            </div>
+                        `;
+                        vizDescription.textContent = 'The developer (DEV) becomes overwhelmed trying to coordinate multiple agents (A1, A2), tasks (T1, T2), and dependencies (D1, D2). Each element moves chaotically and unpredictably, representing the overwhelming nature of manual coordination. The center pulses between yellow (normal) and red (overloaded), showing developer stress as the system becomes unmanageable. This chaos leads to errors, delays, and burnout.';
+                        break;
+                        
+                    case 'visibility-gap':
+                        vizTitle.textContent = '📊 Limited System Visibility: The 2D vs 3D Reality Gap';
+                        vizSubtitle.textContent = 'Traditional tools hide the true complexity of AI systems';
+                        vizContent.innerHTML = `
+                            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; height: 180px;">
+                                <div style="width: 200px; height: 120px; border: 2px solid #666; background: linear-gradient(135deg, #333, #111); border-radius: 8px; display: flex; flex-direction: column; padding: 10px; position: relative;">
+                                    <div style="position: absolute; top: -25px; left: 0; font-size: 0.7rem; color: #666;">Traditional 2D View</div>
+                                    <div style="height: 8px; background: #666; margin: 4px 0; border-radius: 4px; animation: centerOverload 2s ease-in-out infinite; opacity: 0.3;"></div>
+                                    <div style="height: 8px; background: #666; margin: 4px 0; border-radius: 4px; animation: centerOverload 2s ease-in-out infinite; opacity: 0.5; animation-delay: 0.5s;"></div>
+                                    <div style="height: 8px; background: #666; margin: 4px 0; border-radius: 4px; animation: centerOverload 2s ease-in-out infinite; opacity: 0.4; animation-delay: 1s;"></div>
+                                    <div style="height: 8px; background: #666; margin: 4px 0; border-radius: 4px; animation: centerOverload 2s ease-in-out infinite; opacity: 0.6; animation-delay: 1.5s;"></div>
+                                </div>
+                                <div style="font-size: 2rem; color: #ff0066; margin: 0 2rem;">≠</div>
+                                <div style="width: 200px; height: 120px; border: 2px dashed #ff0066; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #ff0066; font-size: 0.8rem; text-align: center; position: relative; animation: centerOverload 2s ease-in-out infinite;">
+                                    <div style="position: absolute; top: -25px; left: 0; font-size: 0.7rem; color: #ff0066;">Hidden 3D Reality</div>
+                                    Complex 3D<br>Agent Network<br>
+                                    <span style="font-size: 0.6rem; color: #ff0066;">INVISIBLE TO TRADITIONAL TOOLS</span>
+                                </div>
+                            </div>
+                        `;
+                        vizDescription.textContent = 'Traditional 2D interfaces (left) show simple bars and basic metrics that pulse weakly, providing minimal insight into system behavior. But the real AI system (right) is a complex 3D network with hidden relationships, dependencies, and interactions that remain completely invisible. The inequality symbol emphasizes this critical gap in understanding, leading to poor decisions and system failures.';
+                        break;
+                        
+                    case 'fragmented-tools':
+                        vizTitle.textContent = '🎯 Fragmented Tool Ecosystem: Broken Development Environment';
+                        vizSubtitle.textContent = 'Disconnected tools that cannot communicate or share context';
+                        vizContent.innerHTML = `
+                            <div style="display: flex; justify-content: space-around; align-items: center; width: 100%; height: 180px;">
+                                <div style="width: 100px; height: 80px; border: 2px solid #00ffff; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 0.7rem; color: #00ffff; position: relative; animation: satelliteChaos 3s ease-in-out infinite;">
+                                    <div>IDE</div>
+                                    <div style="font-size: 0.5rem;">Tool</div>
+                                    <div style="position: absolute; top: -10px; right: -10px; width: 20px; height: 20px; border: 2px solid #ff0066; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; color: #ff0066; animation: centerOverload 1s ease-in-out infinite;">✗</div>
+                                </div>
+                                <div style="width: 100px; height: 80px; border: 2px solid #00ffff; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 0.7rem; color: #00ffff; position: relative; animation: satelliteChaos 3s ease-in-out infinite; animation-delay: 1s;">
+                                    <div>AI</div>
+                                    <div style="font-size: 0.5rem;">Service</div>
+                                    <div style="position: absolute; top: -10px; right: -10px; width: 20px; height: 20px; border: 2px solid #ff0066; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; color: #ff0066; animation: centerOverload 1s ease-in-out infinite; animation-delay: 0.5s;">✗</div>
+                                </div>
+                                <div style="width: 100px; height: 80px; border: 2px solid #00ffff; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 0.7rem; color: #00ffff; position: relative; animation: satelliteChaos 3s ease-in-out infinite; animation-delay: 2s;">
+                                    <div>Deploy</div>
+                                    <div style="font-size: 0.5rem;">Tool</div>
+                                    <div style="position: absolute; top: -10px; right: -10px; width: 20px; height: 20px; border: 2px solid #ff0066; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; color: #ff0066; animation: centerOverload 1s ease-in-out infinite; animation-delay: 1.5s;">✗</div>
+                                </div>
+                            </div>
+                        `;
+                        vizDescription.textContent = 'Three essential development tools (IDE, AI Service, Deploy Tool) float independently with broken connections between them. Each tool has a red disconnect symbol (✗) that pulses, emphasizing complete isolation. The tools move chaotically with different timing, showing failed attempts at coordination. This fragmentation forces developers to manually transfer context between tools, creating inefficiency, errors, and lost productivity.';
+                        break;
+                        
+                    case 'manual-overhead':
+                        vizTitle.textContent = '⚡ Manual Management Overhead: Productivity Killer';
+                        vizSubtitle.textContent = 'Developers waste time on coordination instead of innovation';
+                        vizContent.innerHTML = `
+                            <div style="display: flex; justify-content: center; align-items: center; height: 180px; position: relative;">
+                                <div style="width: 80px; height: 80px; border: 3px solid #ffff00; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; animation: centerOverload 2s ease-in-out infinite;">👨‍💻</div>
+                                <div style="position: absolute; top: 20px; left: 20px; font-size: 0.6rem; color: #ff0066; animation: satelliteChaos 2s ease-in-out infinite;">Manual Config</div>
+                                <div style="position: absolute; top: 20px; right: 20px; font-size: 0.6rem; color: #ff0066; animation: satelliteChaos 2s ease-in-out infinite; animation-delay: 0.5s;">Context Switch</div>
+                                <div style="position: absolute; bottom: 20px; left: 20px; font-size: 0.6rem; color: #ff0066; animation: satelliteChaos 2s ease-in-out infinite; animation-delay: 1s;">Error Handling</div>
+                                <div style="position: absolute; bottom: 20px; right: 20px; font-size: 0.6rem; color: #ff0066; animation: satelliteChaos 2s ease-in-out infinite; animation-delay: 1.5s;">Status Checking</div>
+                                <div style="position: absolute; top: 50%; left: 10px; font-size: 0.6rem; color: #ff0066; animation: satelliteChaos 2s ease-in-out infinite; animation-delay: 0.3s;">Coordination</div>
+                                <div style="position: absolute; top: 50%; right: 10px; font-size: 0.6rem; color: #ff0066; animation: satelliteChaos 2s ease-in-out infinite; animation-delay: 0.8s;">Monitoring</div>
+                            </div>
+                        `;
+                        vizDescription.textContent = 'A single developer (center) is surrounded by multiple manual tasks that demand constant attention: configuration, context switching, error handling, status checking, coordination, and monitoring. The developer icon pulses between yellow (normal) and red (stressed), while overhead tasks move chaotically around them. This represents the productivity drain of manual management, preventing focus on creative problem-solving and innovation.';
+                        break;
+                }
+            }
+            
+            // Add more visualization types for other slides...
+            else {
+                vizTitle.textContent = '🚀 Interactive Visualization';
+                vizSubtitle.textContent = 'Click any card to see detailed demonstrations';
+                vizContent.innerHTML = `
+                    <div style="text-align: center; color: rgba(0, 255, 255, 0.5); font-size: 4rem; margin: 2rem 0;">✨</div>
+                `;
+                vizDescription.textContent = 'This interactive presentation provides detailed visualizations for every feature. Click on any card to see animated demonstrations that explain complex concepts through engaging visual storytelling.';
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowRight' || event.key === ' ') {
+                nextSlide();
+            } else if (event.key === 'ArrowLeft') {
+                previousSlide();
+            } else if (event.key === 'Home') {
+                currentSlide = 1;
+                showSlide(currentSlide);
+            } else if (event.key === 'End') {
+                currentSlide = totalSlides;
+                showSlide(currentSlide);
+            }
+        });
+
+        // Initialize
+        showSlide(currentSlide);
+        updateSlideCounter();
+    </script>
+</body>
+</html>

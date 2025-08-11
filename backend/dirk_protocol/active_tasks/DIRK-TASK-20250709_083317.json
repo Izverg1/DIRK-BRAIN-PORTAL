@@ -1,0 +1,45 @@
+{
+  "task_id": "DIRK-TASK-20250709_083317",
+  "title": "Test Authentication System",
+  "description": "Build a simple TypeScript authentication system with OAuth2 integration",
+  "creator": "DIRK.d (Gemini)",
+  "assignee": "DIRK.c (Claude Code)",
+  "status": "ASSIGNED",
+  "priority": "MEDIUM",
+  "created_at": "2025-07-09T08:33:17-04:00",
+  "deadline": "2025-07-16T08:33:17-04:00",
+  "language": "TypeScript",
+  "requirements": [
+    "Build real, production-ready implementation",
+    "No minimal or demo versions",
+    "Include comprehensive TypeScript types",
+    "Add complete test coverage",
+    "Follow macOS integration patterns",
+    "Include proper error handling",
+    "Generate comprehensive documentation"
+  ],
+  "acceptance_criteria": [
+    "All functionality works as specified",
+    "TypeScript compilation passes without errors",
+    "All tests pass",
+    "Code follows DIRK standards",
+    "Documentation is complete and accurate",
+    "macOS integration is properly implemented"
+  ],
+  "architecture_spec": {
+    "language": "TypeScript",
+    "platform": "macOS",
+    "patterns": ["Domain Modeling", "Safety First", "Enterprise Grade"],
+    "constraints": ["No simulations", "Production ready", "Full implementation"]
+  },
+  "cognitive_focuses": [
+    "Foundational Reasoning",
+    "Formal Logic", 
+    "Empirical Grounding",
+    "Abstraction",
+    "Best Explanation"
+  ],
+  "context_refs": [],
+  "progress_log": [],
+  "verification_status": "PENDING"
+}

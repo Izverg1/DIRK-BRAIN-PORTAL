@@ -1,0 +1,99 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "name": "dirk_file_backup",
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "mkdir -p /Users/izverg/Documents/dirk_protocol/backups/auto/$(date +%Y%m%d) && if [ -f \"$CLAUDE_FILE_PATHS\" ]; then cp \"$CLAUDE_FILE_PATHS\" \"/Users/izverg/Documents/dirk_protocol/backups/auto/$(date +%Y%m%d)/$(basename \"$CLAUDE_FILE_PATHS\")-$(date +%H%M%S).backup\" 2>/dev/null && echo '💾 DIRK: File backup created'; fi"
+          }
+        ]
+      },
+      {
+        "name": "dirk_standards_enforcement",
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if echo \"$CLAUDE_FILE_PATHS\" | grep -E '(minimal|simple|demo|mock)' && ! echo \"$CLAUDE_FILE_PATHS\" | grep -E '\\.(test|spec)\\.' ; then echo '🚫 DIRK VIOLATION: No minimal/demo versions allowed. Build real implementation.' && exit 1; fi"
+          }
+        ]
+      },
+      {
+        "name": "dirk_production_protection",
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if echo \"$CLAUDE_FILE_PATHS\" | grep -E '\\.(env|production|config\\.prod|secrets)' || echo \"$CLAUDE_FILE_PATHS\" | grep -E '/(production|prod|deploy)/' ; then echo '🚫 DIRK PROTECTION: Production file modification blocked' && exit 1; fi"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "name": "dirk_context_logging",
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"#DIRK-MACOS-$(date +%Y%m%d)-$(printf '%04d' $RANDOM): File modified: $CLAUDE_FILE_PATHS by Claude Code at $(date -Iseconds)\" >> /Users/izverg/Documents/dirk_protocol/context/DIRK_CONTEXT.md"
+          }
+        ]
+      },
+      {
+        "name": "dirk_task_progress_tracking",
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -f \"/Users/izverg/Documents/dirk_protocol/active_tasks/current_task.json\" ]; then echo \"$(date -Iseconds): Modified $CLAUDE_FILE_PATHS\" >> /Users/izverg/Documents/dirk_protocol/active_tasks/current_task_progress.log; fi"
+          }
+        ]
+      },
+      {
+        "name": "dirk_typescript_validation",
+        "matcher": {
+          "tool_name": "Write",
+          "file_paths": ["*.ts", "*.tsx"]
+        },
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if command -v npx >/dev/null 2>&1; then echo '🔧 DIRK: TypeScript validation...' && npx tsc --noEmit \"$CLAUDE_FILE_PATHS\" 2>/dev/null && echo '✅ TypeScript validation passed' || echo '⚠️ TypeScript validation failed - review required'; fi"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "name": "dirk_session_summary",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"🏁 DIRK Session ended at $(date -Iseconds). Backups created: $(ls /Users/izverg/Documents/dirk_protocol/backups/auto/$(date +%Y%m%d) 2>/dev/null | wc -l)\" >> /Users/izverg/Documents/dirk_protocol/context/DIRK_CONTEXT.md"
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(git *)",
+      "Bash(python3 *)",
+      "Bash(node *)",
+      "Read(*)",
+      "Write(*)"
+    ],
+    "deny": [
+      "Bash(rm -rf *)",
+      "Bash(sudo *)",
+      "Write(*.production.*)",
+      "Write(/System/*)",
+      "Write(/usr/*)"
+    ]
+  }
+}

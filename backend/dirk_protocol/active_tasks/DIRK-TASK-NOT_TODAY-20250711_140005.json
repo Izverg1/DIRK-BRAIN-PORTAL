@@ -1,0 +1,59 @@
+{
+  "task_id": "DIRK-TASK-NOT_TODAY-20250711_140005",
+  "project": "NOT_TODAY",
+  "project_path": "/Users/izverg/projects/NOT_TODAY/v0-untitled-project/",
+  "project_identifier": {
+    "name": "NOT_TODAY",
+    "package_name": "my-DIRK-project",
+    "has_brain_folder": true,
+    "working_directory_pattern": "**/NOT_TODAY/v0-untitled-project", 
+    "next_js_version": "15.2.4",
+    "react_version": "19"
+  },
+  "validation_checksum": "sha256_brain_validated_20250711",
+  "priority": "HIGH",
+  "status": "ASSIGNED",
+  "assigned_to": "DIRK.c",
+  "deadline": "2025-07-17",
+  "title": "Enterprise-Grade Testing & Recovery-Focused Quality Assurance",
+  "description": "Implement comprehensive testing suite including unit tests, integration tests, accessibility testing, AI safety validation, crisis detection testing, and recovery-specific user journey testing. Ensure 100% guardrail effectiveness and enterprise-grade quality standards.",
+  "requirements": {
+    "typescript_types": true,
+    "test_coverage": "100%",
+    "safety_validation": "recovery_focused",
+    "dirk_compliance": true,
+    "accessibility": "WCAG_2.1_AA",
+    "security": "enterprise_grade"
+  },
+  "dependencies": [
+    "DIRK-TASK-NOT_TODAY-20250711_140001",
+    "DIRK-TASK-NOT_TODAY-20250711_140002", 
+    "DIRK-TASK-NOT_TODAY-20250711_140003",
+    "DIRK-TASK-NOT_TODAY-20250711_140004"
+  ],
+  "brain_references": [
+    "/Users/izverg/projects/NOT_TODAY/v0-untitled-project/BRAIN/not_today_dynamic_addiction_architecture.md",
+    "/Users/izverg/projects/NOT_TODAY/v0-untitled-project/BRAIN/crisis_relay_tech_requirements.md"
+  ],
+  "validation_required": {
+    "check_working_directory": true,
+    "verify_brain_folder_exists": true,
+    "validate_referenced_files": true,
+    "confirm_project_identity": true,
+    "verify_testing_framework": true
+  },
+  "technical_specifications": {
+    "testing_framework": "jest_with_testing_library",
+    "coverage_requirements": {
+      "unit_tests": "100%_all_components",
+      "integration_tests": "95%_user_journeys", 
+      "e2e_tests": "critical_paths_only",
+      "accessibility_tests": "automated_plus_manual"
+    },
+    "safety_validation": {
+      "ai_guardrail_testing": "10000_test_cases_minimum",
+      "crisis_detection_accuracy": "99_percent_sensitivity",
+      "content_filtering": "zero_inappropriate_responses"
+    }
+  }
+}

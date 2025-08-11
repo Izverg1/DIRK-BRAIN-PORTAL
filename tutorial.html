@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIRK Brain Portal - Interactive Tutorial</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .header {
+            background: rgba(26, 26, 46, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(59, 130, 246, 0.3);
+            padding: 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+        
+        .header p {
+            color: #94a3b8;
+            font-size: 1.1rem;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem 2rem;
+            background: rgba(26, 26, 46, 0.6);
+            border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+            position: sticky;
+            top: 120px;
+            z-index: 90;
+        }
+        
+        .nav-tab {
+            padding: 0.75rem 1.5rem;
+            background: rgba(30, 58, 95, 0.6);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 8px;
+            color: #94a3b8;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-tab:hover {
+            background: rgba(59, 130, 246, 0.2);
+            color: #3b82f6;
+            transform: translateY(-2px);
+        }
+        
+        .nav-tab.active {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(139, 92, 246, 0.3));
+            color: #fff;
+            border-color: #3b82f6;
+        }
+        
+        .content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .card {
+            background: rgba(30, 58, 95, 0.3);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+        }
+        
+        .card h2 {
+            color: #3b82f6;
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+        }
+        
+        .card h3 {
+            color: #8b5cf6;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .feature-card {
+            background: rgba(30, 58, 95, 0.5);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+            border-color: #8b5cf6;
+        }
+        
+        .feature-card h4 {
+            color: #10b981;
+            margin-bottom: 0.5rem;
+        }
+        
+        .code-block {
+            background: #0a0a0a;
+            border: 1px solid #1e293b;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+        }
+        
+        .code-block code {
+            font-family: 'Monaco', 'Courier New', monospace;
+            color: #10b981;
+            font-size: 0.9rem;
+        }
+        
+        .step-list {
+            counter-reset: step-counter;
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .step-list li {
+            counter-increment: step-counter;
+            position: relative;
+            padding-left: 3rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(59, 130, 246, 0.1);
+        }
+        
+        .step-list li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 2rem;
+            height: 2rem;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #fff;
+        }
+        
+        .keyboard-shortcut {
+            display: inline-block;
+            background: rgba(59, 130, 246, 0.2);
+            border: 1px solid #3b82f6;
+            border-radius: 4px;
+            padding: 0.25rem 0.5rem;
+            font-family: monospace;
+            font-size: 0.9rem;
+            margin: 0 0.25rem;
+        }
+        
+        .alert {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .alert.info {
+            background: rgba(59, 130, 246, 0.1);
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+        
+        .alert.success {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+        
+        .demo-button {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+        
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4);
+        }
+        
+        .progress-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            transition: width 0.3s ease;
+            z-index: 200;
+        }
+        
+        .interactive-demo {
+            background: #0a0a0a;
+            border: 2px solid #3b82f6;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .interactive-demo::before {
+            content: 'INTERACTIVE DEMO';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-indicator" id="progress"></div>
+    
+    <header class="header">
+        <h1>DIRK Brain Portal</h1>
+        <p>Interactive Tutorial & User Guide</p>
+    </header>
+    
+    <nav class="nav-tabs">
+        <div class="nav-tab active" onclick="showSection('getting-started')">Getting Started</div>
+        <div class="nav-tab" onclick="showSection('core-features')">Core Features</div>
+        <div class="nav-tab" onclick="showSection('agent-management')">Agent Management</div>
+        <div class="nav-tab" onclick="showSection('security')">Security</div>
+        <div class="nav-tab" onclick="showSection('advanced')">Advanced</div>
+        <div class="nav-tab" onclick="showSection('troubleshooting')">Troubleshooting</div>
+    </nav>
+    
+    <div class="content">
+        <!-- Getting Started Section -->
+        <section id="getting-started" class="section active">
+            <div class="card">
+                <h2>🚀 Quick Start Guide</h2>
+                <p>Welcome to DIRK Brain Portal - your AI agent orchestration platform!</p>
+                
+                <h3>Installation Steps</h3>
+                <ol class="step-list">
+                    <li>
+                        <strong>Run the Setup Wizard</strong>
+                        <div class="code-block">
+                            <code>python setup_wizard.py</code>
+                        </div>
+                        <p>Follow the interactive prompts to configure your environment.</p>
+                    </li>
+                    
+                    <li>
+                        <strong>Start the Platform</strong>
+                        <div class="code-block">
+                            <code>./start.sh  # On Linux/Mac<br>.\start.bat  # On Windows</code>
+                        </div>
+                        <p>This starts all services: Frontend, Backend API, and gRPC server.</p>
+                    </li>
+                    
+                    <li>
+                        <strong>Access the Portal</strong>
+                        <p>Open your browser and navigate to:</p>
+                        <div class="alert info">
+                            <strong>Frontend:</strong> http://localhost:3000<br>
+                            <strong>API Docs:</strong> http://localhost:3001/docs
+                        </div>
+                    </li>
+                </ol>
+                
+                <h3>First Time Setup</h3>
+                <div class="interactive-demo">
+                    <p><strong>Configure Your First AI Provider:</strong></p>
+                    <ol>
+                        <li>Click the Settings icon in the top-right corner</li>
+                        <li>Navigate to "AI Providers"</li>
+                        <li>Enter your API keys for Claude, GPT, or Gemini</li>
+                        <li>Click "Test Connection" to verify</li>
+                    </ol>
+                    <button class="demo-button" onclick="simulateProviderSetup()">Try Demo Setup</button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Core Features Section -->
+        <section id="core-features" class="section">
+            <div class="card">
+                <h2>✨ Core Features</h2>
+                <p>DIRK Brain Portal offers powerful features for AI agent orchestration.</p>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h4>📋 Unified Command Center</h4>
+                        <p>Execute commands through CLI or API with smart routing.</p>
+                        <div class="code-block">
+                            <code>claude code "Create a React component"<br>gemini analyze "Review this code"</code>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4>🎭 View Modes</h4>
+                        <p>Switch between three view modes:</p>
+                        <ul>
+                            <li><strong>Command:</strong> Focus on execution</li>
+                            <li><strong>Monitor:</strong> 3D visualization</li>
+                            <li><strong>Hybrid:</strong> Split view</li>
+                        </ul>
+                        <p>Shortcut: <span class="keyboard-shortcut">Ctrl + Space</span></p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4>🤖 AI Swarm Generation</h4>
+                        <p>Generate agent teams using natural language:</p>
+                        <div class="alert info">
+                            "Create a full-stack development team with testing"
+                        </div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4>🔒 MrWolf Security</h4>
+                        <p>"The Wolf" validates your code for vulnerabilities.</p>
+                        <div class="code-block">
+                            <code>POST /api/security/validate-code</code>
+                        </div>
+                    </div>
+                </div>
+                
+                <h3>Keyboard Shortcuts</h3>
+                <table style="width: 100%; margin-top: 1rem;">
+                    <tr>
+                        <td><span class="keyboard-shortcut">Ctrl + Space</span></td>
+                        <td>Toggle view mode</td>
+                    </tr>
+                    <tr>
+                        <td><span class="keyboard-shortcut">Ctrl + Shift + S</span></td>
+                        <td>Split view</td>
+                    </tr>
+                    <tr>
+                        <td><span class="keyboard-shortcut">Tab</span></td>
+                        <td>Focus command input</td>
+                    </tr>
+                    <tr>
+                        <td><span class="keyboard-shortcut">Esc</span></td>
+                        <td>Close dialogs</td>
+                    </tr>
+                </table>
+            </div>
+        </section>
+        
+        <!-- Agent Management Section -->
+        <section id="agent-management" class="section">
+            <div class="card">
+                <h2>🤖 Agent Management</h2>
+                
+                <h3>Creating Agent Swarms</h3>
+                <ol class="step-list">
+                    <li>
+                        <strong>Use the AI Prompt Box</strong>
+                        <p>Located at the bottom of the interface. Enter natural language commands:</p>
+                        <div class="code-block">
+                            <code>"Create agents for e-commerce platform development"</code>
+                        </div>
+                    </li>
+                    
+                    <li>
+                        <strong>Select Templates</strong>
+                        <p>Choose from pre-configured team templates:</p>
+                        <ul>
+                            <li>Full-Stack Development Team</li>
+                            <li>Data Analysis Pipeline</li>
+                            <li>Security Audit Team</li>
+                            <li>Creative Content Squad</li>
+                        </ul>
+                    </li>
+                    
+                    <li>
+                        <strong>Deploy Agents</strong>
+                        <p>Drag generated agents onto projects or use deployment commands:</p>
+                        <div class="code-block">
+                            <code>POST /api/pods/deploy<br>{<br>  "agents": [...],<br>  "type": "swarm"<br>}</code>
+                        </div>
+                    </li>
+                </ol>
+                
+                <h3>Agent Types</h3>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h4>DIRK.c - Coding Agents</h4>
+                        <p>Specialized in software development tasks.</p>
+                        <ul>
+                            <li>Code generation</li>
+                            <li>Debugging</li>
+                            <li>Refactoring</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4>DIRK.g - Creative Agents</h4>
+                        <p>Handle creative and design tasks.</p>
+                        <ul>
+                            <li>UI/UX design</li>
+                            <li>Content creation</li>
+                            <li>Graphics generation</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4>DIRK.a - Analysis Agents</h4>
+                        <p>Data analysis and business intelligence.</p>
+                        <ul>
+                            <li>Data processing</li>
+                            <li>Report generation</li>
+                            <li>Pattern recognition</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <h3>Deployment Options</h3>
+                <div class="alert info">
+                    <strong>Local:</strong> Run agents on your machine<br>
+                    <strong>Docker:</strong> Containerized deployment<br>
+                    <strong>SSH:</strong> Deploy to remote servers<br>
+                    <strong>Cloud:</strong> AWS, GCP, Azure integration
+                </div>
+            </div>
+        </section>
+        
+        <!-- Security Section -->
+        <section id="security" class="section">
+            <div class="card">
+                <h2>🔒 Security with MrWolf</h2>
+                <p>"I solve problems" - Winston Wolf</p>
+                
+                <h3>Security Features</h3>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h4>🛡️ Code Validation</h4>
+                        <p>Comprehensive threat detection:</p>
+                        <ul>
+                            <li>SQL Injection</li>
+                            <li>XSS vulnerabilities</li>
+                            <li>Command injection</li>
+                            <li>Path traversal</li>
+                            <li>Sensitive data exposure</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4>📦 Dependency Scanning</h4>
+                        <p>Check for vulnerable packages:</p>
+                        <div class="code-block">
+                            <code>POST /api/security/check-dependencies</code>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4>✅ Compliance Checking</h4>
+                        <p>Validate against standards:</p>
+                        <ul>
+                            <li>OWASP Top 10</li>
+                            <li>PCI DSS</li>
+                            <li>GDPR</li>
+                            <li>SOC 2</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <h3>Running Security Scans</h3>
+                <div class="interactive-demo">
+                    <p><strong>Generate a Full Security Report:</strong></p>
+                    <div class="code-block">
+                        <code>curl -X POST http://localhost:3001/api/security/full-report \<br>  -H "Content-Type: application/json" \<br>  -d '{"project_id": "your_project"}'</code>
+                    </div>
+                    <button class="demo-button" onclick="runSecurityScan()">Run Demo Scan</button>
+                </div>
+                
+                <div class="alert">
+                    <strong>⚠️ Security Best Practices:</strong>
+                    <ul>
+                        <li>Never commit API keys to version control</li>
+                        <li>Use environment variables for sensitive data</li>
+                        <li>Regularly update dependencies</li>
+                        <li>Enable MrWolf validation for all deployments</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Advanced Section -->
+        <section id="advanced" class="section">
+            <div class="card">
+                <h2>🔧 Advanced Features</h2>
+                
+                <h3>Custom Connectors</h3>
+                <p>Create your own connector for custom integrations:</p>
+                <div class="code-block">
+                    <code>class CustomConnector(BaseConnector):<br>    async def execute(self, command):<br>        # Your implementation<br>        pass</code>
+                </div>
+                
+                <h3>Workflow Automation</h3>
+                <p>Define complex multi-step workflows:</p>
+                <div class="code-block">
+                    <code>{<br>  "workflow": "deployment_pipeline",<br>  "steps": [<br>    {"type": "sequential", "command": "run tests"},<br>    {"type": "parallel", "commands": ["build", "lint"]},<br>    {"type": "conditional", "command": "deploy", "condition": "tests_pass"}<br>  ]<br>}</code>
+                </div>
+                
+                <h3>Real-time Monitoring</h3>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h4>📊 WebSocket Streaming</h4>
+                        <p>Real-time command output and agent status updates.</p>
+                        <div class="code-block">
+                            <code>ws://localhost:8080/ws/terminal</code>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4>🎯 Performance Metrics</h4>
+                        <p>Track agent performance and system metrics.</p>
+                        <ul>
+                            <li>Task completion rates</li>
+                            <li>Response times</li>
+                            <li>Resource utilization</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4>🌍 3D Visualization</h4>
+                        <p>Elegant hexagonal grid showing:</p>
+                        <ul>
+                            <li>Project nodes</li>
+                            <li>Agent positions</li>
+                            <li>Data flow paths</li>
+                            <li>Activity indicators</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <h3>API Integration</h3>
+                <p>Integrate DIRK Brain Portal with your existing tools:</p>
+                <div class="code-block">
+                    <code># Python Example<br>import requests<br><br>response = requests.post(<br>    "http://localhost:3001/api/unified/execute",<br>    json={"command": "claude code 'Create API endpoint'"}<br>)<br>print(response.json())</code>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Troubleshooting Section -->
+        <section id="troubleshooting" class="section">
+            <div class="card">
+                <h2>🔍 Troubleshooting</h2>
+                
+                <h3>Common Issues</h3>
+                
+                <div class="alert">
+                    <strong>Port Already in Use</strong>
+                    <p>Solution: Change ports in .env files or kill existing processes:</p>
+                    <div class="code-block">
+                        <code>lsof -i :3000  # Find process<br>kill -9 [PID]  # Kill process</code>
+                    </div>
+                </div>
+                
+                <div class="alert">
+                    <strong>gRPC Server Not Starting</strong>
+                    <p>Solution: Install gRPC dependencies:</p>
+                    <div class="code-block">
+                        <code>pip install grpcio grpcio-tools</code>
+                    </div>
+                </div>
+                
+                <div class="alert">
+                    <strong>WebSocket Connection Failed</strong>
+                    <p>Solution: Check CORS settings and firewall rules.</p>
+                </div>
+                
+                <h3>Debugging Tips</h3>
+                <ul>
+                    <li>Check logs in <code>backend/logs/</code></li>
+                    <li>Use browser DevTools Network tab for API issues</li>
+                    <li>Run <code>npm run dev</code> with <code>--verbose</code> flag</li>
+                    <li>Test individual services: <code>python main.py</code></li>
+                </ul>
+                
+                <h3>Getting Help</h3>
+                <div class="alert success">
+                    <strong>📚 Resources:</strong><br>
+                    • Documentation: <a href="#" style="color: #10b981;">GitHub Wiki</a><br>
+                    • Community: <a href="#" style="color: #10b981;">Discord Server</a><br>
+                    • Issues: <a href="#" style="color: #10b981;">GitHub Issues</a><br>
+                    • Email: support@dirkbrain.ai
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <script>
+        // Tab navigation
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Remove active from all tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Mark tab as active
+            event.target.classList.add('active');
+            
+            // Update progress bar
+            updateProgress();
+        }
+        
+        // Progress indicator
+        function updateProgress() {
+            const sections = document.querySelectorAll('.section');
+            const activeSectionIndex = Array.from(sections).findIndex(s => s.classList.contains('active'));
+            const progress = ((activeSectionIndex + 1) / sections.length) * 100;
+            document.getElementById('progress').style.width = progress + '%';
+        }
+        
+        // Demo functions
+        function simulateProviderSetup() {
+            alert('Demo: This would open the provider configuration dialog.\n\n1. Enter your API key\n2. Select model preferences\n3. Test the connection\n4. Save configuration');
+        }
+        
+        function runSecurityScan() {
+            alert('Demo Security Scan Results:\n\n✅ No SQL injection vulnerabilities\n✅ No XSS vulnerabilities\n⚠️ 2 outdated dependencies found\n✅ HTTPS properly configured\n\nThe Wolf says: "Pretty good, but update those dependencies."');
+        }
+        
+        // Initialize
+        updateProgress();
+        
+        // Add smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+        
+        // Add interactive code blocks (click to copy)
+        document.querySelectorAll('.code-block code').forEach(block => {
+            block.style.cursor = 'pointer';
+            block.title = 'Click to copy';
+            block.addEventListener('click', function() {
+                const text = this.innerText;
+                navigator.clipboard.writeText(text).then(() => {
+                    const original = this.style.background;
+                    this.style.background = 'rgba(16, 185, 129, 0.2)';
+                    setTimeout(() => {
+                        this.style.background = original;
+                    }, 200);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

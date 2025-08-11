@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIRK.c Complete Guide - Developer & Implementation Engine</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --bg-color: #ecf0f1;
+            --text-color: #2c3e50;
+            --border-color: #bdc3c7;
+            --code-bg: #f8f9fa;
+            --dirk-c-color: #3498db;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--dirk-c-color), #2980b9);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .nav {
+            background: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .nav a {
+            text-decoration: none;
+            color: var(--primary-color);
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .nav a:hover {
+            background-color: var(--dirk-c-color);
+            color: white;
+        }
+
+        .main-content {
+            padding: 2rem 0;
+        }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-left: 5px solid var(--dirk-c-color);
+        }
+
+        .command-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .command-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-top: 4px solid var(--dirk-c-color);
+        }
+
+        .command-card h4 {
+            color: var(--dirk-c-color);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .code-block {
+            background: var(--code-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .code-block::before {
+            content: attr(data-lang);
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: var(--dirk-c-color);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 3px;
+            font-size: 0.8rem;
+        }
+
+        .claude-terminal {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            position: relative;
+        }
+
+        .claude-terminal::before {
+            content: 'Claude Code Session';
+            position: absolute;
+            top: 0.5rem;
+            left: 1rem;
+            background: var(--dirk-c-color);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 3px;
+            font-size: 0.8rem;
+        }
+
+        .claude-prompt {
+            color: #569cd6;
+        }
+
+        .claude-output {
+            color: #9cdcfe;
+        }
+
+        .hooks-section {
+            background: linear-gradient(135deg, var(--dirk-c-color), #2980b9);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+        }
+
+        .hooks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .hook-card {
+            background: rgba(255,255,255,0.1);
+            padding: 1.5rem;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .workflow-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .workflow-step {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-left: 4px solid var(--dirk-c-color);
+            position: relative;
+        }
+
+        .step-number {
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: var(--dirk-c-color);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+            border-left: 4px solid;
+        }
+
+        .alert.info {
+            background: #d4edda;
+            border-left-color: var(--success-color);
+            color: #155724;
+        }
+
+        .alert.warning {
+            background: #fff3cd;
+            border-left-color: var(--warning-color);
+            color: #856404;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-top: 3px solid var(--dirk-c-color);
+        }
+
+        .feature-card h4 {
+            color: var(--dirk-c-color);
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1>⚡ DIRK.c Complete Guide</h1>
+            <p>Developer & Implementation Engine</p>
+        </div>
+    </header>
+
+    <nav class="nav">
+        <div class="container">
+            <ul>
+                <li><a href="index.html">← Back to Main</a></li>
+                <li><a href="#overview">Overview</a></li>
+                <li><a href="#getting-started">Getting Started</a></li>
+                <li><a href="#commands">Slash Commands</a></li>
+                <li><a href="#hooks">Quality Hooks</a></li>
+                <li><a href="#workflow">Development Workflow</a></li>
+                <li><a href="#examples">Examples</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="container">
+            
+            <section id="overview">
+                <div class="card">
+                    <h2>⚡ What is DIRK.c?</h2>
+                    <p><strong>DIRK.c</strong> is the Developer and Implementation engine of the DIRK system, powered by Claude Code CLI. It transforms DIRK.g specifications into working code while ensuring enterprise-grade quality through automated validation.</p>
+                    
+                    <h3>Key Capabilities</h3>
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <h4>🏗️ Code Implementation</h4>
+                            <p>Generate enterprise-grade TypeScript, C++, and other code following specifications</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4>🧪 Automated Testing</h4>
+                            <p>Create comprehensive unit, integration, and e2e test suites</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4>🛡️ Security Validation</h4>
+                            <p>Scan for vulnerabilities, credentials, and security best practices</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4>✨ Code Quality</h4>
+                            <p>Automatic formatting, linting, and style enforcement</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4>📚 Documentation</h4>
+                            <p>Generate API docs, code comments, and implementation guides</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4>🚀 Performance</h4>
+                            <p>Optimization recommendations and benchmarking</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="getting-started">
+                <div class="card">
+                    <h2>🚀 Getting Started with DIRK.c</h2>
+                    
+                    <h3>Step 1: Start Claude Code Session</h3>
+                    <div class="code-block" data-lang="bash">
+# Navigate to CrawlZilla project and start Claude Code
+cd /Users/izverg/Documents/CrawlZilla
+claude
+
+# Or use the convenient alias
+dirk-c
+                    </div>
+
+                    <h3>Step 2: Explore Available Commands</h3>
+                    <div class="claude-terminal">
+<span class="claude-prompt">claude></span> /help
+<span class="claude-output">
+Available commands:
+  /build - Build entire project with quality validation
+  /test - Run comprehensive test suite  
+  /implement-from-dirk-g - Implement DIRK.g specifications
+  /feature - Implement new feature
+  /debug - Debug system issues
+  /optimize - Performance optimization
+</span>
+                    </div>
+
+                    <h3>Step 3: Test Basic Functionality</h3>
+                    <div class="claude-terminal">
+<span class="claude-prompt">claude></span> /build
+<span class="claude-output">
+🔧 Building CrawlZilla project...
+✅ Environment validation passed
+✅ Dependencies up to date
+✅ TypeScript compilation successful
+✅ C++ core build completed
+✅ Tests passed (95% coverage)
+✅ Build completed successfully
+</span>
+                    </div>
+                </div>
+            </section>
+
+            <section id="commands">
+                <div class="card">
+                    <h2>📋 Slash Commands Reference</h2>
+                    
+                    <div class="command-grid">
+                        <div class="command-card">
+                            <h4>/build</h4>
+                            <p><strong>Build Entire Project</strong></p>
+                            <div class="claude-terminal">
+<span class="claude-prompt">claude></span> /build
+                            </div>
+                            <p>Validates environment, installs dependencies, compiles C++ core, builds TypeScript API, runs tests, and generates documentation.</p>
+                            
+                            <h5>DIRK Principles Applied:</h5>
+                            <ul>
+                                <li><strong>Systematic Doubt:</strong> Validates all dependencies and environment</li>
+                                <li><strong>Empirical Grounding:</strong> Runs comprehensive tests</li>
+                                <li><strong>Formal Logic:</strong> Verifies build integrity</li>
+                            </ul>
+                        </div>
+
+                        <div class="command-card">
+                            <h4>/test</h4>
+                            <p><strong>Comprehensive Testing</strong></p>
+                            <div class="claude-terminal">
+<span class="claude-prompt">claude></span> /test unit
+<span class="claude-prompt">claude></span> /test integration  
+<span class="claude-prompt">claude></span> /test e2e
+<span class="claude-prompt">claude></span> /test all
+                            </div>
+                            <p>Run unit tests for individual components, integration tests for API and service interactions, or end-to-end workflow tests.</p>
+                            
+                            <h5>Test Types:</h5>
+                            <ul>
+                                <li><strong>unit:</strong> Fast unit tests for individual components</li>
+                                <li><strong>integration:</strong> API and service integration tests</li>
+                                <li><strong>e2e:</strong> End-to-end workflow tests</li>
+                                <li><strong>all:</strong> Complete test suite (default)</li>
+                            </ul>
+                        </div>
+
+                        <div class="command-card">
+                            <h4>/implement-from-dirk-g</h4>
+                            <p><strong>DIRK.g Integration</strong></p>
+                            <div class="claude-terminal">
+<span class="claude-prompt">claude></span> /implement-from-dirk-g
+<span class="claude-output">
+🧠 Reading DIRK.g specifications...
+📋 Business requirements parsed
+🏗️ Solution architecture analyzed
+⚡ Generating implementation plan
+🔧 Creating code with enterprise standards
+🧪 Generating comprehensive tests
+📚 Creating documentation
+✅ Implementation completed
+</span>
+                            </div>
+                            <p>Reads DIRK.g specifications from handoff directory and implements features according to business requirements and solution architecture.</p>
+                            
+                            <h5>Workflow:</h5>
+                            <ol>
+                                <li>Read DIRK.g specifications from <code>.dirk/handoff/</code></li>
+                                <li>Parse business requirements and architecture design</li>
+                                <li>Generate implementation plan</li>
+                                <li>Create code following enterprise standards</li>
+                                <li>Implement security and quality measures</li>
+                                <li>Generate tests and documentation</li>
+                                <li>Validate against acceptance criteria</li>
+                            </ol>
+                        </div>
+
+                        <div class="command-card">
+                            <h4>/feature</h4>
+                            <p><strong>New Feature Implementation</strong></p>
+                            <div class="claude-terminal">
+<span class="claude-prompt">claude></span> /feature "rate limiting for crawler API"
+<span class="claude-output">
+🎯 Analyzing feature requirements...
+🏗️ Designing implementation approach
+⚡ Generating code with quality standards
+🧪 Creating comprehensive tests
+📚 Updating documentation
+🛡️ Validating security and performance
+✅ Feature implementation completed
+</span>
+                            </div>
+                            <p>Implement new features from scratch with complete analysis, design, implementation, testing, and documentation.</p>
+                            
+                            <h5>Process:</h5>
+                            <ul>
+                                <li>Analyze feature requirements</li>
+                                <li>Design solution architecture</li>
+                                <li>Plan implementation approach</li>
+                                <li>Generate code with quality standards</li>
+                                <li>Create comprehensive tests</li>
+                                <li>Update documentation</li>
+                                <li>Validate security and performance</li>
+                            </ul>
+                        </div>
+
+                        <div class="command-card">
+                            <h4>/debug</h4>
+                            <p><strong>System Debugging</strong></p>
+                            <div class="claude-terminal">
+<span class="claude-prompt">claude></span> /debug component
+<span class="claude-prompt">claude></span> /debug error
+<span class="claude-prompt">claude></span> /debug performance
+                            </div>
+                            <p>Debug system issues using systematic analysis and evidence-based diagnosis.</p>
+                            
+                            <h5>Debug Types:</h5>
+                            <ul>
+                                <li><strong>component:</strong> Debug specific system component</li>
+                                <li><strong>error:</strong> Analyze error logs and stack traces</li>
+                                <li><strong>performance:</strong> Profile and optimize performance</li>
+                            </ul>
+                        </div>
+
+                        <div class="command-card">
+                            <h4>/optimize</h4>
+                            <p><strong>Performance Optimization</strong></p>
+                            <div class="claude-terminal">
+<span class="claude-prompt">claude></span> /optimize cpu
+<span class="claude-prompt">claude></span> /optimize memory
+<span class="claude-prompt">claude></span> /optimize network
+<span class="claude-prompt">claude></span> /optimize database
+                            </div>
+                            <p>Optimize system performance with evidence-based improvements and benchmarking.</p>
+                            
+                            <h5>Optimization Areas:</h5>
+                            <ul>
+                                <li><strong>cpu:</strong> CPU usage and algorithmic efficiency</li>
+                                <li><strong>memory:</strong> Memory usage and garbage collection</li>
+                                <li><strong>network:</strong> Network requests and bandwidth</li>
+                                <li><strong>database:</strong> Database queries and indexing</li>
+                            </ul>
+                        </div>
+
+                        <div class="command-card">
+                            <h4>/self-analyze</h4>
+                            <p><strong>Self-Analysis & Validation</strong></p>
+                            <div class="claude-terminal">
+<span class="claude-prompt">claude></span> /self-analyze enhanced-intelligent-automation.ts
+<span class="claude-output">
+🔍 DIRK.c Self-Analysis Active
+📋 Reading DIRK.g specifications...
+🎯 Analyzing implementation compliance...
+
+📊 ANALYSIS RESULTS:
+✅ Overall Compliance: 85%
+✅ Security Patterns: 4/5
+✅ Error Handling: 5/5  
+✅ Performance: 5/5
+✅ Code Quality: 100%
+
+🔧 RECOMMENDATIONS:
+- Add authentication validation
+- Enhance input sanitization
+- Consider rate limiting patterns
+
+📁 Full report: .dirk/analysis/analysis_20250710.md
+</span>
+                            </div>
+                            <p>Analyzes DIRK.c's own implementations against DIRK.g specifications and enterprise standards.</p>
+                            
+                            <h5>Analysis Dimensions:</h5>
+                            <ul>
+                                <li><strong>Specification Compliance:</strong> Matches DIRK.g requirements</li>
+                                <li><strong>Security Patterns:</strong> Authentication, validation, sanitization</li>
+                                <li><strong>Error Handling:</strong> Try/catch blocks, proper error management</li>
+                                <li><strong>Performance:</strong> Async patterns, caching, optimization</li>
+                                <li><strong>Code Quality:</strong> No minimal implementations or placeholders</li>
+                                <li><strong>DIRK Principles:</strong> All 8 cognitive principles applied</li>
+                            </ul>
+                        </div>
+
+                        <div class="command-card">
+                            <h4>/proof-validate</h4>
+                            <p><strong>Mathematical Proof Validation</strong></p>
+                            <div class="claude-terminal">
+<span class="claude-prompt">claude></span> /proof-validate rate-limiter.ts
+<span class="claude-output">
+🔬 DIRK.c Proof Validation Active
+📐 Mathematical proof analysis...
+🧮 Logical consistency checks...
+🏢 Enterprise compliance verification...
+
+📊 PROOF STATUS:
+✅ Algorithm Correctness: PROVEN
+✅ Complexity Claims: VERIFIED  
+✅ Edge Case Coverage: COMPLETE
+✅ Type Safety: PROVEN
+✅ Performance Guarantees: PROVEN
+
+🎯 CERTIFICATION: Ready for Production
+📈 Proof Confidence: 94%
+</span>
+                            </div>
+                            <p>Provides formal mathematical and logical proof validation of implementations.</p>
+                            
+                            <h5>Proof Techniques:</h5>
+                            <ul>
+                                <li><strong>Algorithm Correctness:</strong> Formal verification of logic</li>
+                                <li><strong>Complexity Analysis:</strong> Time/space complexity validation</li>
+                                <li><strong>Edge Case Coverage:</strong> Exhaustive scenario testing</li>
+                                <li><strong>Type Safety:</strong> TypeScript/C++ type correctness</li>
+                                <li><strong>Security Properties:</strong> Vulnerability-free proof</li>
+                            </ul>
+                        </div>
+
+                        <div class="command-card">
+                            <h4>/enterprise-implement</h4>
+                            <p><strong>Enterprise-Grade Implementation</strong></p>
+                            <div class="claude-terminal">
+<span class="claude-prompt">claude></span> /enterprise-implement "user authentication system"
+<span class="claude-output">
+🛡️ Quality Enforcement Active
+🧠 Reading DIRK.g specifications...
+⚡ Enterprise-grade implementation mode
+🔧 Creating production-ready code...
+
+✅ Security: Enterprise-grade authentication
+✅ Performance: Sub-200ms response time
+✅ Error Handling: Comprehensive coverage
+✅ Documentation: Complete API docs
+✅ Testing: 95%+ coverage
+
+🚀 Enterprise implementation completed
+📊 Auto-analysis: 96% compliance
+</span>
+                            </div>
+                            <p>Ensures DIRK.c creates only enterprise-grade implementations with quality enforcement.</p>
+                            
+                            <h5>Quality Guarantees:</h5>
+                            <ul>
+                                <li><strong>No Minimal Versions:</strong> Blocks simplified implementations</li>
+                                <li><strong>Enterprise Patterns:</strong> Production-ready code only</li>
+                                <li><strong>Security First:</strong> Built-in security validation</li>
+                                <li><strong>Performance Optimized:</strong> Meets enterprise targets</li>
+                                <li><strong>Fully Tested:</strong> Comprehensive test coverage</li>
+                            </ul>
+                        </div>
+
+                        <div class="command-card">
+                            <h4>/continuous-validation</h4>
+                            <p><strong>Real-Time Quality Monitoring</strong></p>
+                            <div class="claude-terminal">
+<span class="claude-prompt">claude></span> /enable-continuous-validation --sensitivity=high
+<span class="claude-output">
+🔍 Continuous Validation Enabled
+📊 Real-time quality monitoring active
+🛡️ Enterprise standards enforcement
+⚡ Auto-analysis on file changes
+
+🎯 Monitoring:
+- File save events → immediate analysis
+- Implementation quality → real-time scoring
+- DIRK.g compliance → continuous validation
+- Security patterns → automatic scanning
+
+✅ Continuous validation system ready
+</span>
+                            </div>
+                            <p>Enables real-time monitoring and validation of all DIRK.c implementations.</p>
+                            
+                            <h5>Continuous Features:</h5>
+                            <ul>
+                                <li><strong>Real-Time Analysis:</strong> Instant feedback on code changes</li>
+                                <li><strong>Auto-Correction:</strong> Automatic fix suggestions</li>
+                                <li><strong>Quality Tracking:</strong> Continuous compliance monitoring</li>
+                                <li><strong>DIRK.g Integration:</strong> Specification adherence validation</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="hooks" class="hooks-section">
+                <div class="container">
+                    <h2>🛡️ Quality Automation Hooks</h2>
+                    <p>DIRK.c includes automated quality gates that run during development to ensure enterprise-grade standards</p>
+                    
+                    <div class="hooks-grid">
+                        <div class="hook-card">
+                            <h4>🛡️ Security Scanning</h4>
+                            <ul>
+                                <li>Hardcoded credential detection</li>
+                                <li>Vulnerable dependency scanning</li>
+                                <li>SQL/Command injection prevention</li>
+                                <li>Security best practices validation</li>
+                            </ul>
+                        </div>
+
+                        <div class="hook-card">
+                            <h4>✨ Code Quality</h4>
+                            <ul>
+                                <li>Automatic TypeScript/C++ formatting</li>
+                                <li>ESLint and clang-format integration</li>
+                                <li>Code style enforcement</li>
+                                <li>Documentation validation</li>
+                            </ul>
+                        </div>
+
+                        <div class="hook-card">
+                            <h4>🔧 Build Validation</h4>
+                            <ul>
+                                <li>Environment dependency checking</li>
+                                <li>Node.js and npm validation</li>
+                                <li>Package integrity verification</li>
+                                <li>Development tool availability</li>
+                            </ul>
+                        </div>
+
+                        <div class="hook-card">
+                            <h4>🔔 Notifications</h4>
+                            <ul>
+                                <li>macOS desktop notifications</li>
+                                <li>Build status alerts</li>
+                                <li>Test completion notifications</li>
+                                <li>Error and warning alerts</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="self-analysis" class="hooks-section">
+                <div class="container">
+                    <h2>🔍 DIRK.c Self-Analysis System</h2>
+                    <p>Advanced self-validation and proof analysis capabilities that ensure DIRK.c implementations meet enterprise standards</p>
+                    
+                    <div class="hooks-grid">
+                        <div class="hook-card">
+                            <h4>🔍 Self-Analysis Engine</h4>
+                            <ul>
+                                <li>Automatic compliance scoring against DIRK.g specs</li>
+                                <li>Security pattern validation</li>
+                                <li>Error handling completeness analysis</li>
+                                <li>Performance pattern detection</li>
+                                <li>Code quality violation scanning</li>
+                            </ul>
+                        </div>
+
+                        <div class="hook-card">
+                            <h4>🔬 Proof Validation System</h4>
+                            <ul>
+                                <li>Mathematical algorithm correctness proof</li>
+                                <li>Logical consistency verification</li>
+                                <li>Type safety formal analysis</li>
+                                <li>Edge case coverage validation</li>
+                                <li>Enterprise compliance certification</li>
+                            </ul>
+                        </div>
+
+                        <div class="hook-card">
+                            <h4>⚡ Real-Time Monitoring</h4>
+                            <ul>
+                                <li>Continuous validation on file changes</li>
+                                <li>Live compliance score updates</li>
+                                <li>Automatic quality trend tracking</li>
+                                <li>Instant feedback on implementations</li>
+                                <li>Background analysis processing</li>
+                            </ul>
+                        </div>
+
+                        <div class="hook-card">
+                            <h4>🔧 Auto-Correction</h4>
+                            <ul>
+                                <li>Intelligent improvement suggestions</li>
+                                <li>Automatic pattern enhancement</li>
+                                <li>Security vulnerability fixes</li>
+                                <li>Performance optimization recommendations</li>
+                                <li>DIRK principles compliance guidance</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h3>🎯 Self-Analysis Workflow</h3>
+                    <div class="workflow-steps">
+                        <div class="workflow-step">
+                            <div class="step-number">1</div>
+                            <h4>Implementation</h4>
+                            <p>DIRK.c creates enterprise-grade code following DIRK.g specifications</p>
+                        </div>
+
+                        <div class="workflow-step">
+                            <div class="step-number">2</div>
+                            <h4>Auto-Analysis</h4>
+                            <p>Automatic analysis against specifications, security, performance, and quality standards</p>
+                        </div>
+
+                        <div class="workflow-step">
+                            <div class="step-number">3</div>
+                            <h4>Compliance Scoring</h4>
+                            <p>Multi-dimensional scoring across security, performance, error handling, and code quality</p>
+                        </div>
+
+                        <div class="workflow-step">
+                            <div class="step-number">4</div>
+                            <h4>Proof Validation</h4>
+                            <p>Mathematical and logical proof of correctness, security, and performance claims</p>
+                        </div>
+
+                        <div class="workflow-step">
+                            <div class="step-number">5</div>
+                            <h4>Gap Identification</h4>
+                            <p>Identify discrepancies between implementation and DIRK.g specifications</p>
+                        </div>
+
+                        <div class="workflow-step">
+                            <div class="step-number">6</div>
+                            <h4>Self-Correction</h4>
+                            <p>Automatic improvements and re-validation until enterprise standards are met</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="workflow">
+                <div class="card">
+                    <h2>🔄 DIRK.c Development Workflow</h2>
+                    
+                    <div class="workflow-steps">
+                        <div class="workflow-step">
+                            <div class="step-number">1</div>
+                            <h4>Specification Analysis</h4>
+                            <p>Parse DIRK.g business requirements and solution architecture with systematic validation</p>
+                        </div>
+
+                        <div class="workflow-step">
+                            <div class="step-number">2</div>
+                            <h4>Implementation Planning</h4>
+                            <p>Generate detailed implementation plan following DIRK principles and enterprise standards</p>
+                        </div>
+
+                        <div class="workflow-step">
+                            <div class="step-number">3</div>
+                            <h4>Code Generation</h4>
+                            <p>Create high-quality TypeScript/C++ code with proper abstractions and error handling</p>
+                        </div>
+
+                        <div class="workflow-step">
+                            <div class="step-number">4</div>
+                            <h4>Quality Validation</h4>
+                            <p>Run security scans, code formatting, linting, and automated quality checks</p>
+                        </div>
+
+                        <div class="workflow-step">
+                            <div class="step-number">5</div>
+                            <h4>Comprehensive Testing</h4>
+                            <p>Generate and execute unit, integration, and e2e tests with coverage validation</p>
+                        </div>
+
+                        <div class="workflow-step">
+                            <div class="step-number">6</div>
+                            <h4>Documentation & Deployment</h4>
+                            <p>Generate API documentation, deployment guides, and production-ready artifacts</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="examples">
+                <div class="card">
+                    <h2>🎯 Practical Examples</h2>
+                    
+                    <h3>Example 1: Complete DIRK.g → DIRK.c Workflow</h3>
+                    <div class="code-block" data-lang="bash">
+# Step 1: Generate specifications with DIRK.g
+dirk_g_workflow "rate limiting system for web crawler API"
+
+# Step 2: Implement with DIRK.c
+dirk-c
+                    </div>
+                    <div class="claude-terminal">
+<span class="claude-prompt">claude></span> /implement-from-dirk-g
+<span class="claude-output">
+🧠 Reading DIRK.g specifications...
+📋 Found: Rate Limiting System Business Analysis
+🏗️ Found: Rate Limiting Solution Architecture
+⚡ Generating implementation plan...
+
+Implementation Plan:
+- Redis-based rate limiter middleware
+- Configurable rate limits per API endpoint
+- User-based and IP-based limiting
+- Comprehensive monitoring and logging
+- Express.js integration with TypeScript
+
+🔧 Creating rate limiting middleware...
+🧪 Generating unit tests...
+🧪 Creating integration tests...
+📚 Generating API documentation...
+🛡️ Running security validation...
+✅ Rate limiting system implemented successfully!
+
+Files created:
+- src/middleware/rateLimiter.ts
+- src/config/rateLimiting.ts
+- tests/unit/rateLimiter.test.ts
+- tests/integration/rateLimiting.test.ts
+- docs/api/rate-limiting.md
+</span>
+                    </div>
+
+                    <h3>Example 2: New Feature Implementation</h3>
+                    <div class="claude-terminal">
+<span class="claude-prompt">claude></span> /feature "user authentication with JWT and OAuth2"
+<span class="claude-output">
+🎯 Analyzing feature: User authentication with JWT and OAuth2
+🧠 Applying DIRK principles to feature analysis...
+
+Business Analysis:
+- Stakeholders: End users, administrators, security team
+- Requirements: Secure login, token-based auth, OAuth2 providers
+- Security: JWT validation, secure token storage, HTTPS enforcement
+
+Solution Architecture:
+- JWT-based authentication service
+- OAuth2 integration with Google/GitHub
+- Role-based access control (RBAC)
+- Token refresh mechanism
+- Secure password hashing with bcrypt
+
+⚡ Implementing authentication system...
+🔧 Creating auth middleware and routes...
+🧪 Generating comprehensive test suite...
+📚 Creating authentication documentation...
+🛡️ Security validation completed...
+✅ Authentication system implemented!
+</span>
+                    </div>
+
+                    <h3>Example 3: Performance Optimization</h3>
+                    <div class="claude-terminal">
+<span class="claude-prompt">claude></span> /optimize database
+<span class="claude-output">
+🚀 Analyzing database performance...
+📊 Profiling current database operations...
+
+Performance Analysis:
+- Slow query identified: crawl_jobs table scan
+- Missing indexes on frequently queried columns
+- N+1 query problem in job status updates
+- Connection pool not optimized
+
+Optimization Plan:
+1. Add composite indexes on (status, created_at)
+2. Implement query batching for status updates
+3. Optimize connection pool configuration
+4. Add query result caching for frequent reads
+
+⚡ Implementing optimizations...
+🔧 Creating database migrations...
+🧪 Performance benchmarks before/after...
+📊 Optimization completed!
+
+Results:
+- Query performance improved by 85%
+- Database load reduced by 60%
+- Response times decreased from 200ms to 30ms
+</span>
+                    </div>
+
+                    <h3>Example 4: System Debugging</h3>
+                    <div class="claude-terminal">
+<span class="claude-prompt">claude></span> /debug error
+<span class="claude-output">
+🔍 Analyzing system errors...
+📋 Reading error logs and stack traces...
+
+Error Analysis (Last 24h):
+- TypeError: Cannot read property 'url' of undefined (15 occurrences)
+- Database connection timeout (8 occurrences)  
+- Rate limit exceeded errors (23 occurrences)
+
+Root Cause Analysis:
+1. Null URL handling in crawler module
+2. Database connection pool exhaustion
+3. Rate limiting too aggressive for bulk operations
+
+🔧 Implementing fixes:
+1. Added null checks and validation in crawler
+2. Increased DB connection pool size
+3. Implemented exponential backoff for rate limiting
+4. Enhanced error logging with context
+
+🧪 Testing fixes...
+✅ All errors resolved, monitoring for 24h
+</span>
+                    </div>
+                </div>
+            </section>
+
+            <section id="tips">
+                <div class="card">
+                    <h2>💡 Best Practices & Tips</h2>
+                    
+                    <div class="alert info">
+                        <strong>Tip 1:</strong> Always use /implement-from-dirk-g when you have DIRK.g specifications. This ensures consistency between analysis and implementation.
+                    </div>
+
+                    <div class="alert info">
+                        <strong>Tip 2:</strong> Run /build frequently to catch issues early. The automated quality hooks will help maintain code standards.
+                    </div>
+
+                    <div class="alert info">
+                        <strong>Tip 3:</strong> Use /test with specific types (unit, integration, e2e) during development for faster feedback loops.
+                    </div>
+
+                    <div class="alert warning">
+                        <strong>Note:</strong> DIRK.c requires Claude Code CLI and API access. Ensure your API key is properly configured.
+                    </div>
+
+                    <h3>Common Development Patterns</h3>
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <h4>Feature Development</h4>
+                            <p>DIRK.g analysis → /implement-from-dirk-g → /test → /build</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4>Bug Fixing</h4>
+                            <p>/debug error → Fix code → /test → Validate fix</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4>Performance Work</h4>
+                            <p>/optimize [area] → Benchmark → Implement → Validate</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4>Code Review Prep</h4>
+                            <p>/build → Security scan → /test all → Documentation review</p>
+                        </div>
+                    </div>
+
+                    <h3>Shell Aliases for Efficiency</h3>
+                    <div class="code-block" data-lang="bash">
+# Quick navigation and common tasks
+dirk-c          # Start Claude Code in CrawlZilla directory
+cz-build        # Build project
+cz-test         # Run tests
+cz-dev          # Start development server
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <footer style="background: var(--primary-color); color: white; text-align: center; padding: 2rem 0; margin-top: 3rem;">
+        <div class="container">
+            <p><a href="index.html" style="color: white;">← Back to Main Documentation</a></p>
+            <p>DIRK.c - Developer & Implementation Engine</p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add copy functionality to code blocks
+        document.querySelectorAll('.code-block, .claude-terminal').forEach(block => {
+            const copyBtn = document.createElement('button');
+            copyBtn.textContent = 'Copy';
+            copyBtn.style.cssText = `
+                position: absolute;
+                top: 0.5rem;
+                left: 0.5rem;
+                background: var(--success-color);
+                color: white;
+                border: none;
+                padding: 0.25rem 0.5rem;
+                border-radius: 3px;
+                cursor: pointer;
+                font-size: 0.8rem;
+                z-index: 10;
+            `;
+            
+            copyBtn.addEventListener('click', () => {
+                navigator.clipboard.writeText(block.textContent).then(() => {
+                    copyBtn.textContent = 'Copied!';
+                    setTimeout(() => {
+                        copyBtn.textContent = 'Copy';
+                    }, 2000);
+                });
+            });
+            
+            block.style.position = 'relative';
+            block.appendChild(copyBtn);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIRK BRAIN Portal - Complete Agent Orchestration Architecture</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+            overflow-x: auto;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #8b5cf6;
+            margin-bottom: 30px;
+            font-size: 2.8rem;
+            text-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
+        }
+
+        .architecture-overview {
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            border: 3px solid #8b5cf6;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 0 30px rgba(139, 92, 246, 0.3);
+        }
+
+        .architecture-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .layer {
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            border: 2px solid #333;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .layer:hover {
+            border-color: #8b5cf6;
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.2);
+        }
+
+        .layer h2 {
+            color: #10b981;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #10b981;
+            padding-bottom: 10px;
+            font-size: 1.4rem;
+        }
+
+        .component {
+            background: #2a2a2a;
+            border-left: 4px solid #8b5cf6;
+            padding: 15px;
+            margin: 12px 0;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .component:hover {
+            background: #3a3a3a;
+            border-left-color: #10b981;
+        }
+
+        .component h3 {
+            color: #fbbf24;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .component p {
+            color: #d1d5db;
+            font-size: 0.95rem;
+        }
+
+        .godmode-section {
+            background: linear-gradient(135deg, #2a1a1a, #3a2a2a);
+            border: 3px solid #f59e0b;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 0 30px rgba(245, 158, 11, 0.3);
+        }
+
+        .godmode-section h2 {
+            color: #f59e0b;
+            margin-bottom: 25px;
+            font-size: 2rem;
+            text-align: center;
+            text-shadow: 0 0 15px rgba(245, 158, 11, 0.5);
+        }
+
+        .agent-ecosystem {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .agent-card {
+            background: #2a2a2a;
+            border: 2px solid #f59e0b;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .agent-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(245, 158, 11, 0.3);
+        }
+
+        .agent-card h4 {
+            color: #f59e0b;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .agent-card .role {
+            color: #10b981;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .deployment-flow {
+            background: linear-gradient(135deg, #1a2a1a, #2a3a2a);
+            border: 3px solid #10b981;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 0 30px rgba(16, 185, 129, 0.3);
+        }
+
+        .deployment-flow h2 {
+            color: #10b981;
+            margin-bottom: 25px;
+            font-size: 2rem;
+            text-align: center;
+        }
+
+        .deployment-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 25px 0;
+        }
+
+        .deployment-card {
+            background: #2a2a2a;
+            border: 2px solid #10b981;
+            border-radius: 12px;
+            padding: 25px;
+        }
+
+        .deployment-card h3 {
+            color: #10b981;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .code-block {
+            background: #000;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            color: #10b981;
+            overflow-x: auto;
+            font-size: 0.9rem;
+        }
+
+        .workflow-example {
+            background: linear-gradient(135deg, #2a1a1a, #3a1a2a);
+            border: 3px solid #ef4444;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 0 30px rgba(239, 68, 68, 0.3);
+        }
+
+        .workflow-example h2 {
+            color: #ef4444;
+            margin-bottom: 25px;
+            font-size: 2rem;
+            text-align: center;
+        }
+
+        .workflow-step {
+            background: #2a2a2a;
+            border-left: 4px solid #ef4444;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .workflow-step:hover {
+            background: #3a3a3a;
+            border-left-width: 6px;
+        }
+
+        .workflow-step h4 {
+            color: #ef4444;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        .flow-diagram {
+            text-align: center;
+            margin: 30px 0;
+            padding: 25px;
+            background: #1a1a1a;
+            border-radius: 12px;
+        }
+
+        .flow-step {
+            display: inline-block;
+            background: linear-gradient(135deg, #8b5cf6, #a855f7);
+            color: white;
+            padding: 12px 25px;
+            margin: 8px;
+            border-radius: 25px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .flow-step:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+        }
+
+        .arrow {
+            color: #10b981;
+            font-size: 1.8rem;
+            margin: 0 15px;
+            text-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+        }
+
+        .highlight {
+            color: #8b5cf6;
+            font-weight: bold;
+        }
+
+        .success {
+            color: #10b981;
+        }
+
+        .warning {
+            color: #f59e0b;
+        }
+
+        .error {
+            color: #ef4444;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #1a1a2a, #2a2a3a);
+            border: 2px solid #6366f1;
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            border-color: #8b5cf6;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.2);
+        }
+
+        .feature-card h3 {
+            color: #6366f1;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .mcp-integration {
+            background: linear-gradient(135deg, #1a1a2a, #2a1a3a);
+            border: 3px solid #a855f7;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 0 30px rgba(168, 85, 247, 0.3);
+        }
+
+        .mcp-integration h2 {
+            color: #a855f7;
+            margin-bottom: 25px;
+            font-size: 2rem;
+            text-align: center;
+        }
+
+        .vision-statement {
+            text-align: center;
+            margin: 50px 0;
+            padding: 40px;
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a, #1a1a1a);
+            border-radius: 20px;
+            border: 3px solid #8b5cf6;
+            box-shadow: 0 0 40px rgba(139, 92, 246, 0.4);
+        }
+
+        .vision-statement h2 {
+            color: #8b5cf6;
+            margin-bottom: 25px;
+            font-size: 2.5rem;
+            text-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
+        }
+
+        .vision-statement p {
+            font-size: 1.3rem;
+            color: #d1d5db;
+            line-height: 1.8;
+        }
+
+        @media (max-width: 768px) {
+            .deployment-options {
+                grid-template-columns: 1fr;
+            }
+
+            .architecture-grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🧠 DIRK BRAIN Portal - Complete Agent Orchestration Architecture</h1>
+
+        <div class="architecture-overview">
+            <h2 style="color: #8b5cf6; text-align: center; margin-bottom: 20px;">🎯 System Overview</h2>
+            <p style="font-size: 1.2rem; text-align: center; color: #d1d5db;">
+                A comprehensive AI agent orchestration platform that deploys intelligent agent swarms across development
+                projects with
+                <span class="highlight">one-script deployment</span>,
+                <span class="success">intelligent failure recovery</span>,
+                <span class="warning">multi-agent coordination</span>, and
+                <span class="error">enterprise-grade safety protocols</span>.
+            </p>
+        </div>
+
+        <div class="architecture-grid">
+            <div class="layer">
+                <h2>🎨 Web Portal (Next.js)</h2>
+                <div class="component">
+                    <h3>Agent Deployment Dashboard</h3>
+                    <p>Visual interface for deploying DIRK agents to projects. Real-time status monitoring and
+                        drag-and-drop assignment.</p>
+                </div>
+                <div class="component">
+                    <h3>Workflow Builder + AI Chatbot</h3>
+                    <p>Visual workflow designer with built-in AI assistant for creating complex agent orchestrations
+                        through natural language.</p>
+                </div>
+                <div class="component">
+                    <h3>Slash Command Designer</h3>
+                    <p>Create, test, and deploy custom slash commands with parameter configuration and template library.
+                    </p>
+                </div>
+                <div class="component">
+                    <h3>Hook Monitor & Configuration</h3>
+                    <p>Real-time monitoring of Git hooks, file watchers, GOD Mode hooks, and agent triggers across all
+                        projects.</p>
+                </div>
+                <div class="component">
+                    <h3>Agent Activity Feed</h3>
+                    <p>Live stream of all agent activities, failures, recoveries, and swarm coordination across the
+                        entire ecosystem.</p>
+                </div>
+            </div>
+
+            <div class="layer">
+                <h2>🤖 Agent Orchestration Engine (Python/FastAPI)</h2>
+                <div class="component">
+                    <h3>Agent Registry & Deployment</h3>
+                    <p>Manages complete agent lifecycle, deployment to projects, configuration, and health monitoring.
+                    </p>
+                </div>
+                <div class="component">
+                    <h3>Workflow Execution Engine</h3>
+                    <p>Executes complex multi-agent workflows with intelligent routing, failure recovery, and dependency
+                        management.</p>
+                </div>
+                <div class="component">
+                    <h3>Slash Command Processor</h3>
+                    <p>Processes and intelligently routes slash commands to appropriate agents based on context and
+                        success patterns.</p>
+                </div>
+                <div class="component">
+                    <h3>Hook Monitoring System</h3>
+                    <p>Monitors file changes, Git events, and triggers intelligent agent responses with pattern
+                        recognition.</p>
+                </div>
+                <div class="component">
+                    <h3>Failure Detection & Recovery</h3>
+                    <p>Advanced failure detection with automatic pivot strategies (Claude fails → Gemini takes over).
+                    </p>
+                </div>
+                <div class="component">
+                    <h3>Built-in AI Chatbot</h3>
+                    <p>AI assistant for creating workflows, configuring agents, troubleshooting, and system
+                        optimization.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="godmode-section">
+            <h2>⚡ GOD Mode Agent Ecosystem</h2>
+            <div class="agent-ecosystem">
+                <div class="agent-card">
+                    <h4>DIRK.c (Claude Code)</h4>
+                    <div class="role">Implementation Agent</div>
+                    <p>Code implementation, testing, validation, documentation generation, and enterprise-grade
+                        development with safety hooks.</p>
+                </div>
+                <div class="agent-card">
+                    <h4>DIRK.g (Gemini)</h4>
+                    <div class="role">Business Analysis & Architecture</div>
+                    <p>Requirements analysis, solution architecture, implementation specs, cross-AI validation, and
+                        quality assurance review.</p>
+                </div>
+                <div class="agent-card">
+                    <h4>DIRK.desktop (Strategic Planning)</h4>
+                    <div class="role">Strategic Planning Interface</div>
+                    <p>High-level architectural decisions, strategic planning, and complex system design coordination.
+                    </p>
+                </div>
+                <div class="agent-card">
+                    <h4>GOD Mode Orchestrator</h4>
+                    <div class="role">Intelligent Task Distribution</div>
+                    <p>Analyzes complex tasks, decomposes requirements, assigns optimal agents, manages parallel
+                        execution, and aggregates results.</p>
+                </div>
+                <div class="agent-card">
+                    <h4>Anthropic Sub-Agents</h4>
+                    <div class="role">Specialized Task Agents</div>
+                    <p>Support for Anthropic's new sub-agent framework with specialized capabilities and coordinated
+                        execution.</p>
+                </div>
+                <div class="agent-card">
+                    <h4>Custom Agent Plugins</h4>
+                    <div class="role">Extensible Agent System</div>
+                    <p>Plugin architecture for custom agent definitions, specialized tools, and domain-specific
+                        capabilities.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="deployment-flow">
+            <h2>🚀 Dual Deployment System</h2>
+            <div class="deployment-options">
+                <div class="deployment-card">
+                    <h3>🖥️ CLI Deployment</h3>
+                    <div class="code-block">
+                        # One-script deployment<br>
+                        curl -sSL https://dirk-brain.com/install | bash<br><br>
+
+                        # Quick deploy to current project<br>
+                        ./deploy-dirk-brain.sh<br><br>
+
+                        # Advanced deployment<br>
+                        dirk deploy --agents claude,gemini,sub-agents \<br>
+                        --hooks git,file-watch,godmode \<br>
+                        --project /path/to/project \<br>
+                        --template react-enterprise<br><br>
+
+                        # GOD Mode deployment<br>
+                        godmode deploy "Full-stack React app with auth" \<br>
+                        --parallel --auto-recovery
+                    </div>
+                </div>
+
+                <div class="deployment-card">
+                    <h3>🌐 Web Interface Deployment</h3>
+                    <div class="component">
+                        <h3>Visual Project Selector</h3>
+                        <p>Browse filesystem, select projects, auto-detect project types and optimal agent
+                            configurations.</p>
+                    </div>
+                    <div class="component">
+                        <h3>Drag-and-Drop Agent Assignment</h3>
+                        <p>Visual agent assignment with intelligent suggestions based on project analysis.</p>
+                    </div>
+                    <div class="component">
+                        <h3>Template-Based Quick Deploy</h3>
+                        <p>Pre-configured templates for React, Python, Rust, enterprise apps with optimized agent
+                            setups.</p>
+                    </div>
+                    <div class="component">
+                        <h3>Real-time Deployment Progress</h3>
+                        <p>Live deployment status with detailed logs and rollback capabilities.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flow-diagram">
+            <h2>🔄 Complete Deployment Flow</h2>
+            <div style="margin: 25px 0;">
+                <span class="flow-step">User Runs Script</span>
+                <span class="arrow">→</span>
+                <span class="flow-step">Generate Portal</span>
+                <span class="arrow">→</span>
+                <span class="flow-step">Deploy Agent Ecosystem</span>
+                <span class="arrow">→</span>
+                <span class="flow-step">Configure GOD Mode</span>
+                <span class="arrow">→</span>
+                <span class="flow-step">Install Hooks & Commands</span>
+                <span class="arrow">→</span>
+                <span class="flow-step">Start Orchestration</span>
+                <span class="arrow">→</span>
+                <span class="flow-step">Ready!</span>
+            </div>
+        </div>
+
+        <div class="mcp-integration">
+            <h2>🔗 MCP (Model Context Protocol) Integration</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3>Desktop Commander MCP</h3>
+                    <p>Direct macOS integration for file operations, application control, and system automation.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Docker MCP Gateway</h3>
+                    <p>Container orchestration and deployment automation through MCP interface.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Filesystem MCP</h3>
+                    <p>Secure file system access with configurable permissions and safety guardrails.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Apple Notes MCP</h3>
+                    <p>Integration with Apple Notes for documentation and knowledge management.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Google Services MCP</h3>
+                    <p>Gmail, Google Drive, and Google Search integration with OAuth authentication.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Web Search MCP</h3>
+                    <p>Brave Search API integration for real-time information retrieval.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="workflow-example">
+            <h2>⚡ Real-World Agent Swarm Example</h2>
+            <div class="workflow-step">
+                <h4>1. Developer Requests: "Build full-stack React app with authentication"</h4>
+                <p>GOD Mode analyzes request and decomposes into subtasks</p>
+            </div>
+            <div class="workflow-step">
+                <h4>2. Intelligent Task Distribution</h4>
+                <p>• DIRK.g → Architecture design and requirements analysis<br>
+                    • DIRK.c → Frontend React implementation<br>
+                    • DIRK.c → Backend API development<br>
+                    • DIRK.desktop → Database schema design</p>
+            </div>
+            <div class="workflow-step">
+                <h4>3. Parallel Agent Execution</h4>
+                <p>All agents work simultaneously with dependency management and progress synchronization</p>
+            </div>
+            <div class="workflow-step">
+                <h4>4. Failure Detection & Recovery</h4>
+                <p><span class="error">DIRK.c fails on authentication implementation</span><br>
+                    <span class="warning">GOD Mode detects pattern failure</span><br>
+                    <span class="success">Auto-pivot to DIRK.g for alternative approach</span>
+                </p>
+            </div>
+            <div class="workflow-step">
+                <h4>5. Cross-Agent Validation</h4>
+                <p>DIRK.g reviews all implementations, suggests improvements, ensures consistency</p>
+            </div>
+            <div class="workflow-step">
+                <h4>6. Success! Complete Application Delivered</h4>
+                <p>Fully functional full-stack application with comprehensive testing and documentation</p>
+            </div>
+        </div>
+
+        <div class="layer">
+            <h2>🛡️ Enterprise Safety & Quality Systems</h2>
+            <div class="component">
+                <h3>Mr. Wolf Advisory Protocol</h3>
+                <p>Prevents recurring mistakes, enforces quality standards, blocks "minimal/demo" code, ensures
+                    production-ready implementations.</p>
+            </div>
+            <div class="component">
+                <h3>DIRK Safety Hooks</h3>
+                <p>Pre/post execution hooks with automatic backups, TypeScript validation, production file protection,
+                    and context logging.</p>
+            </div>
+            <div class="component">
+                <h3>GOD Mode Safety Mechanisms</h3>
+                <p>Protected operations, audit trails, emergency overrides, and comprehensive safety checks for all
+                    agent operations.</p>
+            </div>
+            <div class="component">
+                <h3>Enterprise Framework Integration</h3>
+                <p>8-principle cognitive framework, case management system, architectural decision records, and quality
+                    gates.</p>
+            </div>
+        </div>
+
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h3>🔄 Intelligent Agent Routing</h3>
+                <p>Automatically routes tasks to optimal agents based on context, history, success patterns, and current
+                    workload.</p>
+            </div>
+            <div class="feature-card">
+                <h3>🚨 Advanced Failure Recovery</h3>
+                <p>Learns from failures, implements recovery strategies, maintains pattern database, and prevents
+                    recurring issues.</p>
+            </div>
+            <div class="feature-card">
+                <h3>💬 Dynamic Workflow Creation</h3>
+                <p>Built-in AI chatbot creates complex workflows through natural language, with template library and
+                    best practices.</p>
+            </div>
+            <div class="feature-card">
+                <h3>📊 Real-time Monitoring</h3>
+                <p>Live dashboard with agent performance metrics, system health, project status, and predictive
+                    analytics.</p>
+            </div>
+            <div class="feature-card">
+                <h3>🎯 Template-based Deployment</h3>
+                <p>Pre-built templates for React, Python, Rust, enterprise apps with optimized agent configurations and
+                    best practices.</p>
+            </div>
+            <div class="feature-card">
+                <h3>🔐 Secure API Management</h3>
+                <p>Encrypted credential storage, automatic key rotation, service validation, and secure multi-service
+                    integration.</p>
+            </div>
+        </div>
+
+        <div class="vision-statement">
+            <h2>🚀 The Vision</h2>
+            <p>
+                <span class="highlight">One script deployment</span> that transforms any development environment into an
+                <span class="success">intelligent AI agent command center</span> with
+                <span class="warning">swarm coordination</span>,
+                <span class="error">enterprise-grade safety</span>,
+                <span class="highlight">failure recovery</span>, and
+                <span class="success">dynamic workflow creation</span>.
+                <br><br>
+                Deploy agents, slash commands, hooks, and complete workflows to any project in under 5 minutes.
+                <br><br>
+                <strong>The future of AI-augmented development is here.</strong>
+            </p>
+        </div>
+    </div>
+</body>
+
+</html>

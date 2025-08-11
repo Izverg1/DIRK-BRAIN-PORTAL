@@ -1,0 +1,326 @@
+                        <div class="claude-terminal">
+<span class="claude-prompt">claude></span> /optimize cpu
+<span class="claude-output">
+⚡ CPU usage analysis...
+
+Performance Bottlenecks:
+- Inefficient regex operations: 45% CPU
+- Synchronous file I/O: 25% CPU
+- String concatenation in loops: 15% CPU
+
+Optimizations Applied:
+✅ Replaced regex with optimized parsers
+✅ Async I/O with worker threads
+✅ StringBuilder pattern implementation
+✅ Algorithm complexity improvements
+✅ Caching of computed results
+
+Results:
+- CPU usage: 85% → 32%
+- Response time: 180ms → 45ms
+- Throughput: 200% improvement
+- Algorithm efficiency: O(n²) → O(n log n)
+</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="scenarios">
+                <div class="card">
+                    <h2>📋 Common Usage Scenarios</h2>
+                    <p>Typical development workflows and how to handle them with DIRK</p>
+                </div>
+
+                <div class="scenario-grid">
+                    <div class="scenario-card">
+                        <h4>🆕 New Project Setup</h4>
+                        <p><strong>Scenario:</strong> Starting a new microservice for the CrawlZilla ecosystem</p>
+                        <div class="code-block" data-lang="bash">
+# Business analysis and architecture
+dirk_g_workflow "user notification microservice with email, SMS, and webhook delivery"
+
+# Implementation
+dirk-c
+/implement-from-dirk-g
+
+# Validate and deploy
+/test all
+/build
+                        </div>
+                        <div class="alert tip">
+                            <strong>Result:</strong> Complete microservice with business logic, tests, documentation, and deployment configuration ready.
+                        </div>
+                    </div>
+
+                    <div class="scenario-card">
+                        <h4>🐛 Production Bug Fix</h4>
+                        <p><strong>Scenario:</strong> Critical bug affecting user authentication in production</p>
+                        <div class="code-block" data-lang="bash">
+# Investigate the issue
+dirk-c
+/debug error
+
+# Analyze logs and reproduce
+/test integration
+
+# Fix and validate
+# (Make code changes)
+/test all
+/build
+                        </div>
+                        <div class="alert tip">
+                            <strong>Result:</strong> Systematic bug identification, fix implementation, and comprehensive validation before deployment.
+                        </div>
+                    </div>
+
+                    <div class="scenario-card">
+                        <h4>📈 Performance Enhancement</h4>
+                        <p><strong>Scenario:</strong> System running slowly under increased load</p>
+                        <div class="code-block" data-lang="bash">
+# Analyze performance issues
+dirk-c
+/debug performance
+
+# Optimize identified bottlenecks
+/optimize database
+/optimize memory
+
+# Validate improvements
+/test performance
+                        </div>
+                        <div class="alert tip">
+                            <strong>Result:</strong> Evidence-based performance improvements with before/after metrics and validation.
+                        </div>
+                    </div>
+
+                    <div class="scenario-card">
+                        <h4>🔒 Security Review</h4>
+                        <p><strong>Scenario:</strong> Preparing for security audit and compliance review</p>
+                        <div class="code-block" data-lang="bash">
+# Security analysis
+dirk_g_sa "comprehensive security architecture review for compliance"
+
+# Implementation and validation
+dirk-c
+/implement-from-dirk-g
+
+# Run security tests
+# Security hooks run automatically
+/build  # Includes security validation
+                        </div>
+                        <div class="alert tip">
+                            <strong>Result:</strong> Complete security analysis, implementation of security measures, and automated validation.
+                        </div>
+                    </div>
+
+                    <div class="scenario-card">
+                        <h4>🔄 API Refactoring</h4>
+                        <p><strong>Scenario:</strong> Modernizing legacy API endpoints</p>
+                        <div class="code-block" data-lang="bash">
+# Architecture review
+dirk_g_sa "API modernization with REST best practices and OpenAPI specification"
+
+# Implementation
+dirk-c
+/implement-from-dirk-g
+
+# Ensure backward compatibility
+/test integration
+/test e2e
+                        </div>
+                        <div class="alert tip">
+                            <strong>Result:</strong> Modern API design with proper documentation, backward compatibility, and comprehensive testing.
+                        </div>
+                    </div>
+
+                    <div class="scenario-card">
+                        <h4>📊 Data Pipeline</h4>
+                        <p><strong>Scenario:</strong> Building analytics pipeline for crawler data</p>
+                        <div class="code-block" data-lang="bash">
+# Business and technical analysis
+dirk_g_workflow "real-time analytics pipeline for crawler performance data"
+
+# Implementation
+dirk-c
+/implement-from-dirk-g
+
+# Performance validation
+/optimize cpu
+/test load
+                        </div>
+                        <div class="alert tip">
+                            <strong>Result:</strong> Scalable data pipeline with real-time processing, analytics, and monitoring capabilities.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="tips">
+                <div class="card">
+                    <h2>💡 Pro Tips & Best Practices</h2>
+                    
+                    <div class="alert info">
+                        <strong>Workflow Tip:</strong> Always start with DIRK.g analysis for new features. The specifications ensure better implementation quality and save development time.
+                    </div>
+
+                    <div class="alert info">
+                        <strong>Testing Tip:</strong> Use /test frequently during development. The automated quality hooks catch issues early and maintain code standards.
+                    </div>
+
+                    <div class="alert info">
+                        <strong>Debugging Tip:</strong> When encountering issues, start with /debug error to get systematic analysis before diving into code changes.
+                    </div>
+
+                    <div class="alert info">
+                        <strong>Performance Tip:</strong> Use /optimize commands with specific targets (cpu, memory, database) for focused improvements with measurable results.
+                    </div>
+
+                    <h3>🎯 When to Use Each Approach</h3>
+                    <div class="scenario-grid">
+                        <div class="scenario-card">
+                            <h4>Use DIRK.g Workflow</h4>
+                            <ul>
+                                <li>New feature development</li>
+                                <li>Architecture decisions</li>
+                                <li>Complex business requirements</li>
+                                <li>System design reviews</li>
+                            </ul>
+                        </div>
+
+                        <div class="scenario-card">
+                            <h4>Use DIRK.c Direct Commands</h4>
+                            <ul>
+                                <li>Bug fixes and debugging</li>
+                                <li>Performance optimization</li>
+                                <li>Code refactoring</li>
+                                <li>Testing and validation</li>
+                            </ul>
+                        </div>
+
+                        <div class="scenario-card">
+                            <h4>Use Combined Approach</h4>
+                            <ul>
+                                <li>Major system overhauls</li>
+                                <li>Security implementations</li>
+                                <li>API design and development</li>
+                                <li>Integration projects</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h3>🔄 Development Rhythm</h3>
+                    <div class="code-block" data-lang="bash">
+# Daily development cycle
+dirk_g_workflow "today's feature requirement"  # Morning: Plan and analyze
+dirk-c                                          # Afternoon: Implement
+/implement-from-dirk-g                          # Convert specs to code
+/test unit                                      # Quick validation
+/build                                          # Full build and quality check
+
+# Weekly optimization cycle
+/debug performance                              # Monday: Analyze performance
+/optimize [bottleneck]                          # Tuesday-Wednesday: Optimize
+/test load                                      # Thursday: Validate improvements
+/build                                          # Friday: Final validation
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <footer style="background: var(--primary-color); color: white; text-align: center; padding: 2rem 0; margin-top: 3rem;">
+        <div class="container">
+            <p><a href="index.html" style="color: white;">← Back to Main Documentation</a></p>
+            <p>DIRK System Examples - Learn by doing with real-world scenarios</p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add copy functionality to code blocks
+        document.querySelectorAll('.code-block, .claude-terminal').forEach(block => {
+            const copyBtn = document.createElement('button');
+            copyBtn.textContent = 'Copy';
+            copyBtn.style.cssText = `
+                position: absolute;
+                top: 0.5rem;
+                left: 0.5rem;
+                background: var(--success-color);
+                color: white;
+                border: none;
+                padding: 0.25rem 0.5rem;
+                border-radius: 3px;
+                cursor: pointer;
+                font-size: 0.8rem;
+                z-index: 10;
+            `;
+            
+            copyBtn.addEventListener('click', () => {
+                navigator.clipboard.writeText(block.textContent).then(() => {
+                    copyBtn.textContent = 'Copied!';
+                    setTimeout(() => {
+                        copyBtn.textContent = 'Copy';
+                    }, 2000);
+                });
+            });
+            
+            block.style.position = 'relative';
+            block.appendChild(copyBtn);
+        });
+
+        // Add animation to scenario cards
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animation = 'slideInUp 0.6s ease-out forwards';
+                }
+            });
+        }, observerOptions);
+
+        // Add CSS animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            
+            .scenario-card {
+                opacity: 0;
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Observe scenario cards
+        document.querySelectorAll('.scenario-card').forEach(card => {
+            observer.observe(card);
+        });
+    </script>
+</body>
+</html>

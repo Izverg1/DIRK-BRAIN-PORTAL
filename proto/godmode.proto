@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package godmode;
+
+service GodModeService {
+  rpc DecomposeTask (DecomposeTaskRequest) returns (DecomposeTaskResponse) {}
+}
+
+message DecomposeTaskRequest {
+  string task_description = 1;
+}
+
+message DecomposeTaskResponse {
+  string original_task = 1;
+  string complexity = 2;
+  int32 estimated_time = 3;
+  ExtractedRequirements extracted_requirements = 4;
+  repeated Subtask subtasks = 5;
+}
+
+message ExtractedRequirements {
+  repeated string technologies = 1;
+  repeated string patterns = 2;
+  repeated string constraints = 3;
+}
+
+message Subtask {
+  string name = 1;
+  string description = 2;
+  string complexity = 3;
+  string assigned_agent = 4;
+  float agent_confidence = 5;
+  string agent_reasoning = 6;
+  repeated string dependencies = 7;
+}

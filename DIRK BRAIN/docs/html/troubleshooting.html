@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIRK System Troubleshooting Guide</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --bg-color: #ecf0f1;
+            --text-color: #2c3e50;
+            --border-color: #bdc3c7;
+            --code-bg: #f8f9fa;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--accent-color), #c0392b);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .nav {
+            background: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .nav a {
+            text-decoration: none;
+            color: var(--primary-color);
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .nav a:hover {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .main-content {
+            padding: 2rem 0;
+        }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-left: 5px solid var(--accent-color);
+        }
+
+        .problem-section {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-top: 4px solid var(--accent-color);
+        }
+
+        .problem-title {
+            color: var(--accent-color);
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .code-block {
+            background: var(--code-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .terminal {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            border-radius: 5px;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+        }
+
+        .terminal .command {
+            color: #569cd6;
+        }
+
+        .terminal .output {
+            color: #9cdcfe;
+        }
+
+        .terminal .error {
+            color: #f44747;
+        }
+
+        .terminal .success {
+            color: #4ec9b0;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+            border-left: 4px solid;
+        }
+
+        .alert.error {
+            background: #f8d7da;
+            border-left-color: var(--accent-color);
+            color: #721c24;
+        }
+
+        .alert.warning {
+            background: #fff3cd;
+            border-left-color: var(--warning-color);
+            color: #856404;
+        }
+
+        .alert.success {
+            background: #d4edda;
+            border-left-color: var(--success-color);
+            color: #155724;
+        }
+
+        .alert.info {
+            background: #cce7ff;
+            border-left-color: var(--secondary-color);
+            color: #004085;
+        }
+
+        .solution-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .solution-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 1.5rem;
+            border-left: 4px solid var(--success-color);
+        }
+
+        .solution-card h4 {
+            color: var(--success-color);
+            margin-bottom: 1rem;
+        }
+
+        .diagnostic-section {
+            background: linear-gradient(135deg, var(--secondary-color), #2980b9);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+        }
+
+        .diagnostic-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .diagnostic-step {
+            background: rgba(255,255,255,0.1);
+            padding: 1.5rem;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .step-number {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: white;
+            color: var(--secondary-color);
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .quick-fix {
+            background: linear-gradient(135deg, var(--success-color), #2ecc71);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+        }
+
+        .quick-fix h5 {
+            margin-bottom: 0.5rem;
+        }
+
+        .category-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .tab-button {
+            padding: 0.75rem 1.5rem;
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .tab-button.active {
+            background: var(--secondary-color);
+            color: white;
+            border-color: var(--secondary-color);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1>🔧 DIRK System Troubleshooting</h1>
+            <p>Complete problem diagnosis and resolution guide</p>
+        </div>
+    </header>
+
+    <nav class="nav">
+        <div class="container">
+            <ul>
+                <li><a href="index.html">← Back to Main</a></li>
+                <li><a href="#quick-diagnosis">Quick Diagnosis</a></li>
+                <li><a href="#dirk-g-issues">DIRK.g Issues</a></li>
+                <li><a href="#dirk-c-issues">DIRK.c Issues</a></li>
+                <li><a href="#environment">Environment</a></li>
+                <li><a href="#performance">Performance</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="container">
+            
+            <section id="quick-diagnosis" class="diagnostic-section">
+                <div class="container">
+                    <h2>🩺 Quick Diagnosis Tool</h2>
+                    <p>Run these commands to quickly identify common issues</p>
+                    
+                    <div class="diagnostic-steps">
+                        <div class="diagnostic-step">
+                            <div class="step-number">1</div>
+                            <h4>Test DIRK.g Functions</h4>
+                            <div class="terminal">
+<span class="command">$ dirk_g_test</span>
+<span class="output">🧠 Testing DIRK.g Integration...
+✅ Functions loaded successfully</span>
+                            </div>
+                        </div>
+
+                        <div class="diagnostic-step">
+                            <div class="step-number">2</div>
+                            <h4>Check Claude Code</h4>
+                            <div class="terminal">
+<span class="command">$ claude --version</span>
+<span class="output">1.0.48 (Claude Code)</span>
+                            </div>
+                        </div>
+
+                        <div class="diagnostic-step">
+                            <div class="step-number">3</div>
+                            <h4>Verify Project Structure</h4>
+                            <div class="terminal">
+<span class="command">$ ls -la /Users/izverg/Documents/CrawlZilla</span>
+<span class="output">drwxr-xr-x .claude/
+drwxr-xr-x .dirk/
+drwxr-xr-x src/
+-rw-r--r-- package.json</span>
+                            </div>
+                        </div>
+
+                        <div class="diagnostic-step">
+                            <div class="step-number">4</div>
+                            <h4>Test Build System</h4>
+                            <div class="terminal">
+<span class="command">$ cd /Users/izverg/Documents/CrawlZilla && npm test</span>
+<span class="output">✅ Environment validation passed
+✅ Dependencies installed</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="category-tabs">
+                <button class="tab-button active" onclick="showTab('dirk-g')">DIRK.g Issues</button>
+                <button class="tab-button" onclick="showTab('dirk-c')">DIRK.c Issues</button>
+                <button class="tab-button" onclick="showTab('environment')">Environment</button>
+                <button class="tab-button" onclick="showTab('performance')">Performance</button>
+            </div>
+
+            <!-- DIRK.g Issues Tab -->
+            <div id="dirk-g" class="tab-content active">
+                <div class="problem-section">
+                    <h3 class="problem-title">🧠 DIRK.g Command Not Found</h3>
+                    
+                    <div class="alert error">
+                        <strong>Error:</strong> <code>dirk_g_ba: command not found</code>
+                    </div>
+
+                    <div class="solution-grid">
+                        <div class="solution-card">
+                            <h4>Solution 1: Activate Functions</h4>
+                            <div class="terminal">
+<span class="command">$ source ~/.dirk/dirk_g_commands.sh</span>
+<span class="command">$ dirk_g_test</span>
+<span class="success">✅ Functions loaded successfully</span>
+                            </div>
+                        </div>
+
+                        <div class="solution-card">
+                            <h4>Solution 2: Check Installation</h4>
+                            <div class="terminal">
+<span class="command">$ ls -la ~/.dirk/</span>
+<span class="output">drwxr-xr-x prompts/
+-rwxr-xr-x dirk_g_commands.sh</span>
+                            </div>
+                            <p>If files are missing, re-run the setup script:</p>
+                            <div class="terminal">
+<span class="command">$ ./complete_dirk_setup.sh</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="problem-section">
+                    <h3 class="problem-title">🤖 Gemini CLI Issues</h3>
+                    
+                    <div class="alert error">
+                        <strong>Error:</strong> <code>gemini: command not found</code>
+                    </div>
+
+                    <div class="quick-fix">
+                        <h5>Quick Fix: Install Gemini CLI</h5>
+                        <div class="terminal">
+<span class="command"># Install Gemini CLI (varies by system)</span>
+<span class="command">$ npm install -g @google/generative-ai-cli</span>
+<span class="comment"># OR follow official installation guide</span>
+<span class="command">$ curl -sSL https://get.gemini.google.com | bash</span>
+                        </div>
+                    </div>
+
+                    <div class="alert warning">
+                        <strong>Note:</strong> Gemini CLI installation varies by system. Check the official documentation for your platform.
+                    </div>
+                </div>
+
+                <div class="problem-section">
+                    <h3 class="problem-title">📝 DIRK.g Produces Generic Responses</h3>
+                    
+                    <div class="alert warning">
+                        <strong>Issue:</strong> DIRK.g responses don't follow the structured format or miss DIRK principles
+                    </div>
+
+                    <div class="solution-grid">
+                        <div class="solution-card">
+                            <h4>Check Prompt Templates</h4>
+                            <div class="terminal">
+<span class="command">$ cat ~/.dirk/prompts/dirk_g_business_analyst.txt</span>
+<span class="output">🧠 DIRK.g - BUSINESS ANALYST MODE ACTIVATED...</span>
+                            </div>
+                            <p>If template is incomplete, re-run setup</p>
+                        </div>
+
+                        <div class="solution-card">
+                            <h4>Use Proper Commands</h4>
+                            <p>Instead of raw gemini commands, use:</p>
+                            <div class="terminal">
+<span class="error">❌ gemini "analyze this requirement"</span>
+<span class="success">✅ dirk_g_ba "analyze this requirement"</span>
+<span class="success">✅ dirk_g_workflow "complete analysis"</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DIRK.c Issues Tab -->
+            <div id="dirk-c" class="tab-content">
+                <div class="problem-section">
+                    <h3 class="problem-title">⚡ Claude Code Not Starting</h3>
+                    
+                    <div class="alert error">
+                        <strong>Error:</strong> <code>claude: command not found</code> or <code>dirk-c: command not found</code>
+                    </div>
+
+                    <div class="solution-grid">
+                        <div class="solution-card">
+                            <h4>Install Claude Code CLI</h4>
+                            <div class="terminal">
+<span class="command">$ npm install -g @anthropic-ai/claude-code</span>
+<span class="command">$ claude --version</span>
+<span class="success">1.0.48 (Claude Code)</span>
+                            </div>
+                        </div>
+
+                        <div class="solution-card">
+                            <h4>Check Shell Aliases</h4>
+                            <div class="terminal">
+<span class="command">$ source ~/.zshrc</span>
+<span class="command">$ alias | grep dirk</span>
+<span class="output">dirk-c='cd ~/Documents/CrawlZilla && claude'</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="problem-section">
+                    <h3 class="problem-title">🔑 API Key Issues</h3>
+                    
+                    <div class="alert error">
+                        <strong>Error:</strong> <code>Authentication failed</code> or <code>Invalid API key</code>
+                    </div>
+
+                    <div class="solution-grid">
+                        <div class="solution-card">
+                            <h4>Set Up API Key</h4>
+                            <div class="terminal">
+<span class="command">$ claude auth login</span>
+<span class="output">Opening browser for authentication...</span>
+<span class="success">✅ Authentication successful</span>
+                            </div>
+                        </div>
+
+                        <div class="solution-card">
+                            <h4>Environment Variable Method</h4>
+                            <div class="terminal">
+<span class="command">$ export ANTHROPIC_API_KEY="your-key-here"</span>
+<span class="command">$ echo 'export ANTHROPIC_API_KEY="your-key"' >> ~/.zshrc</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="problem-section">
+                    <h3 class="problem-title">🎯 Slash Commands Not Working</h3>
+                    
+                    <div class="alert error">
+                        <strong>Error:</strong> <code>Unknown command: /build</code> or commands not responding
+                    </div>
+
+                    <div class="solution-grid">
+                        <div class="solution-card">
+                            <h4>Check Command Files</h4>
+                            <div class="terminal">
+<span class="command">$ ls -la .claude/commands/</span>
+<span class="output">-rw-r--r-- build.md
+-rw-r--r-- test.md
+-rw-r--r-- implement-from-dirk-g.md</span>
+                            </div>
+                        </div>
+
+                        <div class="solution-card">
+                            <h4>Restart Claude Code Session</h4>
+                            <div class="terminal">
+<span class="command">$ cd /Users/izverg/Documents/CrawlZilla</span>
+<span class="command">$ claude</span>
+<span class="output">Loading custom commands...</span>
+<span class="command">claude> /help</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="problem-section">
+                    <h3 class="problem-title">🛡️ Quality Hooks Failing</h3>
+                    
+                    <div class="alert warning">
+                        <strong>Issue:</strong> Security scans or code quality checks are failing
+                    </div>
+
+                    <div class="solution-grid">
+                        <div class="solution-card">
+                            <h4>Check Hook Permissions</h4>
+                            <div class="terminal">
+<span class="command">$ ls -la .claude/hooks/</span>
+<span class="output">-rwxr-xr-x security_scan.sh
+-rwxr-xr-x code_quality.sh</span>
+<span class="command"># If not executable:</span>
+<span class="command">$ chmod +x .claude/hooks/*.sh</span>
+                            </div>
+                        </div>
+
+                        <div class="solution-card">
+                            <h4>Test Hooks Individually</h4>
+                            <div class="terminal">
+<span class="command">$ ./.claude/hooks/security_scan.sh</span>
+<span class="success">✅ No hardcoded credentials detected</span>
+<span class="command">$ ./.claude/hooks/code_quality.sh</span>
+<span class="success">✅ Code formatting completed</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Environment Issues Tab -->
+            <div id="environment" class="tab-content">
+                <div class="problem-section">
+                    <h3 class="problem-title">📦 Node.js Issues</h3>
+                    
+                    <div class="alert error">
+                        <strong>Error:</strong> <code>node: command not found</code> or version conflicts
+                    </div>
+
+                    <div class="solution-grid">
+                        <div class="solution-card">
+                            <h4>Install Node.js via Homebrew</h4>
+                            <div class="terminal">
+<span class="command">$ brew install node</span>
+<span class="command">$ node --version</span>
+<span class="success">v20.0.0</span>
+<span class="command">$ npm --version</span>
+<span class="success">10.0.0</span>
+                            </div>
+                        </div>
+
+                        <div class="solution-card">
+                            <h4>Use Node Version Manager</h4>
+                            <div class="terminal">
+<span class="command">$ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash</span>
+<span class="command">$ source ~/.zshrc</span>
+<span class="command">$ nvm install --lts</span>
+<span class="command">$ nvm use --lts</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="problem-section">
+                    <h3 class="problem-title">🍺 Homebrew Issues</h3>
+                    
+                    <div class="alert warning">
+                        <strong>Issue:</strong> Homebrew not found or packages failing to install
+                    </div>
+
+                    <div class="quick-fix">
+                        <h5>Install Homebrew</h5>
+                        <div class="terminal">
+<span class="command">$ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"</span>
+<span class="command">$ echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zshrc</span>
+<span class="command">$ source ~/.zshrc</span>
+                        </div>
+                    </div>
+
+                    <div class="solution-grid">
+                        <div class="solution-card">
+                            <h4>Fix Homebrew PATH</h4>
+                            <div class="terminal">
+<span class="command">$ echo $PATH</span>
+<span class="comment"># Should include /opt/homebrew/bin</span>
+<span class="command">$ export PATH="/opt/homebrew/bin:$PATH"</span>
+                            </div>
+                        </div>
+
+                        <div class="solution-card">
+                            <h4>Update Homebrew</h4>
+                            <div class="terminal">
+<span class="command">$ brew update</span>
+<span class="command">$ brew doctor</span>
+<span class="success">Your system is ready to brew.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="problem-section">
+                    <h3 class="problem-title">🔧 Development Tools Missing</h3>
+                    
+                    <div class="alert info">
+                        <strong>Info:</strong> Required development tools for C++ compilation and formatting
+                    </div>
+
+                    <div class="quick-fix">
+                        <h5>Install Essential Tools</h5>
+                        <div class="terminal">
+<span class="command">$ xcode-select --install</span>
+<span class="command">$ brew install cmake sqlite3 clang-format terminal-notifier</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Performance Issues Tab -->
+            <div id="performance" class="tab-content">
+                <div class="problem-section">
+                    <h3 class="problem-title">🐌 Slow DIRK.g Response Times</h3>
+                    
+                    <div class="alert warning">
+                        <strong>Issue:</strong> DIRK.g taking too long to generate responses
+                    </div>
+
+                    <div class="solution-grid">
+                        <div class="solution-card">
+                            <h4>Optimize Prompt Length</h4>
+                            <p>Shorter, more focused requirements get faster responses:</p>
+                            <div class="terminal">
+<span class="error">❌ dirk_g_ba "complex multi-paragraph requirement..."</span>
+<span class="success">✅ dirk_g_ba "user authentication with OAuth2"</span>
+                            </div>
+                        </div>
+
+                        <div class="solution-card">
+                            <h4>Check Network Connection</h4>
+                            <div class="terminal">
+<span class="command">$ ping google.com</span>
+<span class="command">$ curl -I https://api.anthropic.com</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="problem-section">
+                    <h3 class="problem-title">💾 High Memory Usage</h3>
+                    
+                    <div class="alert warning">
+                        <strong>Issue:</strong> Claude Code sessions consuming excessive memory
+                    </div>
+
+                    <div class="solution-grid">
+                        <div class="solution-card">
+                            <h4>Monitor Memory Usage</h4>
+                            <div class="terminal">
+<span class="command">$ top -pid $(pgrep -f claude)</span>
+<span class="command">$ ps aux | grep claude</span>
+                            </div>
+                        </div>
+
+                        <div class="solution-card">
+                            <h4>Restart Sessions Regularly</h4>
+                            <p>Long-running sessions can accumulate memory:</p>
+                            <div class="terminal">
+<span class="command"># Exit and restart Claude Code</span>
+<span class="command">claude> exit</span>
+<span class="command">$ dirk-c</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="problem-section">
+                    <h3 class="problem-title">🔥 CPU Spikes During Build</h3>
+                    
+                    <div class="alert info">
+                        <strong>Info:</strong> Build processes and quality hooks can be CPU intensive
+                    </div>
+
+                    <div class="solution-grid">
+                        <div class="solution-card">
+                            <h4>Optimize Build Process</h4>
+                            <div class="terminal">
+<span class="command"># Use incremental builds</span>
+<span class="command">claude> /test unit</span>
+<span class="comment"># Instead of full build for quick feedback</span>
+                            </div>
+                        </div>
+
+                        <div class="solution-card">
+                            <h4>Adjust Hook Configuration</h4>
+                            <p>Disable heavy hooks during development:</p>
+                            <div class="terminal">
+<span class="command">$ vim .claude/settings.json</span>
+<span class="comment"># Temporarily disable CPU-intensive hooks</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <section id="emergency">
+                <div class="card">
+                    <h2>🚨 Emergency Recovery</h2>
+                    <p>When everything goes wrong, use these nuclear options</p>
+                    
+                    <div class="alert error">
+                        <strong>Warning:</strong> These commands will reset your DIRK installation. Use only as a last resort.
+                    </div>
+
+                    <div class="solution-grid">
+                        <div class="solution-card">
+                            <h4>Complete DIRK System Reset</h4>
+                            <div class="terminal">
+<span class="command"># Remove all DIRK components</span>
+<span class="command">$ rm -rf ~/.dirk/</span>
+<span class="command">$ rm -rf /Users/izverg/Documents/CrawlZilla/.claude/</span>
+<span class="command">$ rm -rf /Users/izverg/Documents/CrawlZilla/.dirk/</span>
+
+<span class="command"># Reinstall everything</span>
+<span class="command">$ cd /Users/izverg/Documents/CrawlZilla</span>
+<span class="command">$ ./complete_dirk_setup.sh</span>
+                            </div>
+                        </div>
+
+                        <div class="solution-card">
+                            <h4>Claude Code Reinstall</h4>
+                            <div class="terminal">
+<span class="command"># Uninstall and reinstall Claude Code</span>
+<span class="command">$ npm uninstall -g @anthropic-ai/claude-code</span>
+<span class="command">$ npm install -g @anthropic-ai/claude-code</span>
+<span class="command">$ claude auth login</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="support">
+                <div class="card">
+                    <h2>📞 Getting Additional Help</h2>
+                    
+                    <div class="alert info">
+                        <strong>Diagnostic Information:</strong> When seeking help, always include this information:
+                    </div>
+
+                    <div class="terminal">
+<span class="command"># System Information</span>
+<span class="command">$ uname -a</span>
+<span class="command">$ sw_vers</span>
+
+<span class="command"># Node.js and npm versions</span>
+<span class="command">$ node --version</span>
+<span class="command">$ npm --version</span>
+
+<span class="command"># Claude Code version</span>
+<span class="command">$ claude --version</span>
+
+<span class="command"># DIRK.g function test</span>
+<span class="command">$ dirk_g_test</span>
+
+<span class="command"># Project structure</span>
+<span class="command">$ ls -la /Users/izverg/Documents/CrawlZilla/</span>
+                    </div>
+
+                    <div class="solution-grid">
+                        <div class="solution-card">
+                            <h4>📚 Documentation</h4>
+                            <ul>
+                                <li><a href="index.html">Main DIRK Documentation</a></li>
+                                <li><a href="dirk-g-guide.html">DIRK.g Complete Guide</a></li>
+                                <li><a href="dirk-c-guide.html">DIRK.c Complete Guide</a></li>
+                                <li><a href="examples.html">Practical Examples</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="solution-card">
+                            <h4>🔧 Quick Fixes</h4>
+                            <ul>
+                                <li>Try restarting terminal session</li>
+                                <li>Source shell profile: <code>source ~/.zshrc</code></li>
+                                <li>Restart Claude Code session</li>
+                                <li>Clear npm cache: <code>npm cache clean --force</code></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <footer style="background: var(--primary-color); color: white; text-align: center; padding: 2rem 0; margin-top: 3rem;">
+        <div class="container">
+            <p><a href="index.html" style="color: white;">← Back to Main Documentation</a></p>
+            <p>DIRK System Troubleshooting - Resolve issues quickly and systematically</p>
+        </div>
+    </footer>
+
+    <script>
+        function showTab(tabId) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all buttons
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabId).classList.add('active');
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+
+        // Add copy functionality to code blocks
+        document.querySelectorAll('.terminal, .code-block').forEach(block => {
+            const copyBtn = document.createElement('button');
+            copyBtn.textContent = 'Copy';
+            copyBtn.style.cssText = `
+                position: absolute;
+                top: 0.5rem;
+                right: 0.5rem;
+                background: var(--success-color);
+                color: white;
+                border: none;
+                padding: 0.25rem 0.5rem;
+                border-radius: 3px;
+                cursor: pointer;
+                font-size: 0.8rem;
+                z-index: 10;
+            `;
+            
+            copyBtn.addEventListener('click', () => {
+                navigator.clipboard.writeText(block.textContent).then(() => {
+                    copyBtn.textContent = 'Copied!';
+                    setTimeout(() => {
+                        copyBtn.textContent = 'Copy';
+                    }, 2000);
+                });
+            });
+            
+            block.style.position = 'relative';
+            block.appendChild(copyBtn);
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

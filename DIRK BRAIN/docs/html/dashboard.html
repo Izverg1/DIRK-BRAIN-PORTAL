@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIRK Enterprise Quality Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .dirk-tag {
+            background: #3498db;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.4em;
+            margin-left: 20px;
+            font-weight: normal;
+        }
+
+        .connection-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #e74c3c;
+            animation: pulse 2s infinite;
+        }
+
+        .status-indicator.connected {
+            background: #27ae60;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .metric-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .metric-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .metric-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .metric-trend {
+            font-size: 0.9em;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-weight: 500;
+        }
+
+        .trend-improving { background: #d5f4e6; color: #27ae60; }
+        .trend-stable { background: #fef9e7; color: #f39c12; }
+        .trend-declining { background: #fadbd8; color: #e74c3c; }
+
+        .metric-value {
+            font-size: 3em;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 10px;
+        }
+
+        .metric-unit {
+            font-size: 0.4em;
+            opacity: 0.7;
+        }
+
+        .metric-description {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+
+        .quality-score { color: #27ae60; }
+        .quality-score.warning { color: #f39c12; }
+        .quality-score.critical { color: #e74c3c; }
+
+        .security-metric { color: #e74c3c; }
+        .security-metric.safe { color: #27ae60; }
+
+        .performance-metric { color: #3498db; }
+        .build-metric { color: #9b59b6; }
+
+        .alerts-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .alerts-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .alerts-title {
+            font-size: 1.5em;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .alert-summary {
+            display: flex;
+            gap: 15px;
+        }
+
+        .alert-count {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+
+        .alert-critical { background: #fadbd8; color: #c0392b; }
+        .alert-warning { background: #fef9e7; color: #d68910; }
+        .alert-info { background: #d6eaf8; color: #2874a6; }
+
+        .alert-item {
+            background: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .alert-item.critical {
+            border-left-color: #e74c3c;
+            background: #fdf2f2;
+        }
+
+        .alert-item.warning {
+            border-left-color: #f39c12;
+            background: #fefbf3;
+        }
+
+        .alert-item.acknowledged {
+            opacity: 0.6;
+        }
+
+        .alert-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .alert-category {
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.8em;
+        }
+
+        .alert-time {
+            font-size: 0.8em;
+            color: #7f8c8d;
+        }
+
+        .alert-message {
+            color: #2c3e50;
+            line-height: 1.4;
+        }
+
+        .alert-actions {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8em;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-acknowledge {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-acknowledge:hover {
+            background: #2980b9;
+        }
+
+        .historical-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .chart-container {
+            width: 100%;
+            height: 300px;
+            margin-top: 20px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Header -->
+        <div class="header">
+            <h1>
+                🧠 DIRK Enterprise Quality Dashboard
+                <span class="dirk-tag">#DIRK-MACOS-CPP-CRAWLZILLA-20250111-0004</span>
+            </h1>
+            <div class="connection-status">
+                <div class="status-indicator" id="connectionStatus"></div>
+                <span id="connectionText">Connecting to monitoring server...</span>
+                <span id="lastUpdate"></span>
+            </div>
+        </div>
+
+        <!-- Main Metrics Grid -->
+        <div class="metrics-grid" id="metricsGrid">
+            <div class="loading">
+                <div class="spinner"></div>
+            </div>
+        </div>
+
+        <!-- Alerts Section -->
+        <div class="alerts-section">
+            <div class="alerts-header">
+                <h2 class="alerts-title">🚨 Real-Time Alerts</h2>
+                <div class="alert-summary" id="alertSummary">
+                    <span class="alert-count alert-critical">0 Critical</span>
+                    <span class="alert-count alert-warning">0 Warnings</span>
+                    <span class="alert-count alert-info">0 Info</span>
+                </div>
+            </div>
+            <div id="alertsList" class="no-data">
+                No alerts at this time. System operating normally.
+            </div>
+        </div>
+
+        <!-- Historical Trends -->
+        <div class="historical-section">
+            <h2>📈 Quality Trends (Last 24 Hours)</h2>
+            <div class="chart-container" id="chartContainer">
+                <canvas id="trendsChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>DIRK Enterprise Framework | Real-time monitoring with zero-tolerance quality enforcement</p>
+            <p>Last Dashboard Update: <span id="dashboardUpdate"></span></p>
+        </div>
+    </div>
+
+    <script>
+        class DIRKDashboard {
+            constructor() {
+                this.ws = null;
+                this.metrics = {};
+                this.alerts = [];
+                this.isConnected = false;
+                this.reconnectAttempts = 0;
+                this.maxReconnectAttempts = 5;
+                
+                this.init();
+            }
+            
+            init() {
+                this.connectWebSocket();
+                this.updateDashboardTime();
+                
+                // Update dashboard time every second
+                setInterval(() => {
+                    this.updateDashboardTime();
+                }, 1000);
+            }
+            
+            connectWebSocket() {
+                try {
+                    this.ws = new WebSocket('ws://localhost:8081');
+                    
+                    this.ws.onopen = () => {
+                        this.onConnectionOpen();
+                    };
+                    
+                    this.ws.onmessage = (event) => {
+                        this.onMessage(event);
+                    };
+                    
+                    this.ws.onclose = () => {
+                        this.onConnectionClose();
+                    };
+                    
+                    this.ws.onerror = (error) => {
+                        this.onConnectionError(error);
+                    };
+                    
+                } catch (error) {
+                    console.error('WebSocket connection failed:', error);
+                    this.onConnectionError(error);
+                }
+            }
+            
+            onConnectionOpen() {
+                console.log('✅ Connected to DIRK monitoring server');
+                this.isConnected = true;
+                this.reconnectAttempts = 0;
+                this.updateConnectionStatus();
+            }
+            
+            onMessage(event) {
+                try {
+                    const data = JSON.parse(event.data);
+                    
+                    switch (data.type) {
+                        case 'initial_data':
+                            this.metrics = data.metrics;
+                            this.alerts = data.alerts;
+                            this.updateDashboard();
+                            break;
+                            
+                        case 'metrics_update':
+                            this.metrics = { ...this.metrics, ...data.metrics };
+                            this.alerts = data.alerts;
+                            this.updateDashboard();
+                            break;
+                            
+                        case 'new_alert':
+                            this.alerts.unshift(data.alert);
+                            this.updateAlerts();
+                            this.showNotification(data.alert);
+                            break;
+                            
+                        case 'alert_acknowledged':
+                            this.markAlertAcknowledged(data.alertId);
+                            break;
+                    }
+                    
+                    document.getElementById('lastUpdate').textContent = 
+                        `Last update: ${new Date(data.timestamp).toLocaleTimeString()}`;
+                    
+                } catch (error) {
+                    console.error('Error processing WebSocket message:', error);
+                }
+            }
+            
+            onConnectionClose() {
+                console.log('🔌 WebSocket connection closed');
+                this.isConnected = false;
+                this.updateConnectionStatus();
+                
+                // Attempt to reconnect
+                if (this.reconnectAttempts < this.maxReconnectAttempts) {
+                    this.reconnectAttempts++;
+                    const delay = Math.min(1000 * Math.pow(2, this.reconnectAttempts), 30000);
+                    
+                    console.log(`Attempting to reconnect in ${delay}ms (attempt ${this.reconnectAttempts}/${this.maxReconnectAttempts})`);
+                    
+                    setTimeout(() => {
+                        this.connectWebSocket();
+                    }, delay);
+                }
+            }
+            
+            onConnectionError(error) {
+                console.error('WebSocket error:', error);
+                this.isConnected = false;
+                this.updateConnectionStatus();
+            }
+            
+            updateConnectionStatus() {
+                const statusElement = document.getElementById('connectionStatus');
+                const textElement = document.getElementById('connectionText');
+                
+                if (this.isConnected) {
+                    statusElement.classList.add('connected');
+                    textElement.textContent = 'Connected to monitoring server';
+                } else {
+                    statusElement.classList.remove('connected');
+                    if (this.reconnectAttempts > 0) {
+                        textElement.textContent = `Reconnecting... (${this.reconnectAttempts}/${this.maxReconnectAttempts})`;
+                    } else {
+                        textElement.textContent = 'Disconnected from monitoring server';
+                    }
+                }
+            }
+            
+            updateDashboard() {
+                this.updateMetrics();
+                this.updateAlerts();
+            }
+            
+            updateMetrics() {
+                const grid = document.getElementById('metricsGrid');
+                
+                const metricCards = [
+                    {
+                        title: 'Overall Quality Score',
+                        value: this.metrics.qualityScore || 0,
+                        unit: '%',
+                        description: 'Weighted composite score across all quality metrics',
+                        trend: this.getMetricTrend('qualityScore'),
+                        className: this.getQualityScoreClass(this.metrics.qualityScore)
+                    },
+                    {
+                        title: 'Security Issues',
+                        value: this.metrics.securityIssues || 0,
+                        unit: '',
+                        description: 'Critical security vulnerabilities requiring immediate attention',
+                        trend: this.getMetricTrend('securityIssues'),
+                        className: this.metrics.securityIssues === 0 ? 'security-metric safe' : 'security-metric'
+                    },
+                    {
+                        title: 'Test Coverage',
+                        value: this.metrics.testCoverage || 0,
+                        unit: '%',
+                        description: 'Unit test coverage across all critical code paths',
+                        trend: this.getMetricTrend('testCoverage'),
+                        className: 'quality-score'
+                    },
+                    {
+                        title: 'Response Time',
+                        value: this.metrics.responseTime || 0,
+                        unit: 'ms',
+                        description: 'Average API response time (95th percentile)',
+                        trend: this.getMetricTrend('responseTime'),
+                        className: 'performance-metric'
+                    },
+                    {
+                        title: 'Build Success Rate',
+                        value: this.metrics.buildSuccess || 0,
+                        unit: '%',
+                        description: 'CI/CD pipeline success rate over last 24 hours',
+                        trend: this.getMetricTrend('buildSuccess'),
+                        className: 'build-metric'
+                    },
+                    {
+                        title: 'Code Complexity',
+                        value: this.metrics.codeComplexity || 0,
+                        unit: '',
+                        description: 'Average cyclomatic complexity per function',
+                        trend: this.getMetricTrend('codeComplexity'),
+                        className: 'quality-score'
+                    }
+                ];
+                
+                grid.innerHTML = metricCards.map(card => `
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <div class="metric-title">${card.title}</div>
+                            <div class="metric-trend trend-${card.trend}">${card.trend}</div>
+                        </div>
+                        <div class="metric-value ${card.className}">
+                            ${card.value.toLocaleString()}
+                            <span class="metric-unit">${card.unit}</span>
+                        </div>
+                        <div class="metric-description">${card.description}</div>
+                    </div>
+                `).join('');
+            }
+            
+            updateAlerts() {
+                const alertsList = document.getElementById('alertsList');
+                const alertSummary = document.getElementById('alertSummary');
+                
+                if (this.alerts.length === 0) {
+                    alertsList.innerHTML = '<div class="no-data">No alerts at this time. System operating normally.</div>';
+                } else {
+                    alertsList.innerHTML = this.alerts.map(alert => `
+                        <div class="alert-item ${alert.severity.toLowerCase()} ${alert.acknowledged ? 'acknowledged' : ''}">
+                            <div class="alert-header">
+                                <span class="alert-category">${alert.category}</span>
+                                <span class="alert-time">${new Date(alert.timestamp).toLocaleString()}</span>
+                            </div>
+                            <div class="alert-message">${alert.message}</div>
+                            ${!alert.acknowledged ? `
+                                <div class="alert-actions">
+                                    <button class="btn btn-acknowledge" onclick="dashboard.acknowledgeAlert('${alert.id}')">
+                                        Acknowledge
+                                    </button>
+                                </div>
+                            ` : '<div style="margin-top: 10px; font-size: 0.8em; color: #27ae60;">✓ Acknowledged</div>'}
+                        </div>
+                    `).join('');
+                }
+                
+                // Update alert summary
+                const counts = this.alerts.reduce((acc, alert) => {
+                    if (!alert.acknowledged) {
+                        acc[alert.severity.toLowerCase()] = (acc[alert.severity.toLowerCase()] || 0) + 1;
+                    }
+                    return acc;
+                }, {});
+                
+                alertSummary.innerHTML = `
+                    <span class="alert-count alert-critical">${counts.critical || 0} Critical</span>
+                    <span class="alert-count alert-warning">${counts.warning || counts.high || 0} Warnings</span>
+                    <span class="alert-count alert-info">${counts.info || counts.medium || counts.low || 0} Info</span>
+                `;
+            }
+            
+            getMetricTrend(metricName) {
+                // In a real implementation, this would analyze historical data
+                // For now, return random trends for demo purposes
+                const trends = ['improving', 'stable', 'declining'];
+                return trends[Math.floor(Math.random() * trends.length)];
+            }
+            
+            getQualityScoreClass(score) {
+                if (score >= 90) return 'quality-score';
+                if (score >= 70) return 'quality-score warning';
+                return 'quality-score critical';
+            }
+            
+            acknowledgeAlert(alertId) {
+                if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+                    this.ws.send(JSON.stringify({
+                        type: 'acknowledge_alert',
+                        alertId: alertId
+                    }));
+                }
+            }
+            
+            markAlertAcknowledged(alertId) {
+                const alert = this.alerts.find(a => a.id === alertId);
+                if (alert) {
+                    alert.acknowledged = true;
+                    this.updateAlerts();
+                }
+            }
+            
+            showNotification(alert) {
+                // Browser notification (if permission granted)
+                if (Notification.permission === 'granted') {
+                    new Notification(`DIRK Alert: ${alert.category}`, {
+                        body: alert.message,
+                        icon: '/favicon.ico',
+                        tag: alert.id
+                    });
+                }
+            }
+            
+            updateDashboardTime() {
+                document.getElementById('dashboardUpdate').textContent = new Date().toLocaleString();
+            }
+        }
+        
+        // Initialize dashboard when page loads
+        let dashboard;
+        document.addEventListener('DOMContentLoaded', () => {
+            dashboard = new DIRKDashboard();
+            
+            // Request notification permission
+            if ('Notification' in window && Notification.permission === 'default') {
+                Notification.requestPermission();
+            }
+        });
+    </script>
+</body>
+</html>
